@@ -1,0 +1,13 @@
+## Interface: 30300
+## Title: chardumps
+## Author: SlaFF
+## Version: 1.0
+## Notes: Dump of character by SlaFF
+## eMail: thatislove@mail.ru
+## OptionalDeps: Ace3
+## DefaultState: Enabled
+## LoadOnDemand: 0
+
+embeds.xml
+chardumpsForm.xml
+options.xml
