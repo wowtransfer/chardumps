@@ -7,7 +7,7 @@
 ## OptionalDeps: Ace3
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
-
+## SavedVariables: CHD_DATA,CHD_KEY
 embeds.xml
 chardumpsForm.xml
 options.xml

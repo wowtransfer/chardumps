@@ -92,7 +92,7 @@ end
 function CHD_GetGlobalInfo()
 	local res            = {};
 
-	CHD_Message(" Get global information");
+	CHD_Message("  Get global information");
 	res.locale           = GetLocale();
 	res.realm            = GetRealmName();
 	res.realmlist        = GetCVar("realmList");
@@ -105,7 +105,7 @@ end
 function CHD_GetPlayerInfo()
 	local res            = {};
 
-	CHD_Message(" Get player`s information");
+	CHD_Message("  Get player`s information");
 	res.name             = UnitName("player");
 	local _, class       = UnitClass("player");
 	res.class            = class;
@@ -123,26 +123,59 @@ function CHD_GetPlayerInfo()
 	return res;
 end
 
---[[
-function CHD_GetGlyphData()
+function CHD_GetGlyphInfo()
 	local res = {};
 
+	CHD_Message("  Get glyphs information");
 	for i = 1,2 do
 		res[i] = {};
 		local curid = {[1] = 1,[2] = 1};
 		for j = 1, GetNumGlyphSockets() do
-			local _, glyphType, glyphTooltipIndex, glyphSpellID, icon = GetGlyphSocketInfo(j, i);
-			if not res[i][glyphType] then
+			local _, glyphType, glyphSpellID = GetGlyphSocketInfo(j, i);
+			if not res[i][glyphType] then -- glyphType 1 or 2, smal or big glyph
 				res[i][glyphType] = {};
 			end
 			res[i][glyphType][ curid[glyphType] ] = glyphSpellID;
-			curid[glyphType] = curid[glyphType]+1;
+			curid[glyphType] = curid[glyphType] + 1;
 		end
 	end
 
-	return retTbl;
+	return res;
 end
---]]
+
+function CHD_GetCurrencyInfo()
+	local res = {};
+
+	CHD_Message("  Get currency information");
+	for i = 1, GetCurrencyListSize() do
+		local _, _, _, _, _, count, _, _, itemID = GetCurrencyListInfo(i);
+		res[i] = {['N'] = count, ['I'] = itemID};
+	end
+
+	return res;
+end
+
+function CHD_GetSpellInfo()
+	local res = {};
+
+	CHD_Message("  Get spell information");
+	for i = 1, MAX_SKILLLINE_TABS do
+		local name, _, offset, numSpells = GetSpellTabInfo(i);
+		if not name then
+			break;
+		end
+		for j = offset + 1, offset + numSpells do
+			local spellLink = GetSpellLink(j, BOOKTYPE_SPELL);
+			if spellLink then
+				local spellid = tonumber(strmatch(spellLink, "Hspell:(%d+)"));
+				res[spellid] = i;
+				print(i, spellid);
+			end
+		end
+	end
+
+	return res;
+end
 
 --[[
 	Saving data
@@ -154,13 +187,16 @@ function CHD_CreateDump()
 	CHD_Message("Creating dump...");
 	dump.globinfo    = CHD_trycall(CHD_GetGlobalInfo)    or {};
 	dump.userinfo    = CHD_trycall(CHD_GetPlayerInfo)    or {};
+	dump.glyphinfo   = CHD_trycall(CHD_GetGlyphInfo)     or {};
+	dump.currinfo    = CHD_trycall(CHD_GetCurrencyInfo)  or {};
+	dump.spellinfo   = CHD_trycall(CHD_GetSpellInfo)     or {};
 	CHD_Message("Dump created successeful");
 
 	return dump;
 end
 
 function CHD_SaveDump(data)
-	CHD_Message("DONE: you can find dump here: WoW Folder /WTF/Account/%PlayerName%/SavedVariables/chardump.lua");
+	CHD_Message("DONE: you can find dump here: WoW Folder /WTF/Account/%PlayerName%/SavedVariables/chardumps.lua");
 
 	CHD_DATA  = data;
 	CHD_KEY   = nil;
