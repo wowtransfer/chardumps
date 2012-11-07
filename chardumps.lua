@@ -200,6 +200,18 @@ function CHD_GetCritterInfo() -- get mounts and companions
 	return res;
 end
 
+function CHD_GetRepInfo()
+	local res = {};
+
+	CHD_Message("  Get reputation information");
+	for i = 1, GetNumFactions() do
+	local name, _, _, _, _, earnedValue, _, canToggleAtWar, _, _, _, _, _ = GetFactionInfo(i);
+		res[i] = {["N"] = name, ["V"] = earnedValue, ["F"] = (canToggleAtWar or 0)};
+	end
+
+	return res;
+end
+
 --[[
 	Saving data
 --]]
@@ -215,6 +227,7 @@ function CHD_CreateDump()
 	dump.spellinfo     = CHD_trycall(CHD_GetSpellInfo)     or {};
 	dump.mountinfo     = CHD_trycall(CHD_GetMountInfo)     or {};
 	dump.critterinfo   = CHD_trycall(CHD_GetCritterInfo)   or {};
+	dump.repinfo       = CHD_trycall(CHD_GetRepInfo)       or {};
 	CHD_Message("Dump created successeful");
 
 	return dump;
