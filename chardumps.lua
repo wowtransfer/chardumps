@@ -169,9 +169,32 @@ function CHD_GetSpellInfo()
 			if spellLink then
 				local spellid = tonumber(strmatch(spellLink, "Hspell:(%d+)"));
 				res[spellid] = i;
-				print(i, spellid);
 			end
 		end
+	end
+
+	return res;
+end
+
+function CHD_GetMountInfo() -- get mounts and companions
+	local res = {};
+
+	CHD_Message("  Get mounts information");
+	for i = 1, GetNumCompanions("MOUNT") do
+		local creatureID = GetCompanionInfo("MOUNT", i);
+		res[i] = creatureID;
+	end
+
+	return res;
+end
+
+function CHD_GetCritterInfo() -- get mounts and companions
+	local res = {};
+
+	CHD_Message("  Get critters information");
+	for i = 1, GetNumCompanions("CRITTER") do
+		local creatureID = GetCompanionInfo("CRITTER", i);
+		res[i] = creatureID;
 	end
 
 	return res;
@@ -185,11 +208,13 @@ function CHD_CreateDump()
 	local dump       = {};
 
 	CHD_Message("Creating dump...");
-	dump.globinfo    = CHD_trycall(CHD_GetGlobalInfo)    or {};
-	dump.userinfo    = CHD_trycall(CHD_GetPlayerInfo)    or {};
-	dump.glyphinfo   = CHD_trycall(CHD_GetGlyphInfo)     or {};
-	dump.currinfo    = CHD_trycall(CHD_GetCurrencyInfo)  or {};
-	dump.spellinfo   = CHD_trycall(CHD_GetSpellInfo)     or {};
+	dump.globinfo      = CHD_trycall(CHD_GetGlobalInfo)    or {};
+	dump.userinfo      = CHD_trycall(CHD_GetPlayerInfo)    or {};
+	dump.glyphinfo     = CHD_trycall(CHD_GetGlyphInfo)     or {};
+	dump.currinfo      = CHD_trycall(CHD_GetCurrencyInfo)  or {};
+	dump.spellinfo     = CHD_trycall(CHD_GetSpellInfo)     or {};
+	dump.mountinfo     = CHD_trycall(CHD_GetMountInfo)     or {};
+	dump.critterinfo   = CHD_trycall(CHD_GetCritterInfo)   or {};
 	CHD_Message("Dump created successeful");
 
 	return dump;
