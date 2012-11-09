@@ -8,6 +8,8 @@
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariables: CHD_DATA,CHD_KEY
+
+chardumps.lua
 embeds.xml
 chardumpsForm.xml
 options.xml

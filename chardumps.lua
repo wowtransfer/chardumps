@@ -66,7 +66,11 @@ end
 function CHD_OnEvent(self, event, ...) -- TODO: delete
 --	print("event: ", event);
 --	print("arg1: ", arg1, ", arg2: ", arg2, ", arg3: ", arg3);
-	if (event == "PLAYER_ENTERING_WORLD") then
+	if (event == "UNIT_SPELLCAST_SENT") then -- TODO: debug
+		if arg2 == "Берсерк" or arg2 == "Гнев карателя" then
+			print("\124cFFFF0000!\124r", arg1, arg2);
+		end
+	elseif (event == "PLAYER_ENTERING_WORLD") then
 		CHD_Message(UnitName("player").." enter in word");
 	elseif (event == "PLAYER_LEAVING_WORLD") then
 		CHD_Message("Bay-bay "..UnitName("player"));
@@ -76,11 +80,15 @@ end
 function CHD_OnLoad(self)
 	self:RegisterEvent("PLAYER_ENTERING_WORLD");
 	self:RegisterEvent("PLAYER_LEAVING_WORLD");
+	self:RegisterEvent("UNIT_SPELLCAST_SENT");
 	self:SetScript("OnEvent", CHD_OnEvent);
 
 	SlashCmdList["CHD"] = CHD_SlashCmdHandler;
 	SLASH_CHD1 = "/chardumps";
 	SLASH_CHD2 = "/chd";
+
+	frmMainchbPlayer:Disable();
+	frmMainchbGlobal:Disable();
 
 	CHD_Message("chardumps created by |cff0000ffSlaFF|r is loaded");
 end
@@ -221,6 +229,7 @@ end
 function CHD_GetAchievementInfo()
 	local res = {};
 
+	CHD_Message("  Get achievement information");
 	local CategoryList = GetCategoryList();
 	for _, CategoryID in pairs(CategoryList) do
 		for j = 1, GetCategoryNumAchievements(CategoryID) do
@@ -237,41 +246,66 @@ function CHD_GetAchievementInfo()
 	return res;
 end
 
+function CHD_GetSkillInfo()
+	local res = {};
+
+	CHD_Message("  Get skill information");
+	for i = 1, GetNumSkillLines() do
+		local skillName, _, _, skillRank, _, _, skillMaxRank = GetSkillLineInfo(i);
+		res[i] = {["N"] = skillName, ["R"] = skillRank, ["M"] = skillMaxRank};
+	end
+
+	return res;
+end
+
+
 --[[
 	Saving data
 --]]
 
+function CHD_Debug()
+
+end
+
 function CHD_CreateDump()
-	local dump       = {};
+	local dump = {};
 
 	CHD_Message("Creating dump...");
 	dump.globinfo      = CHD_trycall(CHD_GetGlobalInfo)      or {};
 	dump.userinfo      = CHD_trycall(CHD_GetPlayerInfo)      or {};
-	dump.glyphinfo     = CHD_trycall(CHD_GetGlyphInfo)       or {};
-	dump.currinfo      = CHD_trycall(CHD_GetCurrencyInfo)    or {};
-	dump.spellinfo     = CHD_trycall(CHD_GetSpellInfo)       or {};
-	dump.mountinfo     = CHD_trycall(CHD_GetMountInfo)       or {};
-	dump.critterinfo   = CHD_trycall(CHD_GetCritterInfo)     or {};
-	dump.repinfo       = CHD_trycall(CHD_GetRepInfo)         or {};
-	dump.achinfo       = CHD_trycall(CHD_GetAchievementInfo) or {};
+	if frmMainchbGlyphs:GetChecked() then
+		dump.glyphinfo     = CHD_trycall(CHD_GetGlyphInfo)       or {};
+	end
+	if frmMainchbCurrency:GetChecked() then
+		dump.currinfo      = CHD_trycall(CHD_GetCurrencyInfo)    or {};
+	end
+	if frmMainchbSpells:GetChecked() then
+		dump.spellinfo     = CHD_trycall(CHD_GetSpellInfo)       or {};
+	end
+	if frmMainchbMounts:GetChecked() then
+		dump.mountinfo     = CHD_trycall(CHD_GetMountInfo)       or {};
+	end
+	if frmMainchbCritters:GetChecked() then
+		dump.critterinfo   = CHD_trycall(CHD_GetCritterInfo)     or {};
+	end
+	if frmMainchbReputation:GetChecked() then
+		dump.repinfo       = CHD_trycall(CHD_GetRepInfo)         or {};
+	end;
+	if frmMainchbAchievements:GetChecked() then
+		dump.achinfo       = CHD_trycall(CHD_GetAchievementInfo) or {};
+	end
+	if frmMainchbSkills:GetChecked() then
+		dump.skillinfo     = CHD_trycall(CHD_GetSkillInfo)       or {};
+	end
 
 	CHD_Message("Dump created successeful");
-
-	return dump;
-end
-
-function CHD_SaveDump(data)
 	CHD_Message("DONE: you can find dump here: WoW Folder /WTF/Account/%PlayerName%/SavedVariables/chardumps.lua");
 
-	CHD_DATA  = data;
+	CHD_DATA  = dump;
 	CHD_KEY   = nil;
 end
 
-function CHD_Dump()
-	local res = {};
 
-	res = CHD_CreateDump();
---	CHD_PrintTable(res.globinfo); -- debug
---	CHD_PrintTable(res.userinfo); -- debug
-	CHD_SaveDump(res);
+function CHD_Dump()
+	CHD_CreateDump();
 end
