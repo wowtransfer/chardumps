@@ -138,6 +138,12 @@ function CHD_GetGlyphInfo()
 			res[i][glyphType][ curid[glyphType] ] = glyphSpellID;
 			curid[glyphType] = curid[glyphType] + 1;
 		end
+--[[ TODO
+		for j = 1, GetNumGlyphSockets() do
+			local _, glyphType, glyphSpellID = GetGlyphSocketInfo(j, i);
+			res[i][j] = (glyphSpellID or 0);
+		end
+--]]
 	end
 
 	return res;
@@ -149,7 +155,7 @@ function CHD_GetCurrencyInfo()
 	CHD_Message("  Get currency information");
 	for i = 1, GetCurrencyListSize() do
 		local _, _, _, _, _, count, _, _, itemID = GetCurrencyListInfo(i);
-		res[i] = {['N'] = count, ['I'] = itemID};
+		res[itemID] = count;
 	end
 
 	return res;
@@ -212,6 +218,25 @@ function CHD_GetRepInfo()
 	return res;
 end
 
+function CHD_GetAchievementInfo()
+	local res = {};
+
+	local CategoryList = GetCategoryList();
+	for _, CategoryID in pairs(CategoryList) do
+		for j = 1, GetCategoryNumAchievements(CategoryID) do
+			IDNumber, _, _, Completed, Month, Day, Year = GetAchievementInfo(CategoryID, j);
+			if IDNumber and Completed then
+				local posixtime = time{year = 2000 + Year, month = Month, day = Day};
+				if posixtime then
+					res[IDNumber] = posixtime;
+				end
+			end
+		end
+	end
+
+	return res;
+end
+
 --[[
 	Saving data
 --]]
@@ -220,14 +245,16 @@ function CHD_CreateDump()
 	local dump       = {};
 
 	CHD_Message("Creating dump...");
-	dump.globinfo      = CHD_trycall(CHD_GetGlobalInfo)    or {};
-	dump.userinfo      = CHD_trycall(CHD_GetPlayerInfo)    or {};
-	dump.glyphinfo     = CHD_trycall(CHD_GetGlyphInfo)     or {};
-	dump.currinfo      = CHD_trycall(CHD_GetCurrencyInfo)  or {};
-	dump.spellinfo     = CHD_trycall(CHD_GetSpellInfo)     or {};
-	dump.mountinfo     = CHD_trycall(CHD_GetMountInfo)     or {};
-	dump.critterinfo   = CHD_trycall(CHD_GetCritterInfo)   or {};
-	dump.repinfo       = CHD_trycall(CHD_GetRepInfo)       or {};
+	dump.globinfo      = CHD_trycall(CHD_GetGlobalInfo)      or {};
+	dump.userinfo      = CHD_trycall(CHD_GetPlayerInfo)      or {};
+	dump.glyphinfo     = CHD_trycall(CHD_GetGlyphInfo)       or {};
+	dump.currinfo      = CHD_trycall(CHD_GetCurrencyInfo)    or {};
+	dump.spellinfo     = CHD_trycall(CHD_GetSpellInfo)       or {};
+	dump.mountinfo     = CHD_trycall(CHD_GetMountInfo)       or {};
+	dump.critterinfo   = CHD_trycall(CHD_GetCritterInfo)     or {};
+	dump.repinfo       = CHD_trycall(CHD_GetRepInfo)         or {};
+	dump.achinfo       = CHD_trycall(CHD_GetAchievementInfo) or {};
+
 	CHD_Message("Dump created successeful");
 
 	return dump;
