@@ -258,6 +258,87 @@ function CHD_GetSkillInfo()
 	return res;
 end
 
+function CHD_GetInventoryInfo()
+	local res = {};
+	local arrSlotName = {"HeadSlot", "NeckSlot", "ShoulderSlot", "BackSlot", "ChestSlot",
+		"ShirtSlot", "TabardSlot", "WristSlot", "HandsSlot", "WaistSlot", "LegsSlot",
+		"FeetSlot", "Finger0Slot", "Finger1Slot", "Trinket0Slot", "Trinket1Slot",
+		"MainHandSlot", "SecondaryHandSlot", "RangedSlot", "AmmoSlot", "Bag0Slot",
+		"Bag1Slot", "Bag2Slot", "Bag3Slot"};
+	local lenSlotName = #arrSlotName; -- 24
+
+	CHD_Message("  Get inventory information");
+	for i = 1, lenSlotName do
+		local slotId = GetInventorySlotInfo(arrSlotName[i]);
+		local itemLink = GetInventoryItemLink("player", slotId);
+		if itemLink then
+			local count = GetInventoryItemCount("player", slotId);
+--			if (count == 1) and (not GetInventoryItemTexture("player", slotId)) then
+--				count = 0; -- for bag returns zero?
+--			end
+			local itemID = tonumber(strmatch(itemLink, "Hitem:(%d+)"));
+			res[i] = {["I"] = itemID, ["N"] = count};
+		end
+	end
+
+	return res;
+end
+
+function CHD_GetBagInfo()
+	local res = {};
+	CHD_Message("  Get bag`s information");
+	--  0 for the backpack
+	-- -2 for the keyring KEYRING_CONTAINER
+	-- -4 for the tokens bag
+	local arrBag = {KEYRING_CONTAINER};
+
+	for i = 0, NUM_BAG_SLOTS do
+		tinsert(arrBag, i);
+	end
+	for k, bag in pairs(arrBag) do
+		local nCount = 0;
+		for slot = 1, GetContainerNumSlots(bag) do
+			local itemLink = GetContainerItemLink(bag, slot)
+			if itemLink then
+				_, itemCount = GetContainerItemInfo(bag, slot);
+				local itemID = tonumber(strmatch(itemLink, "Hitem:(%d+)"));
+				res[bag..":"..slot] = {["I"] = itemID, ["N"] = itemCount};
+				nCount = nCount + 1;
+			end
+		end
+		CHD_Message("  scaning of bag: "..bag..", items: "..nCount);
+	end
+
+	return res;
+end
+
+function CHD_GetBankInfo()
+	local res = {};
+	-- BANK_CONTAINER is the bank window
+	-- NUM_BAG_SLOTS+1 to NUM_BAG_SLOTS+NUM_BANKBAGSLOTS are your bank bags
+	local arrBag = {BANK_CONTAINER};
+
+	CHD_Message("  Get bank`s information");
+	for i = NUM_BAG_SLOTS+1, NUM_BAG_SLOTS+NUM_BANKBAGSLOTS do
+		tinsert(arrBag, i);
+	end
+	for k, bag in pairs(arrBag) do
+		local nCount = 0;
+		for slot = 1, GetContainerNumSlots(bag) do
+			local itemLink = GetContainerItemLink(bag, slot)
+			if itemLink then
+				_, itemCount = GetContainerItemInfo(bag, slot);
+				local itemID = tonumber(strmatch(itemLink, "Hitem:(%d+)"));
+				print(bag, slot, itemID, itemCount, itemLink);
+				res[bag..":"..slot] = {["I"] = itemID, ["N"] = itemCount};
+				nCount = nCount + 1;
+			end
+		end
+		CHD_Message("  scaning of bank`s bag: "..bag..", items: "..nCount);
+	end
+
+	return res;
+end
 
 --[[
 	Saving data
@@ -271,32 +352,36 @@ function CHD_CreateDump()
 	local dump = {};
 
 	CHD_Message("Creating dump...");
-	dump.globinfo      = CHD_trycall(CHD_GetGlobalInfo)      or {};
-	dump.userinfo      = CHD_trycall(CHD_GetPlayerInfo)      or {};
+	dump.global      = CHD_trycall(CHD_GetGlobalInfo)      or {};
+	dump.player      = CHD_trycall(CHD_GetPlayerInfo)      or {};
 	if frmMainchbGlyphs:GetChecked() then
-		dump.glyphinfo     = CHD_trycall(CHD_GetGlyphInfo)       or {};
+		dump.glyph         = CHD_trycall(CHD_GetGlyphInfo)       or {};
 	end
 	if frmMainchbCurrency:GetChecked() then
-		dump.currinfo      = CHD_trycall(CHD_GetCurrencyInfo)    or {};
+		dump.currency      = CHD_trycall(CHD_GetCurrencyInfo)    or {};
 	end
 	if frmMainchbSpells:GetChecked() then
-		dump.spellinfo     = CHD_trycall(CHD_GetSpellInfo)       or {};
+		dump.spell         = CHD_trycall(CHD_GetSpellInfo)       or {};
 	end
 	if frmMainchbMounts:GetChecked() then
-		dump.mountinfo     = CHD_trycall(CHD_GetMountInfo)       or {};
+		dump.mount         = CHD_trycall(CHD_GetMountInfo)       or {};
 	end
 	if frmMainchbCritters:GetChecked() then
-		dump.critterinfo   = CHD_trycall(CHD_GetCritterInfo)     or {};
+		dump.critter       = CHD_trycall(CHD_GetCritterInfo)     or {};
 	end
 	if frmMainchbReputation:GetChecked() then
-		dump.repinfo       = CHD_trycall(CHD_GetRepInfo)         or {};
+		dump.reputation    = CHD_trycall(CHD_GetRepInfo)         or {};
 	end;
 	if frmMainchbAchievements:GetChecked() then
-		dump.achinfo       = CHD_trycall(CHD_GetAchievementInfo) or {};
+		dump.achievement   = CHD_trycall(CHD_GetAchievementInfo) or {};
 	end
 	if frmMainchbSkills:GetChecked() then
-		dump.skillinfo     = CHD_trycall(CHD_GetSkillInfo)       or {};
+		dump.skill         = CHD_trycall(CHD_GetSkillInfo)       or {};
 	end
+
+	dump.inventory         = CHD_trycall(CHD_GetInventoryInfo)   or {};
+	dump.bag               = CHD_trycall(CHD_GetBagInfo)         or {};
+	dump.bank              = CHD_trycall(CHD_GetBankInfo)        or {};
 
 	CHD_Message("Dump created successeful");
 	CHD_Message("DONE: you can find dump here: WoW Folder /WTF/Account/%PlayerName%/SavedVariables/chardumps.lua");
