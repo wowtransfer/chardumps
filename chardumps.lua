@@ -29,10 +29,6 @@ function CHD_PrintTable(table)
 	end
 end
 
-function CHD_Log(str)
-	print("\124c0080C0FF  "..str.."\124r");
-end
-
 function CHD_LogErr(str)
 	print("\124c00FF0000"..(str or "nil").."\124r");
 end
@@ -63,26 +59,7 @@ function CHD_SlashCmdHandler(cmd)
 	end
 end
 
-function CHD_OnEvent(self, event, ...) -- TODO: delete
---	print("event: ", event);
---	print("arg1: ", arg1, ", arg2: ", arg2, ", arg3: ", arg3);
-	if (event == "UNIT_SPELLCAST_SENT") then -- TODO: debug
-		if arg2 == "Берсерк" or arg2 == "Гнев карателя" then
-			print("\124cFFFF0000!\124r", arg1, arg2);
-		end
-	elseif (event == "PLAYER_ENTERING_WORLD") then
-		CHD_Message(UnitName("player").." enter in word");
-	elseif (event == "PLAYER_LEAVING_WORLD") then
-		CHD_Message("Bay-bay "..UnitName("player"));
-	end
-end
-
 function CHD_OnLoad(self)
-	self:RegisterEvent("PLAYER_ENTERING_WORLD");
-	self:RegisterEvent("PLAYER_LEAVING_WORLD");
-	self:RegisterEvent("UNIT_SPELLCAST_SENT");
-	self:SetScript("OnEvent", CHD_OnEvent);
-
 	SlashCmdList["CHD"] = CHD_SlashCmdHandler;
 	SLASH_CHD1 = "/chardumps";
 	SLASH_CHD2 = "/chd";
@@ -146,12 +123,6 @@ function CHD_GetGlyphInfo()
 			res[i][glyphType][ curid[glyphType] ] = glyphSpellID;
 			curid[glyphType] = curid[glyphType] + 1;
 		end
---[[ TODO
-		for j = 1, GetNumGlyphSockets() do
-			local _, glyphType, glyphSpellID = GetGlyphSocketInfo(j, i);
-			res[i][j] = (glyphSpellID or 0);
-		end
---]]
 	end
 
 	return res;
@@ -190,7 +161,7 @@ function CHD_GetSpellInfo()
 	return res;
 end
 
-function CHD_GetMountInfo() -- get mounts and companions
+function CHD_GetMountInfo()
 	local res = {};
 
 	CHD_Message("  Get mounts information");
@@ -202,7 +173,7 @@ function CHD_GetMountInfo() -- get mounts and companions
 	return res;
 end
 
-function CHD_GetCritterInfo() -- get mounts and companions
+function CHD_GetCritterInfo()
 	local res = {};
 
 	CHD_Message("  Get critters information");
@@ -295,6 +266,7 @@ function CHD_GetBagInfo()
 	for i = 0, NUM_BAG_SLOTS do
 		tinsert(arrBag, i);
 	end
+	i = 0;
 	for k, bag in pairs(arrBag) do
 		local nCount = 0;
 		for slot = 1, GetContainerNumSlots(bag) do
@@ -302,11 +274,11 @@ function CHD_GetBagInfo()
 			if itemLink then
 				_, itemCount = GetContainerItemInfo(bag, slot);
 				local itemID = tonumber(strmatch(itemLink, "Hitem:(%d+)"));
-				res[bag..":"..slot] = {["I"] = itemID, ["N"] = itemCount};
+				res[i*100 + slot] = {["I"] = itemID, ["N"] = itemCount};
 				nCount = nCount + 1;
 			end
 		end
-		CHD_Message("  scaning of bag: "..bag..", items: "..nCount);
+		CHD_Message("    scaning of bag: "..bag..", items: "..nCount);
 	end
 
 	return res;
@@ -322,6 +294,7 @@ function CHD_GetBankInfo()
 	for i = NUM_BAG_SLOTS+1, NUM_BAG_SLOTS+NUM_BANKBAGSLOTS do
 		tinsert(arrBag, i);
 	end
+	i = 0;
 	for k, bag in pairs(arrBag) do
 		local nCount = 0;
 		for slot = 1, GetContainerNumSlots(bag) do
@@ -329,12 +302,11 @@ function CHD_GetBankInfo()
 			if itemLink then
 				_, itemCount = GetContainerItemInfo(bag, slot);
 				local itemID = tonumber(strmatch(itemLink, "Hitem:(%d+)"));
-				print(bag, slot, itemID, itemCount, itemLink);
-				res[bag..":"..slot] = {["I"] = itemID, ["N"] = itemCount};
+				res[i*100 + slot] = {["I"] = itemID, ["N"] = itemCount};
 				nCount = nCount + 1;
 			end
 		end
-		CHD_Message("  scaning of bank`s bag: "..bag..", items: "..nCount);
+		CHD_Message("    scaning of bank`s bag: "..bag..", items: "..nCount);
 	end
 
 	return res;
@@ -378,12 +350,17 @@ function CHD_CreateDump()
 	if frmMainchbSkills:GetChecked() then
 		dump.skill         = CHD_trycall(CHD_GetSkillInfo)       or {};
 	end
+	if frmMainchbInventory:GetChecked() then
+		dump.inventory     = CHD_trycall(CHD_GetInventoryInfo)   or {};
+	end
+	if frmMainchbBag:GetChecked() then
+		dump.bag           = CHD_trycall(CHD_GetBagInfo)         or {};
+	end
+	if frmMainchbBank:GetChecked() then
+		dump.bank          = CHD_trycall(CHD_GetBankInfo)        or {};
+	end
 
-	dump.inventory         = CHD_trycall(CHD_GetInventoryInfo)   or {};
-	dump.bag               = CHD_trycall(CHD_GetBagInfo)         or {};
-	dump.bank              = CHD_trycall(CHD_GetBankInfo)        or {};
-
-	CHD_Message("Dump created successeful");
+	CHD_Message("Dump create successeful");
 	CHD_Message("DONE: you can find dump here: WoW Folder /WTF/Account/%PlayerName%/SavedVariables/chardumps.lua");
 
 	CHD_DATA  = dump;

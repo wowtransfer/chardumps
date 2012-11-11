@@ -3,7 +3,7 @@
   <Frame name="frmMain" movable="true" enableMouse="true">
     <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508883-59c2-4f83-ae10-27aaad48391b" />-->
     <Size>
-      <AbsDimension x="408" y="334" />
+      <AbsDimension x="408" y="332" />
     </Size>
     <Anchors>
       <Anchor point="CENTER" relativeTo="UIParent">
@@ -12,6 +12,7 @@
         </Offset>
       </Anchor>
     </Anchors>
+    <TitleRegion setAllPoints="true" />
     <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
       <BackgroundInsets>
         <AbsInset left="11" right="12" top="12" bottom="11" />
@@ -71,7 +72,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="147" y="-290" />
+              <AbsDimension x="274" y="-290" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -103,12 +104,12 @@
       <Button name="$parentbtnClose" text="x">
         <!--<FrameSkin skinid="f15d4970-d66d-444e-bb2d-1ad102c87fed" frameid="f15d4973-d66d-444e-bb2d-1ad102c87fed" />-->
         <Size>
-          <AbsDimension x="26" y="24" />
+          <AbsDimension x="22" y="21" />
         </Size>
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="366" y="-25" />
+              <AbsDimension x="370" y="-22" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -150,7 +151,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="22" y="-216" />
+              <AbsDimension x="22" y="-185" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -186,12 +187,12 @@
       <Button name="$parentbtnDump" text="Dump">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508884-59c2-4f83-ae10-27aaad48391b" />-->
         <Size>
-          <AbsDimension x="82" y="24" />
+          <AbsDimension x="82" y="22" />
         </Size>
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="44" y="-290" />
+              <AbsDimension x="148" y="-290" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -232,7 +233,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="22" y="-36" />
+              <AbsDimension x="186" y="-65" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -277,7 +278,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="22" y="-96" />
+              <AbsDimension x="22" y="-65" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -322,7 +323,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="22" y="-66" />
+              <AbsDimension x="186" y="-95" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -367,7 +368,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="22" y="-126" />
+              <AbsDimension x="22" y="-95" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -412,7 +413,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="22" y="-156" />
+              <AbsDimension x="22" y="-125" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -457,7 +458,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="22" y="-186" />
+              <AbsDimension x="22" y="-155" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -502,7 +503,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="186" y="-36" />
+              <AbsDimension x="22" y="-35" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -547,7 +548,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="186" y="-66" />
+              <AbsDimension x="186" y="-35" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -592,13 +593,148 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="22" y="-246" />
+              <AbsDimension x="22" y="-215" />
             </Offset>
           </Anchor>
         </Anchors>
         <Layers>
           <Layer>
             <FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="Skills">
+              <Anchors>
+                <Anchor point="LEFT" relativePoint="RIGHT">
+                  <Offset>
+                    <AbsDimension x="-2" y="0" />
+                  </Offset>
+                </Anchor>
+              </Anchors>
+              <FontHeight>
+                <AbsValue val="10" />
+              </FontHeight>
+              <Color r="1" g="0.8196079" b="0" />
+              <Shadow>
+                <Color r="0" g="0" b="0" />
+                <Offset>
+                  <AbsDimension x="1" y="-1" />
+                </Offset>
+              </Shadow>
+            </FontString>
+          </Layer>
+        </Layers>
+        <NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+        <PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+        <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+        <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+        <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+      </CheckButton>
+      <CheckButton name="$parentchbBank" checked="true">
+        <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
+&lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;Width&gt;158&lt;/Width&gt;
+  &lt;Height&gt;24&lt;/Height&gt;
+&lt;/Size&gt;</Property></FrameSkin>-->
+        <Size>
+          <AbsDimension x="32" y="32" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="186" y="-185" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer>
+            <FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="Bank">
+              <Anchors>
+                <Anchor point="LEFT" relativePoint="RIGHT">
+                  <Offset>
+                    <AbsDimension x="-2" y="0" />
+                  </Offset>
+                </Anchor>
+              </Anchors>
+              <FontHeight>
+                <AbsValue val="10" />
+              </FontHeight>
+              <Color r="1" g="0.8196079" b="0" />
+              <Shadow>
+                <Color r="0" g="0" b="0" />
+                <Offset>
+                  <AbsDimension x="1" y="-1" />
+                </Offset>
+              </Shadow>
+            </FontString>
+          </Layer>
+        </Layers>
+        <NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+        <PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+        <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+        <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+        <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+      </CheckButton>
+      <CheckButton name="$parentchbBag" checked="true">
+        <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
+&lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;Width&gt;158&lt;/Width&gt;
+  &lt;Height&gt;24&lt;/Height&gt;
+&lt;/Size&gt;</Property></FrameSkin>-->
+        <Size>
+          <AbsDimension x="32" y="32" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="186" y="-155" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer>
+            <FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="Bag">
+              <Anchors>
+                <Anchor point="LEFT" relativePoint="RIGHT">
+                  <Offset>
+                    <AbsDimension x="-2" y="0" />
+                  </Offset>
+                </Anchor>
+              </Anchors>
+              <FontHeight>
+                <AbsValue val="10" />
+              </FontHeight>
+              <Color r="1" g="0.8196079" b="0" />
+              <Shadow>
+                <Color r="0" g="0" b="0" />
+                <Offset>
+                  <AbsDimension x="1" y="-1" />
+                </Offset>
+              </Shadow>
+            </FontString>
+          </Layer>
+        </Layers>
+        <NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+        <PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+        <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+        <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+        <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+      </CheckButton>
+      <CheckButton name="$parentchbInventory" checked="true">
+        <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
+&lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;Width&gt;158&lt;/Width&gt;
+  &lt;Height&gt;24&lt;/Height&gt;
+&lt;/Size&gt;</Property></FrameSkin>-->
+        <Size>
+          <AbsDimension x="32" y="32" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="186" y="-125" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer>
+            <FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="Inventory">
               <Anchors>
                 <Anchor point="LEFT" relativePoint="RIGHT">
                   <Offset>
