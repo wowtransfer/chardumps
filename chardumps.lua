@@ -10,6 +10,7 @@
 ]]
 
 chardumps = LibStub('AceAddon-3.0'):NewAddon('chardumps');
+local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
 
 --[[
 	Functions
@@ -53,9 +54,9 @@ function CHD_SlashCmdHandler(cmd)
 	if cmdlist[1] == "show" then
 		frmMain:Show();
 	else
-		CHD_Message("/chardumps or /chd");
-		CHD_Message("/chardumps show -- show main frame");
-		CHD_Message("/chardumps -- show help");
+		CHD_Message(L.help1);
+		CHD_Message(L.help2);
+		CHD_Message(L.help3);
 	end
 end
 
@@ -67,7 +68,22 @@ function CHD_OnLoad(self)
 	frmMainchbPlayer:Disable();
 	frmMainchbGlobal:Disable();
 
-	CHD_Message("chardumps created by |cff0000ffSlaFF|r is loaded");
+	-- localization
+	frmMainchbPlayerText:SetText(L.chbPlayer);
+	frmMainchbGlobalText:SetText(L.chbGlobal);
+	frmMainchbGlyphsText:SetText(L.chbGlyphsText);
+	frmMainchbCurrencyText:SetText(L.chbCurrencyText);
+	frmMainchbSpellsText:SetText(L.chbSpells);
+	frmMainchbMountsText:SetText(L.chbMounts);
+	frmMainchbCrittersText:SetText(L.chbCritters);
+	frmMainchbReputationText:SetText(L.chbReputation);
+	frmMainchbAchievementsText:SetText(L.chbAchievements);
+	frmMainchbSkillsText:SetText(L.chbSkills);
+	frmMainchbInventoryText:SetText(L.chbInventory);
+	frmMainchbBagsText:SetText(L.chbBags);
+	frmMainchbBankText:SetText(L.chbBank);
+
+	CHD_Message(L.loadmessage);
 end
 
 --[[
@@ -77,7 +93,7 @@ end
 function CHD_GetGlobalInfo()
 	local res            = {};
 
-	CHD_Message("  Get global information");
+	CHD_Message(L.GetGlobal);
 	res.locale           = GetLocale();
 	res.realm            = GetRealmName();
 	res.realmlist        = GetCVar("realmList");
@@ -90,7 +106,7 @@ end
 function CHD_GetPlayerInfo()
 	local res            = {};
 
-	CHD_Message("  Get player`s information");
+	CHD_Message(L.GetPlayer);
 	res.name             = UnitName("player");
 	local _, class       = UnitClass("player");
 	res.class            = class;
@@ -111,7 +127,7 @@ end
 function CHD_GetGlyphInfo()
 	local res = {};
 
-	CHD_Message("  Get glyphs information");
+	CHD_Message(L.GetPlyph);
 	for i = 1,2 do
 		res[i] = {};
 		local curid = {[1] = 1,[2] = 1};
@@ -131,7 +147,7 @@ end
 function CHD_GetCurrencyInfo()
 	local res = {};
 
-	CHD_Message("  Get currency information");
+	CHD_Message(L.GetCurrency);
 	for i = 1, GetCurrencyListSize() do
 		local _, _, _, _, _, count, _, _, itemID = GetCurrencyListInfo(i);
 		res[itemID] = count;
@@ -143,7 +159,7 @@ end
 function CHD_GetSpellInfo()
 	local res = {};
 
-	CHD_Message("  Get spell information");
+	CHD_Message(L.GetSpell);
 	for i = 1, MAX_SKILLLINE_TABS do
 		local name, _, offset, numSpells = GetSpellTabInfo(i);
 		if not name then
@@ -164,7 +180,7 @@ end
 function CHD_GetMountInfo()
 	local res = {};
 
-	CHD_Message("  Get mounts information");
+	CHD_Message();
 	for i = 1, GetNumCompanions("MOUNT") do
 		local creatureID = GetCompanionInfo("MOUNT", i);
 		res[i] = creatureID;
@@ -176,7 +192,7 @@ end
 function CHD_GetCritterInfo()
 	local res = {};
 
-	CHD_Message("  Get critters information");
+	CHD_Message(L.GetCritter);
 	for i = 1, GetNumCompanions("CRITTER") do
 		local creatureID = GetCompanionInfo("CRITTER", i);
 		res[i] = creatureID;
@@ -188,7 +204,7 @@ end
 function CHD_GetRepInfo()
 	local res = {};
 
-	CHD_Message("  Get reputation information");
+	CHD_Message(L.GetReputation);
 	for i = 1, GetNumFactions() do
 	local name, _, _, _, _, earnedValue, _, canToggleAtWar, _, _, _, _, _ = GetFactionInfo(i);
 		res[i] = {["N"] = name, ["V"] = earnedValue, ["F"] = (canToggleAtWar or 0)};
@@ -200,7 +216,7 @@ end
 function CHD_GetAchievementInfo()
 	local res = {};
 
-	CHD_Message("  Get achievement information");
+	CHD_Message(L.GetAchievement);
 	local CategoryList = GetCategoryList();
 	for _, CategoryID in pairs(CategoryList) do
 		for j = 1, GetCategoryNumAchievements(CategoryID) do
@@ -220,7 +236,7 @@ end
 function CHD_GetSkillInfo()
 	local res = {};
 
-	CHD_Message("  Get skill information");
+	CHD_Message(L.GetSkill);
 	for i = 1, GetNumSkillLines() do
 		local skillName, _, _, skillRank, _, _, skillMaxRank = GetSkillLineInfo(i);
 		res[i] = {["N"] = skillName, ["R"] = skillRank, ["M"] = skillMaxRank};
@@ -238,7 +254,7 @@ function CHD_GetInventoryInfo()
 		"Bag1Slot", "Bag2Slot", "Bag3Slot"};
 	local lenSlotName = #arrSlotName; -- 24
 
-	CHD_Message("  Get inventory information");
+	CHD_Message(L.GetInventory);
 	for i = 1, lenSlotName do
 		local slotId = GetInventorySlotInfo(arrSlotName[i]);
 		local itemLink = GetInventoryItemLink("player", slotId);
@@ -257,7 +273,7 @@ end
 
 function CHD_GetBagInfo()
 	local res = {};
-	CHD_Message("  Get bag`s information");
+	CHD_Message(L.GetBag);
 	--  0 for the backpack
 	-- -2 for the keyring KEYRING_CONTAINER
 	-- -4 for the tokens bag
@@ -278,7 +294,7 @@ function CHD_GetBagInfo()
 				nCount = nCount + 1;
 			end
 		end
-		CHD_Message("    scaning of bag: "..bag..", items: "..nCount);
+		CHD_Message(string.format(L.ScaningBagTotal, bag, nCount));
 	end
 
 	return res;
@@ -290,7 +306,7 @@ function CHD_GetBankInfo()
 	-- NUM_BAG_SLOTS+1 to NUM_BAG_SLOTS+NUM_BANKBAGSLOTS are your bank bags
 	local arrBag = {BANK_CONTAINER};
 
-	CHD_Message("  Get bank`s information");
+	CHD_Message(L.GetBank);
 	for i = NUM_BAG_SLOTS+1, NUM_BAG_SLOTS+NUM_BANKBAGSLOTS do
 		tinsert(arrBag, i);
 	end
@@ -306,7 +322,7 @@ function CHD_GetBankInfo()
 				nCount = nCount + 1;
 			end
 		end
-		CHD_Message("    scaning of bank`s bag: "..bag..", items: "..nCount);
+		CHD_Message(string.format(L.ScaningBankTotal, bag, nCount));
 	end
 
 	return res;
@@ -317,13 +333,13 @@ end
 --]]
 
 function CHD_Debug()
-
+	print(L.chbPlayer);
 end
 
 function CHD_CreateDump()
 	local dump = {};
 
-	CHD_Message("Creating dump...");
+	CHD_Message(L.CreatingDump);
 	dump.global      = CHD_trycall(CHD_GetGlobalInfo)      or {};
 	dump.player      = CHD_trycall(CHD_GetPlayerInfo)      or {};
 	if frmMainchbGlyphs:GetChecked() then
@@ -353,15 +369,15 @@ function CHD_CreateDump()
 	if frmMainchbInventory:GetChecked() then
 		dump.inventory     = CHD_trycall(CHD_GetInventoryInfo)   or {};
 	end
-	if frmMainchbBag:GetChecked() then
+	if frmMainchbBags:GetChecked() then
 		dump.bag           = CHD_trycall(CHD_GetBagInfo)         or {};
 	end
 	if frmMainchbBank:GetChecked() then
 		dump.bank          = CHD_trycall(CHD_GetBankInfo)        or {};
 	end
 
-	CHD_Message("Dump create successeful");
-	CHD_Message("DONE: you can find dump here: WoW Folder /WTF/Account/%PlayerName%/SavedVariables/chardumps.lua");
+	CHD_Message(L.CreatedDump);
+	CHD_Message(L.DumpDone);
 
 	CHD_DATA  = dump;
 	CHD_KEY   = nil;

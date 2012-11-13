@@ -9,7 +9,8 @@
 ## LoadOnDemand: 0
 ## SavedVariables: CHD_DATA,CHD_KEY
 
-chardumps.lua
 embeds.xml
+localization.xml
+chardumps.lua
 chardumpsForm.xml
 options.xml
