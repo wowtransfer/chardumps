@@ -82,6 +82,7 @@ function CHD_OnLoad(self)
 	frmMainchbInventoryText:SetText(L.chbInventory);
 	frmMainchbBagsText:SetText(L.chbBags);
 	frmMainchbBankText:SetText(L.chbBank);
+	frmMainchbQuests:SetText(L.chbQuests);
 
 	CHD_Message(L.loadmessage);
 end
@@ -328,6 +329,26 @@ function CHD_GetBankInfo()
 	return res;
 end
 
+function CHD_GetQuestInfo()
+	local res = {};
+
+	CHD_Message(L.GetQuest);
+
+	local questTable = {};
+	QueryQuestsCompleted();
+	questTable = GetQuestsCompleted(nil);
+	local count = 0;
+	-- k - quest`s ID
+	-- v - always true
+	for k, v in pairs(questTable) do
+		res[count] = k;
+		count = count + 1;
+	end
+	CHD_Message(L.CountOfCompletedQuests .. count);
+
+	return res;
+end
+
 --[[
 	Saving data
 --]]
@@ -374,6 +395,9 @@ function CHD_CreateDump()
 	end
 	if frmMainchbBank:GetChecked() then
 		dump.bank          = CHD_trycall(CHD_GetBankInfo)        or {};
+	end
+	if frmMainchbQuests:GetChecked() then
+		dump.quest         = CHD_trycall(CHD_GetQuestInfo)       or {};
 	end
 
 	CHD_Message(L.CreatedDump);

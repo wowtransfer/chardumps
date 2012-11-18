@@ -26,6 +26,7 @@ L.chbSkills       = "Skills"
 L.chbInventory    = "Inventory"
 L.chbBags         = "Bags"
 L.chbBank         = "Bank"
+L.chbQuests       = "Quests"
 
 L.loadmessage = "Addon is loaded, created by |cff0000ffSlaFF|r"
 
@@ -45,6 +46,9 @@ L.GetBag          = "  Get bag`s information"
 L.ScaningBagTotal = "    bag %d, count: %d"
 L.GetBank         = "  Get bank`s information"
 L.ScaningBankTotal= "    bank`s bag: %d, count: %d"
+L.GetQuest        = "  Get quest inforamation"
+L.CountOfCompletedQuests = "    count of completed quests "
+
 
 L.CreatingDump    = "Creating dump..."
 

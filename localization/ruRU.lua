@@ -26,6 +26,7 @@ L.chbSkills       = "Навыки"
 L.chbInventory    = "Одетые вещи"
 L.chbBags         = "Сумки"
 L.chbBank         = "Банк"
+L.chbQuests       = "Задания"
 
 L.loadmessage = "Аддон загружен, создатель \124cff0000ffSlaFF\124r"
 
@@ -45,6 +46,8 @@ L.GetBag          = "  Чтение сумок"
 L.ScaningBagTotal = "    сумка %d, количество: %d"
 L.GetBank         = "  Чтение банка"
 L.ScaningBankTotal= "    банковская ячейка %d, количество %d"
+L.GetQuest        = "  Чтение выполненных квестов"
+L.CountOfCompletedQuests = "    количество выполненных заданий "
 
 L.CreatingDump    = "Создание дампа..."
 L.CreatedDump     = "Создание дампа прошло успешно"
