@@ -7,7 +7,7 @@
 ## OptionalDeps: Ace3
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
-## SavedVariables: CHD_DATA,CHD_KEY
+## SavedVariables: CHD_CLIENT,CHD_SERVER,CHD_KEY
 
 embeds.xml
 localization.xml

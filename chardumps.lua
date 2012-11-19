@@ -12,6 +12,14 @@
 chardumps = LibStub('AceAddon-3.0'):NewAddon('chardumps');
 local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
 
+CHD_CLIENT = CHD_CLIENT or {};
+CHD_SERVER = CHD_SERVER or {};
+
+CHD_SERVER.quest = CHD_SERVER.quest or {};
+CHD_SERVER.taxi = CHD_SERVER.taxi or {};
+
+local MAX_NUM_CONTINENT = 4 -- 1..4
+
 --[[
 	Functions
 --]]
@@ -48,6 +56,20 @@ function CHD_trycall(fun)
 	return nil;
 end
 
+function CHD_GetTableCount(t)
+	local size = 0;
+
+	if type(t) ~= "table" then
+		return 0;
+	end
+
+	for _, _ in pairs(t) do
+		size = size + 1
+	end
+
+	return size;
+end
+
 function CHD_SlashCmdHandler(cmd)
 	local cmdlist = {strsplit(" ", cmd)};
 
@@ -57,6 +79,115 @@ function CHD_SlashCmdHandler(cmd)
 		CHD_Message(L.help1);
 		CHD_Message(L.help2);
 		CHD_Message(L.help3);
+	end
+end
+
+function CHD_SetTaxiInfo(continent)
+	local res = {};
+
+--[[
+-1 - if showing the cosmic map or a Battleground map. Also when showing The Scarlet Enclave, the Death Knights' starting area. 
+0 - if showing the entire world of Azeroth
+1 - if showing Kalimdor, or a zone map within it.
+2 - if showing Eastern Kingdoms, or a zone map within it.
+3 - if showing Outland, or a zone map within it.
+4 - if showing Northrend, or a zone map within it.
+5 - if showing the Maelstrom, or a zone map within it.
+6 - if showing Pandaria, or a zone map within it.
+--]]
+	local continent = GetCurrentMapContinent();
+	if (continent < 1) or (continent > MAX_NUM_CONTINENT) then
+		return false;
+	end
+
+	local arrContinent = {L.Kalimdor, L.EasternKingdoms, L.Outland, L.Northrend};
+	CHD_Message(L.GetTaxi .. arrContinent[continent]);
+	for i = 1, NumTaxiNodes() do
+		local name = TaxiNodeName(i);
+		res[i] = name;
+	end
+
+	CHD_SERVER.taxi[continent] = res;
+
+	frmMainchbTaxiText:SetText(L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
+		(#CHD_SERVER.taxi[1] or 0),
+		(#CHD_SERVER.taxi[2] or 0),
+		(#CHD_SERVER.taxi[3] or 0),
+		(#CHD_SERVER.taxi[4] or 0))
+	);
+
+	CHD_Message(L.CountOfTaxi .. tostring(#CHD_SERVER.taxi[continent]));
+
+	return true;
+end
+
+function CHD_OnVariablesLoaded()
+	-- client
+	if CHD_CLIENT.glyph then
+		frmMainchbGlyphsText:SetText(L.chbGlyphs .. string.format(" (%d)",
+			CHD_GetTableCount(CHD_CLIENT.glyph)));
+	end
+	if CHD_CLIENT.currency then
+		frmMainchbCurrencyText:SetText(L.chbCurrency .. string.format(" (%d)",
+			CHD_GetTableCount(CHD_CLIENT.currency)));
+	end
+	if CHD_CLIENT.spell then
+		frmMainchbSpellsText:SetText(L.chbSpells .. string.format(" (%d)",
+			CHD_GetTableCount(CHD_CLIENT.spell)));
+	end
+	if CHD_CLIENT.mount then
+		frmMainchbMountsText:SetText(L.chbMounts .. string.format(" (%d)", #CHD_CLIENT.mount))
+	end
+	if CHD_CLIENT.critter then
+		frmMainchbCrittersText:SetText(L.chbCritters .. string.format(" (%d)", #CHD_CLIENT.critter))
+	end
+	if CHD_CLIENT.reputation then
+		frmMainchbReputationText:SetText(L.chbReputation .. string.format(" (%d)",
+			CHD_GetTableCount(CHD_CLIENT.reputation)));
+	end
+	if CHD_CLIENT.achievement then
+		frmMainchbAchievementsText:SetText(L.chbAchievements .. string.format(" (%d)",
+			CHD_GetTableCount(CHD_CLIENT.achievement)));
+	end
+	if CHD_CLIENT.skill then
+		frmMainchbSkillsText:SetText(L.chbSkills .. string.format(" (%d)",
+			CHD_GetTableCount(CHD_CLIENT.skill)));
+	end
+	if CHD_CLIENT.bag then
+		frmMainchbBagsText:SetText(L.chbBags .. string.format(" (%d)",
+			CHD_GetTableCount(CHD_CLIENT.bag)));
+	end
+	if CHD_CLIENT.inventory then
+		frmMainchbInventoryText:SetText(L.chbInventory .. string.format(" (%d)",
+			CHD_GetTableCount(CHD_CLIENT.inventory)));
+	end
+
+	-- server
+	for i = 1, MAX_NUM_CONTINENT do
+		if not CHD_SERVER.taxi[i] then
+			CHD_SERVER.taxi[i] = {};
+		end
+	end
+	if CHD_SERVER.taxi then
+		frmMainchbTaxiText:SetText(L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
+			#CHD_SERVER.taxi[1],
+			#CHD_SERVER.taxi[2],
+			#CHD_SERVER.taxi[3],
+			#CHD_SERVER.taxi[4])
+		);
+	end
+	if CHD_SERVER.quest then
+		frmMainchbQuestsText:SetText(L.chbQuests .. string.format(" (%d)", #CHD_SERVER.quest));
+	end
+end
+
+function CHD_OnEvent(self, event, ...)
+	if "TAXIMAP_OPENED" == event then
+		if frmMainchbTaxi:GetChecked() then
+			CHD_SetTaxiInfo();
+		end
+	elseif "VARIABLES_LOADED" == event then
+		CHD_OnVariablesLoaded();
 	end
 end
 
@@ -71,8 +202,8 @@ function CHD_OnLoad(self)
 	-- localization
 	frmMainchbPlayerText:SetText(L.chbPlayer);
 	frmMainchbGlobalText:SetText(L.chbGlobal);
-	frmMainchbGlyphsText:SetText(L.chbGlyphsText);
-	frmMainchbCurrencyText:SetText(L.chbCurrencyText);
+	frmMainchbGlyphsText:SetText(L.chbGlyphs);
+	frmMainchbCurrencyText:SetText(L.chbCurrency);
 	frmMainchbSpellsText:SetText(L.chbSpells);
 	frmMainchbMountsText:SetText(L.chbMounts);
 	frmMainchbCrittersText:SetText(L.chbCritters);
@@ -81,14 +212,32 @@ function CHD_OnLoad(self)
 	frmMainchbSkillsText:SetText(L.chbSkills);
 	frmMainchbInventoryText:SetText(L.chbInventory);
 	frmMainchbBagsText:SetText(L.chbBags);
+
 	frmMainchbBankText:SetText(L.chbBank);
-	frmMainchbQuests:SetText(L.chbQuests);
+	frmMainchbQuestsText:SetText(L.chbQuests);
+	frmMainchbTaxiText:SetText(L.chbTaxi);
+
+	self:SetScript("OnEvent", CHD_OnEvent);
+	self:RegisterEvent("TAXIMAP_OPENED");
+	self:RegisterEvent("VARIABLES_LOADED");
 
 	CHD_Message(L.loadmessage);
 end
 
+function CHD_OnRecieveQuestsClick()
+	QueryQuestsCompleted();
+	if frmMainchbQuests:GetChecked() then
+		CHD_SERVER.quest       = CHD_trycall(CHD_GetQuestInfo)       or {};
+		frmMainchbQuestsText:SetText(L.chbQuests .. string.format(" (%d)",
+			CHD_GetTableCount(CHD_SERVER.quest)));
+	else
+		CHD_SERVER.quest = {};
+		frmMainchbQuestsText:SetText(L.chbQuests .. " (0)");
+	end
+end;
+
 --[[
-	Geting data
+	Get client data
 --]]
 
 function CHD_GetGlobalInfo()
@@ -186,6 +335,7 @@ function CHD_GetMountInfo()
 		local creatureID = GetCompanionInfo("MOUNT", i);
 		res[i] = creatureID;
 	end
+	sort(res);
 
 	return res;
 end
@@ -198,6 +348,7 @@ function CHD_GetCritterInfo()
 		local creatureID = GetCompanionInfo("CRITTER", i);
 		res[i] = creatureID;
 	end
+	sort(res);
 
 	return res;
 end
@@ -295,6 +446,7 @@ function CHD_GetBagInfo()
 				nCount = nCount + 1;
 			end
 		end
+		i = i + 1;
 		CHD_Message(string.format(L.ScaningBagTotal, bag, nCount));
 	end
 
@@ -329,22 +481,23 @@ function CHD_GetBankInfo()
 	return res;
 end
 
+-- Get server data
+
 function CHD_GetQuestInfo()
 	local res = {};
 
 	CHD_Message(L.GetQuest);
 
-	local questTable = {};
-	QueryQuestsCompleted();
-	questTable = GetQuestsCompleted(nil);
-	local count = 0;
+	local questTable = GetQuestsCompleted(nil);
+	local count = 1;
 	-- k - quest`s ID
 	-- v - always true
 	for k, v in pairs(questTable) do
 		res[count] = k;
 		count = count + 1;
 	end
-	CHD_Message(L.CountOfCompletedQuests .. count);
+	sort(res);
+	CHD_Message(L.CountOfCompletedQuests .. string.format(" (%d)", count - 1));
 
 	return res;
 end
@@ -357,7 +510,7 @@ function CHD_Debug()
 	print(L.chbPlayer);
 end
 
-function CHD_CreateDump()
+function CHD_OnClientDumpClick()
 	local dump = {};
 
 	CHD_Message(L.CreatingDump);
@@ -365,49 +518,79 @@ function CHD_CreateDump()
 	dump.player      = CHD_trycall(CHD_GetPlayerInfo)      or {};
 	if frmMainchbGlyphs:GetChecked() then
 		dump.glyph         = CHD_trycall(CHD_GetGlyphInfo)       or {};
+	else
+		dump.glyph = {};
 	end
+	frmMainchbGlyphsText:SetText(L.chbGlyphs .. string.format(" (%d)",
+		CHD_GetTableCount(dump.glyph)));
 	if frmMainchbCurrency:GetChecked() then
 		dump.currency      = CHD_trycall(CHD_GetCurrencyInfo)    or {};
+	else
+		dump.currency = {};
 	end
+	frmMainchbCurrencyText:SetText(L.chbCurrency .. string.format(" (%d)",
+		CHD_GetTableCount(dump.currency)));
 	if frmMainchbSpells:GetChecked() then
 		dump.spell         = CHD_trycall(CHD_GetSpellInfo)       or {};
+	else
+		dump.spell = {};
 	end
+	frmMainchbSpellsText:SetText(L.chbSpells .. string.format(" (%d)",
+		CHD_GetTableCount(dump.spell)));
 	if frmMainchbMounts:GetChecked() then
 		dump.mount         = CHD_trycall(CHD_GetMountInfo)       or {};
+	else
+		dump.mount = {};
 	end
+	frmMainchbMountsText:SetText(L.chbMounts .. string.format(" (%d)", #dump.mount))
 	if frmMainchbCritters:GetChecked() then
 		dump.critter       = CHD_trycall(CHD_GetCritterInfo)     or {};
+	else
+		dump.critter = {};
 	end
+	frmMainchbCrittersText:SetText(L.chbCritters .. string.format(" (%d)", #dump.critter))
 	if frmMainchbReputation:GetChecked() then
 		dump.reputation    = CHD_trycall(CHD_GetRepInfo)         or {};
+	else
+		dump.reputation = {};
 	end;
+	frmMainchbReputationText:SetText(L.chbReputation .. string.format(" (%d)",
+		CHD_GetTableCount(dump.reputation)));
 	if frmMainchbAchievements:GetChecked() then
 		dump.achievement   = CHD_trycall(CHD_GetAchievementInfo) or {};
+	else
+		dump.achievement = {};
 	end
+	frmMainchbAchievementsText:SetText(L.chbAchievements .. string.format(" (%d)",
+		CHD_GetTableCount(dump.achievement)));
 	if frmMainchbSkills:GetChecked() then
 		dump.skill         = CHD_trycall(CHD_GetSkillInfo)       or {};
+	else
+		dump.skill = {};
 	end
+	frmMainchbSkillsText:SetText(L.chbSkills .. string.format(" (%d)",
+		CHD_GetTableCount(dump.skill)));
 	if frmMainchbInventory:GetChecked() then
 		dump.inventory     = CHD_trycall(CHD_GetInventoryInfo)   or {};
+	else
+		dump.inventory = {};
 	end
+	frmMainchbInventoryText:SetText(L.chbInventory .. string.format(" (%d)",
+		CHD_GetTableCount(dump.inventory)));
 	if frmMainchbBags:GetChecked() then
 		dump.bag           = CHD_trycall(CHD_GetBagInfo)         or {};
+	else
+		dump.bag = {};
 	end
+	frmMainchbBagsText:SetText(L.chbBags .. string.format(" (%d)",
+		CHD_GetTableCount(dump.bag)));
 	if frmMainchbBank:GetChecked() then
 		dump.bank          = CHD_trycall(CHD_GetBankInfo)        or {};
-	end
-	if frmMainchbQuests:GetChecked() then
-		dump.quest         = CHD_trycall(CHD_GetQuestInfo)       or {};
 	end
 
 	CHD_Message(L.CreatedDump);
 	CHD_Message(L.DumpDone);
 
-	CHD_DATA  = dump;
+	CHD_CLIENT = dump;
 	CHD_KEY   = nil;
-end
-
-
-function CHD_Dump()
-	CHD_CreateDump();
 end

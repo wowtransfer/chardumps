@@ -3,7 +3,7 @@
   <Frame name="frmMain" movable="true" enableMouse="true">
     <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508883-59c2-4f83-ae10-27aaad48391b" />-->
     <Size>
-      <AbsDimension x="408" y="332" />
+      <AbsDimension x="408" y="357" />
     </Size>
     <Anchors>
       <Anchor point="CENTER" relativeTo="UIParent">
@@ -64,6 +64,43 @@
       </Layer>
     </Layers>
     <Frames>
+      <Button name="$parentButton2" text="Recieve quests">
+        <!--<FrameSkin skinid="f15d4970-d66d-444e-bb2d-1ad102c87fed" frameid="f15d4973-d66d-444e-bb2d-1ad102c87fed" />-->
+        <Size>
+          <AbsDimension x="122" y="22" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="186" y="-273" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>CHD_OnRecieveQuestsClick()</OnClick>
+        </Scripts>
+        <NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </NormalTexture>
+        <PushedTexture file="Interface\Buttons\UI-Panel-Button-Down">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </PushedTexture>
+        <DisabledTexture file="Interface\Buttons\UI-Panel-Button-Disabled">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </DisabledTexture>
+        <HighlightTexture file="Interface\Buttons\UI-Panel-Button-Highlight" alphaMode="ADD">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </HighlightTexture>
+        <ButtonText name="$parentText">
+          <FontHeight>
+            <AbsValue val="10" />
+          </FontHeight>
+        </ButtonText>
+        <NormalFont style="GameFontNormal" />
+        <HighlightFont style="GameFontHighlight" />
+        <DisabledFont style="GameFontDisable" />
+        <PushedTextOffset x="0" y="0" />
+      </Button>
       <Button name="$parentButton1" text="Debug">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508884-59c2-4f83-ae10-27aaad48391b" />-->
         <Size>
@@ -72,7 +109,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="274" y="-290" />
+              <AbsDimension x="244" y="-215" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -192,13 +229,12 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="148" y="-290" />
+              <AbsDimension x="148" y="-215" />
             </Offset>
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>CHD_Dump();
-</OnClick>
+          <OnClick>CHD_OnClientDumpClick()</OnClick>
         </Scripts>
         <NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">
           <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
@@ -593,7 +629,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="22" y="-215" />
+              <AbsDimension x="186" y="-185" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -638,13 +674,13 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="186" y="-185" />
+              <AbsDimension x="22" y="-243" />
             </Offset>
           </Anchor>
         </Anchors>
         <Layers>
           <Layer>
-            <FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="Bank">
+            <FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="Bank (0)">
               <Anchors>
                 <Anchor point="LEFT" relativePoint="RIGHT">
                   <Offset>
@@ -773,13 +809,58 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="186" y="-215" />
+              <AbsDimension x="22" y="-273" />
             </Offset>
           </Anchor>
         </Anchors>
         <Layers>
           <Layer>
-            <FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="Quests">
+            <FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="Quests (0)">
+              <Anchors>
+                <Anchor point="LEFT" relativePoint="RIGHT">
+                  <Offset>
+                    <AbsDimension x="-2" y="0" />
+                  </Offset>
+                </Anchor>
+              </Anchors>
+              <FontHeight>
+                <AbsValue val="10" />
+              </FontHeight>
+              <Color r="1" g="0.8196079" b="0" />
+              <Shadow>
+                <Color r="0" g="0" b="0" />
+                <Offset>
+                  <AbsDimension x="1" y="-1" />
+                </Offset>
+              </Shadow>
+            </FontString>
+          </Layer>
+        </Layers>
+        <NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+        <PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+        <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+        <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+        <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+      </CheckButton>
+      <CheckButton name="$parentchbTaxi" checked="true">
+        <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
+&lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;Width&gt;158&lt;/Width&gt;
+  &lt;Height&gt;24&lt;/Height&gt;
+&lt;/Size&gt;</Property></FrameSkin>-->
+        <Size>
+          <AbsDimension x="32" y="32" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="22" y="-303" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer>
+            <FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="Taxi (0)">
               <Anchors>
                 <Anchor point="LEFT" relativePoint="RIGHT">
                   <Offset>
@@ -808,7 +889,7 @@
       </CheckButton>
     </Frames>
     <Scripts>
-      <OnLoad>CHD_OnLoad(self);
+      <OnLoad>CHD_OnLoad(self)
 </OnLoad>
     </Scripts>
   </Frame>
