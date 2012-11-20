@@ -15,7 +15,6 @@ local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
 CHD_CLIENT = CHD_CLIENT or {};
 CHD_SERVER = CHD_SERVER or {};
 
-CHD_SERVER.quest = CHD_SERVER.quest or {};
 CHD_SERVER.taxi = CHD_SERVER.taxi or {};
 
 local MAX_NUM_CONTINENT = 4 -- 1..4
@@ -82,45 +81,6 @@ function CHD_SlashCmdHandler(cmd)
 	end
 end
 
-function CHD_SetTaxiInfo(continent)
-	local res = {};
-
---[[
--1 - if showing the cosmic map or a Battleground map. Also when showing The Scarlet Enclave, the Death Knights' starting area. 
-0 - if showing the entire world of Azeroth
-1 - if showing Kalimdor, or a zone map within it.
-2 - if showing Eastern Kingdoms, or a zone map within it.
-3 - if showing Outland, or a zone map within it.
-4 - if showing Northrend, or a zone map within it.
-5 - if showing the Maelstrom, or a zone map within it.
-6 - if showing Pandaria, or a zone map within it.
---]]
-	local continent = GetCurrentMapContinent();
-	if (continent < 1) or (continent > MAX_NUM_CONTINENT) then
-		return false;
-	end
-
-	local arrContinent = {L.Kalimdor, L.EasternKingdoms, L.Outland, L.Northrend};
-	CHD_Message(L.GetTaxi .. arrContinent[continent]);
-	for i = 1, NumTaxiNodes() do
-		local name = TaxiNodeName(i);
-		res[i] = name;
-	end
-
-	CHD_SERVER.taxi[continent] = res;
-
-	frmMainchbTaxiText:SetText(L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
-		(#CHD_SERVER.taxi[1] or 0),
-		(#CHD_SERVER.taxi[2] or 0),
-		(#CHD_SERVER.taxi[3] or 0),
-		(#CHD_SERVER.taxi[4] or 0))
-	);
-
-	CHD_Message(L.CountOfTaxi .. tostring(#CHD_SERVER.taxi[continent]));
-
-	return true;
-end
-
 function CHD_OnVariablesLoaded()
 	-- client
 	if CHD_CLIENT.glyph then
@@ -163,12 +123,12 @@ function CHD_OnVariablesLoaded()
 	end
 
 	-- server
-	for i = 1, MAX_NUM_CONTINENT do
-		if not CHD_SERVER.taxi[i] then
-			CHD_SERVER.taxi[i] = {};
-		end
-	end
 	if CHD_SERVER.taxi then
+		for i = 1, MAX_NUM_CONTINENT do
+			if not CHD_SERVER.taxi[i] then
+				CHD_SERVER.taxi[i] = {};
+			end
+		end
 		frmMainchbTaxiText:SetText(L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
 			#CHD_SERVER.taxi[1],
 			#CHD_SERVER.taxi[2],
@@ -179,6 +139,10 @@ function CHD_OnVariablesLoaded()
 	if CHD_SERVER.quest then
 		frmMainchbQuestsText:SetText(L.chbQuests .. string.format(" (%d)", #CHD_SERVER.quest));
 	end
+	if CHD_SERVER.bank then
+		frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)",
+			CHD_GetTableCount(CHD_SERVER.bank)));
+	end
 end
 
 function CHD_OnEvent(self, event, ...)
@@ -188,7 +152,28 @@ function CHD_OnEvent(self, event, ...)
 		end
 	elseif "VARIABLES_LOADED" == event then
 		CHD_OnVariablesLoaded();
+	elseif "BANKFRAME_OPENED" == event then
+		if frmMainchbBank:GetChecked() then
+			CHD_SERVER.bank = CHD_trycall(CHD_GetBankInfo) or {};
+		else
+			CHD_SERVER.bank = {};
+		end
+		frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)",
+			CHD_GetTableCount(CHD_SERVER.bank)));
 	end
+end
+
+function AddTooltip(theFrame, Title, TooltipText)
+	theFrame.title = Title;
+	theFrame.tooltiptext = TooltipText;
+	theFrame:SetScript("OnEnter", function()
+				GameTooltip:SetOwner(theFrame, "ANCHOR_TOPLEFT");
+				GameTooltip:ClearLines();
+				GameTooltip:SetText(theFrame.title);
+				GameTooltip:AddLine(theFrame.tooltiptext, 1, 1, 1, true);
+				GameTooltip:Show();
+			end);
+	theFrame:SetScript("OnLeave", function() GameTooltip:Hide() end);
 end
 
 function CHD_OnLoad(self)
@@ -196,12 +181,7 @@ function CHD_OnLoad(self)
 	SLASH_CHD1 = "/chardumps";
 	SLASH_CHD2 = "/chd";
 
-	frmMainchbPlayer:Disable();
-	frmMainchbGlobal:Disable();
-
 	-- localization
-	frmMainchbPlayerText:SetText(L.chbPlayer);
-	frmMainchbGlobalText:SetText(L.chbGlobal);
 	frmMainchbGlyphsText:SetText(L.chbGlyphs);
 	frmMainchbCurrencyText:SetText(L.chbCurrency);
 	frmMainchbSpellsText:SetText(L.chbSpells);
@@ -215,11 +195,37 @@ function CHD_OnLoad(self)
 
 	frmMainchbBankText:SetText(L.chbBank);
 	frmMainchbQuestsText:SetText(L.chbQuests);
+	frmMainbtnQuestQueryText:SetText(L.btnServerQuery);
 	frmMainchbTaxiText:SetText(L.chbTaxi);
+
+	frmMainbtnClientDumpText:SetText(L.btnClientDump);
 
 	self:SetScript("OnEvent", CHD_OnEvent);
 	self:RegisterEvent("TAXIMAP_OPENED");
 	self:RegisterEvent("VARIABLES_LOADED");
+	self:RegisterEvent("BANKFRAME_OPENED");
+
+--	TooltipTemp = CreateFrame("GameTooltip", "TooltipTemp", nil, "GameTooltipTemplate");
+--	TooltipTemp:SetOwner(UIParent, "ANCHOR_NONE");
+	AddTooltip(frmMainchbGlyphs, L.chbGlyphs, L.ttchbGlyphs);
+	AddTooltip(frmMainchbCurrency, L.chbCurrency, L.ttchbCurrency);
+	AddTooltip(frmMainchbSpells, L.chbSpells, L.ttchbSpells);
+	AddTooltip(frmMainchbMounts, L.chbMounts, L.ttchbMounts);
+	AddTooltip(frmMainchbCritters, L.chbCritters, L.ttchbCritters);
+	AddTooltip(frmMainchbReputation, L.chbReputation, L.ttchbReputation);
+	AddTooltip(frmMainchbAchievements, L.chbAchievements, L.ttchbAchievements);
+	AddTooltip(frmMainchbSkills, L.chbSkills, L.ttchbSkills);
+	AddTooltip(frmMainchbInventory, L.chbInventory, L.ttchbInventory);
+	AddTooltip(frmMainchbBags, L.chbBags, L.ttchbBags);
+
+	AddTooltip(frmMainchbBank, L.chbBank, L.ttchbBank);
+	AddTooltip(frmMainchbQuests, L.chbQuests, L.ttchbQuests);
+	AddTooltip(frmMainchbTaxi, L.chbTaxi, L.ttchbTaxi);
+
+	AddTooltip(frmMainbtnHide, L.ttbtnHide, "");
+	AddTooltip(frmMainbtnMinimize, L.ttbtnMinimize, "");
+	AddTooltip(frmMainbtnClientDump, L.btnClientDump, L.ttbtnClientDump);
+	AddTooltip(frmMainbtnQuestQuery, L.btnServerQuery, L.ttbtnServerQuery);
 
 	CHD_Message(L.loadmessage);
 end
@@ -453,6 +459,66 @@ function CHD_GetBagInfo()
 	return res;
 end
 
+-- Get server data
+
+function CHD_GetQuestInfo()
+	local res = {};
+
+	CHD_Message(L.GetQuest);
+
+	local questTable = GetQuestsCompleted(nil);
+	local count = 1;
+	-- k - quest`s ID
+	-- v - always true
+	for k, v in pairs(questTable) do
+		res[count] = k;
+		count = count + 1;
+	end
+	sort(res);
+	CHD_Message(L.CountOfCompletedQuests .. string.format(" (%d)", count - 1));
+
+	return res;
+end
+
+function CHD_SetTaxiInfo(continent)
+	local res = {};
+
+--[[
+-1 - if showing the cosmic map or a Battleground map. Also when showing The Scarlet Enclave, the Death Knights' starting area. 
+0 - if showing the entire world of Azeroth
+1 - if showing Kalimdor, or a zone map within it.
+2 - if showing Eastern Kingdoms, or a zone map within it.
+3 - if showing Outland, or a zone map within it.
+4 - if showing Northrend, or a zone map within it.
+5 - if showing the Maelstrom, or a zone map within it.
+6 - if showing Pandaria, or a zone map within it.
+--]]
+	local continent = GetCurrentMapContinent();
+	if (continent < 1) or (continent > MAX_NUM_CONTINENT) then
+		return false;
+	end
+
+	local arrContinent = {L.Kalimdor, L.EasternKingdoms, L.Outland, L.Northrend};
+	CHD_Message(L.GetTaxi .. arrContinent[continent]);
+	for i = 1, NumTaxiNodes() do
+		local name = TaxiNodeName(i);
+		res[i] = name;
+	end
+
+	CHD_SERVER.taxi[continent] = res;
+
+	frmMainchbTaxiText:SetText(L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
+		(#CHD_SERVER.taxi[1] or 0),
+		(#CHD_SERVER.taxi[2] or 0),
+		(#CHD_SERVER.taxi[3] or 0),
+		(#CHD_SERVER.taxi[4] or 0))
+	);
+
+	CHD_Message(L.CountOfTaxi .. tostring(#CHD_SERVER.taxi[continent]));
+
+	return true;
+end
+
 function CHD_GetBankInfo()
 	local res = {};
 	-- BANK_CONTAINER is the bank window
@@ -475,29 +541,9 @@ function CHD_GetBankInfo()
 				nCount = nCount + 1;
 			end
 		end
+		i = i + 1;
 		CHD_Message(string.format(L.ScaningBankTotal, bag, nCount));
 	end
-
-	return res;
-end
-
--- Get server data
-
-function CHD_GetQuestInfo()
-	local res = {};
-
-	CHD_Message(L.GetQuest);
-
-	local questTable = GetQuestsCompleted(nil);
-	local count = 1;
-	-- k - quest`s ID
-	-- v - always true
-	for k, v in pairs(questTable) do
-		res[count] = k;
-		count = count + 1;
-	end
-	sort(res);
-	CHD_Message(L.CountOfCompletedQuests .. string.format(" (%d)", count - 1));
 
 	return res;
 end
@@ -507,7 +553,7 @@ end
 --]]
 
 function CHD_Debug()
-	print(L.chbPlayer);
+
 end
 
 function CHD_OnClientDumpClick()
@@ -584,9 +630,6 @@ function CHD_OnClientDumpClick()
 	end
 	frmMainchbBagsText:SetText(L.chbBags .. string.format(" (%d)",
 		CHD_GetTableCount(dump.bag)));
-	if frmMainchbBank:GetChecked() then
-		dump.bank          = CHD_trycall(CHD_GetBankInfo)        or {};
-	end
 
 	CHD_Message(L.CreatedDump);
 	CHD_Message(L.DumpDone);
