@@ -73,6 +73,9 @@ function CHD_SlashCmdHandler(cmd)
 	local cmdlist = {strsplit(" ", cmd)};
 
 	if cmdlist[1] == "show" then
+		frmMainpanSystem:SetBackdrop(nil);
+		frmMainpanSystem:SetParent(frmMain);
+		frmMainpanSystem:Show();
 		frmMain:Show();
 	else
 		CHD_Message(L.help1);
@@ -176,6 +179,24 @@ function AddTooltip(theFrame, Title, TooltipText)
 	theFrame:SetScript("OnLeave", function() GameTooltip:Hide() end);
 end
 
+function CHD_GetBackdrop()
+	local backdrop = {
+		bgFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
+		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+		tile = true,
+		tileSize = 16,
+		edgeSize = 16,
+		insets = {
+			left = 5,
+			right = 5,
+			top = 5,
+			bottom = 5
+		}
+	}
+
+	return backdrop;
+end
+
 function CHD_OnLoad(self)
 	SlashCmdList["CHD"] = CHD_SlashCmdHandler;
 	SLASH_CHD1 = "/chardumps";
@@ -205,8 +226,24 @@ function CHD_OnLoad(self)
 	self:RegisterEvent("VARIABLES_LOADED");
 	self:RegisterEvent("BANKFRAME_OPENED");
 
---	TooltipTemp = CreateFrame("GameTooltip", "TooltipTemp", nil, "GameTooltipTemplate");
---	TooltipTemp:SetOwner(UIParent, "ANCHOR_NONE");
+	frmMain:SetBackdrop(CHD_GetBackdrop());
+
+	local btnW = frmMainbtnHide:GetWidth();
+	print("btnW", btnW);
+	frmMainbtnHide:SetParent(frmMainpanSystem);
+	frmMainbtnHide:ClearAllPoints();
+	frmMainbtnHide:SetPoint("CENTER", frmMainpanSystem, 0, 0);
+	frmMainbtnHide:SetPoint("RIGHT", frmMainpanSystem, -8, 0);
+	frmMainbtnMinimize:SetParent(frmMainpanSystem);
+	frmMainbtnMinimize:ClearAllPoints();
+	frmMainbtnMinimize:SetPoint("CENTER", frmMainpanSystem, 0, 0);
+	frmMainbtnMinimize:SetPoint("RIGHT", frmMainpanSystem, -11 - btnW, 0);
+
+	frmMainpanSystem:ClearAllPoints();
+	frmMainpanSystem:SetPoint("TOPRIGHT", frmMain);
+	frmMainpanSystem:SetPoint("TOPRIGHT", 0, 0);
+	frmMainpanSystem:SetWidth(5 + 5 + btnW*2 + 3*3);
+
 	AddTooltip(frmMainchbGlyphs, L.chbGlyphs, L.ttchbGlyphs);
 	AddTooltip(frmMainchbCurrency, L.chbCurrency, L.ttchbCurrency);
 	AddTooltip(frmMainchbSpells, L.chbSpells, L.ttchbSpells);
@@ -228,6 +265,25 @@ function CHD_OnLoad(self)
 	AddTooltip(frmMainbtnQuestQuery, L.btnServerQuery, L.ttbtnServerQuery);
 
 	CHD_Message(L.loadmessage);
+end
+
+function OnfrmMainbtnMinimizeClLick()
+	if frmMain:IsVisible() then
+		frmMainpanSystem:SetBackdrop(CHD_GetBackdrop());
+		frmMainpanSystem:SetParent("UIParent");
+		frmMain:Hide();
+	else
+		frmMainpanSystem:SetBackdrop(nil);
+		frmMainpanSystem:SetParent(frmMain);
+		frmMain:Show();
+	end
+end
+
+function OnfrmMainbtnHideClLick()
+	if frmMainpanSystem:IsVisible() then
+		frmMainpanSystem:Hide();
+	end
+	frmMain:Hide();
 end
 
 function CHD_OnRecieveQuestsClick()
