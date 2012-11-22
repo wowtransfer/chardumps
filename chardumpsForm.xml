@@ -3,7 +3,7 @@
   <Frame name="frmMain" movable="true" enableMouse="true">
     <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508883-59c2-4f83-ae10-27aaad48391b" />-->
     <Size>
-      <AbsDimension x="357" y="314" />
+      <AbsDimension x="357" y="304" />
     </Size>
     <Anchors>
       <Anchor point="CENTER" relativeTo="UIParent">
@@ -85,7 +85,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="180" y="-250" />
+              <AbsDimension x="178" y="-237" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -123,7 +123,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="220" y="-218" />
+              <AbsDimension x="218" y="-205" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -165,7 +165,8 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>OnfrmMainbtnHideClLick()</OnClick>
+          <OnClick>OnfrmMainbtnHideClLick()
+</OnClick>
         </Scripts>
         <NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">
           <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
@@ -201,7 +202,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="16" y="-160" />
+              <AbsDimension x="14" y="-147" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -246,7 +247,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="180" y="-40" />
+              <AbsDimension x="178" y="-27" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -291,7 +292,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="16" y="-40" />
+              <AbsDimension x="14" y="-27" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -336,7 +337,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="180" y="-70" />
+              <AbsDimension x="178" y="-57" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -381,7 +382,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="16" y="-70" />
+              <AbsDimension x="14" y="-57" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -426,7 +427,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="16" y="-100" />
+              <AbsDimension x="14" y="-87" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -471,7 +472,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="16" y="-130" />
+              <AbsDimension x="14" y="-117" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -516,7 +517,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="180" y="-160" />
+              <AbsDimension x="178" y="-147" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -561,7 +562,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="16" y="-218" />
+              <AbsDimension x="14" y="-205" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -606,7 +607,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="180" y="-130" />
+              <AbsDimension x="178" y="-117" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -651,7 +652,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="180" y="-100" />
+              <AbsDimension x="178" y="-87" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -696,7 +697,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="16" y="-248" />
+              <AbsDimension x="14" y="-235" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -741,7 +742,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="16" y="-278" />
+              <AbsDimension x="14" y="-265" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -782,7 +783,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="99" y="-190" />
+              <AbsDimension x="97" y="-177" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -825,7 +826,8 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>OnfrmMainbtnMinimizeClLick()</OnClick>
+          <OnClick>OnfrmMainbtnMinimizeClLick()
+</OnClick>
         </Scripts>
         <NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">
           <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />

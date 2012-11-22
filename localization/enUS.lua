@@ -74,7 +74,7 @@ L.ttchbBags       = "On/Off save of items in bags"
 
 L.ttchbBank       = "On/Off save of items in the bank"
 L.ttchbQuests     = "On/Off save of completed quests"
-L.ttchbTaxi       = "On/Off save of taxi"
+L.ttchbTaxi       = "On/Off save of taxi\n(1, 2, 3, 4)\n1 -- taxi in Kalimdor\n2 -- taxi in Eastern Kingdoms\n3 -- taxi in Outland\n4 -- taxi in Northrend"
 
 L.ttbtnClientDump = "Create the client dump of player"
 L.ttbtnServerQuery = "Receive the completed quests from server"

@@ -229,20 +229,19 @@ function CHD_OnLoad(self)
 	frmMain:SetBackdrop(CHD_GetBackdrop());
 
 	local btnW = frmMainbtnHide:GetWidth();
-	print("btnW", btnW);
 	frmMainbtnHide:SetParent(frmMainpanSystem);
 	frmMainbtnHide:ClearAllPoints();
 	frmMainbtnHide:SetPoint("CENTER", frmMainpanSystem, 0, 0);
-	frmMainbtnHide:SetPoint("RIGHT", frmMainpanSystem, -8, 0);
+	frmMainbtnHide:SetPoint("RIGHT", frmMainpanSystem, -11, 0);
 	frmMainbtnMinimize:SetParent(frmMainpanSystem);
 	frmMainbtnMinimize:ClearAllPoints();
 	frmMainbtnMinimize:SetPoint("CENTER", frmMainpanSystem, 0, 0);
-	frmMainbtnMinimize:SetPoint("RIGHT", frmMainpanSystem, -11 - btnW, 0);
+	frmMainbtnMinimize:SetPoint("RIGHT", frmMainpanSystem, -14 - btnW, 0);
 
 	frmMainpanSystem:ClearAllPoints();
 	frmMainpanSystem:SetPoint("TOPRIGHT", frmMain);
 	frmMainpanSystem:SetPoint("TOPRIGHT", 0, 0);
-	frmMainpanSystem:SetWidth(5 + 5 + btnW*2 + 3*3);
+	frmMainpanSystem:SetWidth(5 + 5 + btnW*2 + 3*3 + 5);
 
 	AddTooltip(frmMainchbGlyphs, L.chbGlyphs, L.ttchbGlyphs);
 	AddTooltip(frmMainchbCurrency, L.chbCurrency, L.ttchbCurrency);
