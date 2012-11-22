@@ -124,6 +124,10 @@ function CHD_OnVariablesLoaded()
 		frmMainchbInventoryText:SetText(L.chbInventory .. string.format(" (%d)",
 			CHD_GetTableCount(CHD_CLIENT.inventory)));
 	end
+	if CHD_CLIENT.equipment then
+		frmMainchbEquipmentText:SetText(L.chbEquipment .. string.format(" (%d)",
+			#CHD_CLIENT.equipment));
+	end
 
 	-- server
 	if CHD_SERVER.taxi then
@@ -213,6 +217,7 @@ function CHD_OnLoad(self)
 	frmMainchbSkillsText:SetText(L.chbSkills);
 	frmMainchbInventoryText:SetText(L.chbInventory);
 	frmMainchbBagsText:SetText(L.chbBags);
+	frmMainchbEquipmentText:SetText(L.chbEquipment);
 
 	frmMainchbBankText:SetText(L.chbBank);
 	frmMainchbQuestsText:SetText(L.chbQuests);
@@ -253,6 +258,7 @@ function CHD_OnLoad(self)
 	AddTooltip(frmMainchbSkills, L.chbSkills, L.ttchbSkills);
 	AddTooltip(frmMainchbInventory, L.chbInventory, L.ttchbInventory);
 	AddTooltip(frmMainchbBags, L.chbBags, L.ttchbBags);
+	AddTooltip(frmMainchbEquipment, L.chbEquipment, L.ttchbEquipment);
 
 	AddTooltip(frmMainchbBank, L.chbBank, L.ttchbBank);
 	AddTooltip(frmMainchbQuests, L.chbQuests, L.ttchbQuests);
@@ -460,6 +466,7 @@ end
 
 function CHD_GetInventoryInfo()
 	local res = {};
+
 	local arrSlotName = {"HeadSlot", "NeckSlot", "ShoulderSlot", "BackSlot", "ChestSlot",
 		"ShirtSlot", "TabardSlot", "WristSlot", "HandsSlot", "WaistSlot", "LegsSlot",
 		"FeetSlot", "Finger0Slot", "Finger1Slot", "Trinket0Slot", "Trinket1Slot",
@@ -486,6 +493,7 @@ end
 
 function CHD_GetBagInfo()
 	local res = {};
+
 	CHD_Message(L.GetBag);
 	--  0 for the backpack
 	-- -2 for the keyring KEYRING_CONTAINER
@@ -509,6 +517,20 @@ function CHD_GetBagInfo()
 		end
 		i = i + 1;
 		CHD_Message(string.format(L.ScaningBagTotal, bag, nCount));
+	end
+
+	return res;
+end
+
+function CHD_GetEquipmentInfo()
+	local res = {};
+
+	CHD_Message(L.GetEquipment);
+	for i = 1, GetNumEquipmentSets() do
+		local name = GetEquipmentSetInfo(i);
+		if name then
+			res[i] = GetEquipmentSetItemIDs(name); -- return table 1..19
+		end
 	end
 
 	return res;
@@ -685,6 +707,13 @@ function CHD_OnClientDumpClick()
 	end
 	frmMainchbBagsText:SetText(L.chbBags .. string.format(" (%d)",
 		CHD_GetTableCount(dump.bag)));
+	if frmMainchbEquipment:GetChecked() then
+		dump.equipment = CHD_trycall(CHD_GetEquipmentInfo) or {};
+	else
+		dump.equipment = {};
+	end
+	frmMainchbEquipmentText:SetText(L.chbEquipment .. string.format(" (%d)",
+		#dump.equipment));
 
 	CHD_Message(L.CreatedDump);
 	CHD_Message(L.DumpDone);

@@ -23,6 +23,7 @@ L.chbAchievements = "Достижения"
 L.chbSkills       = "Навыки"
 L.chbInventory    = "Одетые вещи"
 L.chbBags         = "Сумки"
+L.chbEquipment    = "Наборы экипировки"
 
 L.chbBank         = "Банк"
 L.chbQuests       = "Задания"
@@ -44,6 +45,7 @@ L.GetSkill        = "  Чтение навыков"
 L.GetInventory    = "  Чтение одетых вещей"
 L.GetBag          = "  Чтение сумок"
 L.ScaningBagTotal = "    сумка %d, количество: %d"
+L.GetEquipment    = "  Чтение наборов экипировки"
 
 L.GetBank         = "Чтение банка"
 L.ScaningBankTotal= "  банковская ячейка %d, количество %d"
@@ -71,6 +73,7 @@ L.ttchbAchievements = "Включить/Отключить сохранение 
 L.ttchbSkills     = "Включить/Отключить сохранение навыков"
 L.ttchbInventory  = "Включить/Отключить сохранение одетых вещей"
 L.ttchbBags       = "Включить/Отключить сохранение предметов в сумках"
+L.ttchbEquipment  = "Включить/Отключить сохранение наборов экипировки"
 
 L.ttchbBank       = "Включить/Отключить сохранение предметов банка"
 L.ttchbQuests     = "Включить/Отключить сохранение заданий"
