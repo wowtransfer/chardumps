@@ -128,6 +128,10 @@ function CHD_OnVariablesLoaded()
 		frmMainchbEquipmentText:SetText(L.chbEquipment .. string.format(" (%d)",
 			#CHD_CLIENT.equipment));
 	end
+	if CHD_CLIENT.questlog then
+		frmMainchbQuestlogText:SetText(L.chbQuestlog .. string.format(" (%d)",
+			#CHD_CLIENT.questlog));
+	end
 
 	-- server
 	if CHD_SERVER.taxi then
@@ -218,6 +222,7 @@ function CHD_OnLoad(self)
 	frmMainchbInventoryText:SetText(L.chbInventory);
 	frmMainchbBagsText:SetText(L.chbBags);
 	frmMainchbEquipmentText:SetText(L.chbEquipment);
+	frmMainchbQuestlogText:SetText(L.chbEquipment);
 
 	frmMainchbBankText:SetText(L.chbBank);
 	frmMainchbQuestsText:SetText(L.chbQuests);
@@ -259,6 +264,7 @@ function CHD_OnLoad(self)
 	AddTooltip(frmMainchbInventory, L.chbInventory, L.ttchbInventory);
 	AddTooltip(frmMainchbBags, L.chbBags, L.ttchbBags);
 	AddTooltip(frmMainchbEquipment, L.chbEquipment, L.ttchbEquipment);
+	AddTooltip(frmMainchbQuestlog, L.chbQuestlog, L.ttchbQuestlog);
 
 	AddTooltip(frmMainchbBank, L.chbBank, L.ttchbBank);
 	AddTooltip(frmMainchbQuests, L.chbQuests, L.ttchbQuests);
@@ -536,6 +542,35 @@ function CHD_GetEquipmentInfo()
 	return res;
 end
 
+function CHD_GetQuestlogInfo()
+	local res = {};
+	local numEntries, numQuests = GetNumQuestLogEntries();
+
+	CHD_Message(L.GetQuestlog);
+	j = 1;
+	for i = 1, numEntries do
+		local _, _, _, _, isHeader, isCollapsed, isComplete, isDaily, questID = GetQuestLogTitle(i);
+		local link, _, charges = GetQuestLogSpecialItemInfo(i);
+	-- - 1 - The quest was failed
+	--   1 - The quest was completed
+	-- nil - The quest has yet to reach a conclusion
+		-- questID, isComplete, itemID
+		if isHeader == nil then
+			if isComplete ~= 1 then
+				isComplete = 0;
+			end
+			local itemID = 0;
+			if link then
+				itemID = tonumber(strmatch(link, "Hitem:(%d+)"));
+			end
+			res[j] = {["Q"] = questID, ["B"] = isComplete, ["I"] = itemID};
+			j = j + 1;
+		end
+	end
+
+	return res;
+end
+
 -- Get server data
 
 function CHD_GetQuestInfo()
@@ -714,6 +749,14 @@ function CHD_OnClientDumpClick()
 	end
 	frmMainchbEquipmentText:SetText(L.chbEquipment .. string.format(" (%d)",
 		#dump.equipment));
+	-- TODO: returns this place
+	if frmMainchbQuestlog:GetChecked() then
+		dump.questlog = CHD_trycall(CHD_GetQuestlogInfo) or {};
+	else
+		dump.questlog = {};
+	end
+	frmMainchbQuestlogText:SetText(L.chbQuestlog .. string.format(" (%d)",
+		#dump.questlog));
 
 	CHD_Message(L.CreatedDump);
 	CHD_Message(L.DumpDone);
