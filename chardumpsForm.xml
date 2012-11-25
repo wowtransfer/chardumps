@@ -85,7 +85,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="180" y="-280" />
+              <AbsDimension x="180" y="-297" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -123,7 +123,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="218" y="-248" />
+              <AbsDimension x="211" y="-281" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -562,7 +562,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-248" />
+              <AbsDimension x="14" y="-265" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -697,7 +697,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-278" />
+              <AbsDimension x="14" y="-295" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -742,7 +742,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-308" />
+              <AbsDimension x="14" y="-325" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -783,7 +783,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="90" y="-207" />
+              <AbsDimension x="95" y="-237" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -851,7 +851,7 @@
         <DisabledFont style="GameFontDisable" />
         <PushedTextOffset x="0" y="0" />
       </Button>
-      <CheckButton name="$parentComponent1" checked="true">
+      <CheckButton name="$parentchbMacro" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;Width&gt;158&lt;/Width&gt;
@@ -863,7 +863,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-368" />
+              <AbsDimension x="14" y="-207" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -908,7 +908,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-338" />
+              <AbsDimension x="14" y="-355" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -953,7 +953,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-398" />
+              <AbsDimension x="14" y="-382" />
             </Offset>
           </Anchor>
         </Anchors>

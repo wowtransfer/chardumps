@@ -132,6 +132,14 @@ function CHD_OnVariablesLoaded()
 		frmMainchbQuestlogText:SetText(L.chbQuestlog .. string.format(" (%d)",
 			#CHD_CLIENT.questlog));
 	end
+	local n = 0;
+	if CHD_CLIENT.pmacro then
+		n = #CHD_CLIENT.pmacro;
+	end
+	if CHD_CLIENT.amacro then
+		n = n + #CHD_CLIENT.amacro;
+	end
+	frmMainchbMacroText:SetText(L.chbMacro .. string.format(" (%d)", n));
 
 	-- server
 	if CHD_SERVER.taxi then
@@ -223,6 +231,7 @@ function CHD_OnLoad(self)
 	frmMainchbBagsText:SetText(L.chbBags);
 	frmMainchbEquipmentText:SetText(L.chbEquipment);
 	frmMainchbQuestlogText:SetText(L.chbEquipment);
+	frmMainchbMacroText:SetText(L.chbMacro);
 
 	frmMainchbBankText:SetText(L.chbBank);
 	frmMainchbQuestsText:SetText(L.chbQuests);
@@ -486,11 +495,9 @@ function CHD_GetInventoryInfo()
 		local itemLink = GetInventoryItemLink("player", slotId);
 		if itemLink then
 			local count = GetInventoryItemCount("player", slotId);
---			if (count == 1) and (not GetInventoryItemTexture("player", slotId)) then
---				count = 0; -- for bag returns zero?
---			end
+			local gem1, gem2, gem3 = GetInventoryItemGems(slotId);
 			local itemID = tonumber(strmatch(itemLink, "Hitem:(%d+)"));
-			res[i] = {["I"] = itemID, ["N"] = count};
+			res[i] = {["I"] = itemID, ["N"] = count, ["G1"] = gem1, ["G2"] = gem2, ["G3"] = gem3};
 		end
 	end
 
@@ -513,11 +520,12 @@ function CHD_GetBagInfo()
 	for k, bag in pairs(arrBag) do
 		local nCount = 0;
 		for slot = 1, GetContainerNumSlots(bag) do
-			local itemLink = GetContainerItemLink(bag, slot)
+			local itemLink = GetContainerItemLink(bag, slot);
+			local gem1, gem2, gem3 = GetContainerItemGems(bag, slot);
 			if itemLink then
 				_, itemCount = GetContainerItemInfo(bag, slot);
 				local itemID = tonumber(strmatch(itemLink, "Hitem:(%d+)"));
-				res[i*100 + slot] = {["I"] = itemID, ["N"] = itemCount};
+				res[i*100 + slot] = {["I"] = itemID, ["N"] = itemCount, ["G1"] = gem1, ["G2"] = gem2, ["G3"] = gem3};
 				nCount = nCount + 1;
 			end
 		end
@@ -566,6 +574,35 @@ function CHD_GetQuestlogInfo()
 			res[j] = {["Q"] = questID, ["B"] = isComplete, ["I"] = itemID};
 			j = j + 1;
 		end
+	end
+
+	return res;
+end
+
+function CHD_GetPMacroInfo()
+	local res = {};
+
+	CHD_Message(L.GetMacro);
+	local count = 1;
+	local _, numCharacterMacros = GetNumMacros();
+	for i = 36 + 1, 36 + numCharacterMacros do
+		local name, texture, body = GetMacroInfo(i);
+		res[count] = {["N"] = name, ["T"] = texture, ["B"] = body};
+		count = count + 1;
+	end
+
+	return res;
+end
+
+function CHD_GetAMacroInfo()
+	local res = {};
+
+	local count = 1;
+	local numAccountMacros = GetNumMacros();
+	for i = 1, numAccountMacros do
+		local name, texture, body = GetMacroInfo(i);
+		res[count] = {["N"] = name, ["T"] = texture, ["B"] = body};
+		count = count + 1;
 	end
 
 	return res;
@@ -757,6 +794,15 @@ function CHD_OnClientDumpClick()
 	end
 	frmMainchbQuestlogText:SetText(L.chbQuestlog .. string.format(" (%d)",
 		#dump.questlog));
+	if frmMainchbMacro:GetChecked() then
+		dump.pmacro = CHD_trycall(CHD_GetPMacroInfo) or {};
+		dump.amacro = CHD_trycall(CHD_GetAMacroInfo) or {};
+	else
+		dump.pmacro = {};
+		dump.amacro = {};
+	end
+	frmMainchbMacroText:SetText(L.chbMacro .. string.format(" (%d)",
+		#dump.pmacro + #dump.amacro));
 
 	CHD_Message(L.CreatedDump);
 	CHD_Message(L.DumpDone);
