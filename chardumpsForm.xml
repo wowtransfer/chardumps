@@ -72,7 +72,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="272" y="-207" />
+              <AbsDimension x="269" y="-251" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -941,7 +941,7 @@
         <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
         <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
       </CheckButton>
-      <CheckButton name="$parentComponent3" checked="true">
+      <CheckButton name="$parentchbFriend" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;Width&gt;158&lt;/Width&gt;
@@ -953,13 +953,13 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-382" />
+              <AbsDimension x="178" y="-207" />
             </Offset>
           </Anchor>
         </Anchors>
         <Layers>
           <Layer>
-            <FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="Socketing">
+            <FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="Friends">
               <Anchors>
                 <Anchor point="LEFT" relativePoint="RIGHT">
                   <Offset>
@@ -1043,7 +1043,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="180" y="-177" />
+              <AbsDimension x="178" y="-177" />
             </Offset>
           </Anchor>
         </Anchors>

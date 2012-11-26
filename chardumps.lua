@@ -141,6 +141,15 @@ function CHD_OnVariablesLoaded()
 	end
 	frmMainchbMacroText:SetText(L.chbMacro .. string.format(" (%d)", n));
 
+	local m = 0;
+	if CHD_CLIENT.friend then
+		n = #CHD_CLIENT.friend;
+	end
+	if CHD_CLIENT.ignore then
+		m = #CHD_CLIENT.ignore;
+	end
+	frmMainchbFriendText:SetText(L.chbFriend .. string.format(" (%d, %d)", n, m));
+
 	-- server
 	if CHD_SERVER.taxi then
 		for i = 1, MAX_NUM_CONTINENT do
@@ -232,6 +241,7 @@ function CHD_OnLoad(self)
 	frmMainchbEquipmentText:SetText(L.chbEquipment);
 	frmMainchbQuestlogText:SetText(L.chbEquipment);
 	frmMainchbMacroText:SetText(L.chbMacro);
+	frmMainchbFriendText:SetText(L.chbFriend);
 
 	frmMainchbBankText:SetText(L.chbBank);
 	frmMainchbQuestsText:SetText(L.chbQuests);
@@ -274,6 +284,8 @@ function CHD_OnLoad(self)
 	AddTooltip(frmMainchbBags, L.chbBags, L.ttchbBags);
 	AddTooltip(frmMainchbEquipment, L.chbEquipment, L.ttchbEquipment);
 	AddTooltip(frmMainchbQuestlog, L.chbQuestlog, L.ttchbQuestlog);
+	AddTooltip(frmMainchbMacro, L.chbMacro, L.ttchbMacro);
+	AddTooltip(frmMainchbFriend, L.chbFriend, L.ttchbFriend);
 
 	AddTooltip(frmMainchbBank, L.chbBank, L.ttchbBank);
 	AddTooltip(frmMainchbQuests, L.chbQuests, L.ttchbQuests);
@@ -608,6 +620,30 @@ function CHD_GetAMacroInfo()
 	return res;
 end
 
+function GetFriendsInfo()
+	local res = {};
+
+	CHD_Message("  Get friends");
+	for i = 1, GetNumFriends() do
+		local name =  GetFriendInfo(i);
+		res[i] = name;
+	end;
+
+	return res;
+end
+
+function GetIgnoresInfo()
+	local res = {};
+
+	CHD_Message("  Get ignores");
+	for i = 1, GetNumIgnores() do
+		local name = GetIgnoreName(i);
+		res[i] = name;
+	end;
+
+	return res;
+end
+
 -- Get server data
 
 function CHD_GetQuestInfo()
@@ -794,6 +830,7 @@ function CHD_OnClientDumpClick()
 	end
 	frmMainchbQuestlogText:SetText(L.chbQuestlog .. string.format(" (%d)",
 		#dump.questlog));
+
 	if frmMainchbMacro:GetChecked() then
 		dump.pmacro = CHD_trycall(CHD_GetPMacroInfo) or {};
 		dump.amacro = CHD_trycall(CHD_GetAMacroInfo) or {};
@@ -803,6 +840,16 @@ function CHD_OnClientDumpClick()
 	end
 	frmMainchbMacroText:SetText(L.chbMacro .. string.format(" (%d)",
 		#dump.pmacro + #dump.amacro));
+
+	if frmMainchbFriend:GetChecked() then
+		dump.friend = CHD_trycall(GetFriendsInfo) or {};
+		dump.ignore = CHD_trycall(GetIgnoresInfo) or {};
+	else
+		dump.friend = {};
+		dump.ignore = {};
+	end
+	frmMainchbFriendText:SetText(L.chbFriend .. string.format(" (%d, %d)",
+		#dump.friend, #dump.ignore));
 
 	CHD_Message(L.CreatedDump);
 	CHD_Message(L.DumpDone);
