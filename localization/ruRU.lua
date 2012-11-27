@@ -51,6 +51,8 @@ L.ScaningBagTotal = "    сумка %d, количество: %d"
 L.GetEquipment    = "  Чтение наборов экипировки"
 L.GetQuestlog     = "  Чтение журнала заданий"
 L.GetMacro        = "  Чтение макросов"
+L.GetFriends      = "  Чтение друзей"
+L.GetIgnores      = "  Чтение игнорируемых"
 
 L.GetBank         = "Чтение банка"
 L.ScaningBankTotal= "  банковская ячейка %d, количество %d"

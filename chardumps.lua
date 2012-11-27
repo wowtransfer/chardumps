@@ -463,15 +463,13 @@ function CHD_GetAchievementInfo()
 	local res = {};
 
 	CHD_Message(L.GetAchievement);
-	local CategoryList = GetCategoryList();
-	for _, CategoryID in pairs(CategoryList) do
-		for j = 1, GetCategoryNumAchievements(CategoryID) do
-			IDNumber, _, _, Completed, Month, Day, Year = GetAchievementInfo(CategoryID, j);
-			if IDNumber and Completed then
-				local posixtime = time{year = 2000 + Year, month = Month, day = Day};
-				if posixtime then
-					res[IDNumber] = posixtime;
-				end
+
+	for i = 1, 100000 do
+		local IDNumber, _, _, Completed, Month, Day, Year = GetAchievementInfo(i);
+		if Completed then
+			local posixtime = time{year = 2000 + Year, month = Month, day = Day};
+			if posixtime then
+				res[IDNumber] = posixtime;
 			end
 		end
 	end
@@ -623,7 +621,7 @@ end
 function GetFriendsInfo()
 	local res = {};
 
-	CHD_Message("  Get friends");
+	CHD_Message(L.GetFriends);
 	for i = 1, GetNumFriends() do
 		local name =  GetFriendInfo(i);
 		res[i] = name;
@@ -635,7 +633,7 @@ end
 function GetIgnoresInfo()
 	local res = {};
 
-	CHD_Message("  Get ignores");
+	CHD_Message(L.GetIgnores);
 	for i = 1, GetNumIgnores() do
 		local name = GetIgnoreName(i);
 		res[i] = name;

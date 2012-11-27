@@ -51,6 +51,8 @@ L.ScaningBagTotal = "    bag %d, count: %d"
 L.GetEquipment    = "  Get equipment sets information"
 L.GetQuestlog     = "  Get quests in the log"
 L.GetMacro        = "  Get macro information"
+L.GetFriends      = "  Get friends"
+L.GetIgnores      = "  Get ignores"
 
 L.GetBank         = "Get bank`s information"
 L.ScaningBankTotal= "  bank`s bag: %d, count: %d"
