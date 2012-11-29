@@ -475,9 +475,11 @@ function CHD_GetRepInfo()
 	local res = {};
 
 	CHD_Message(L.GetReputation);
-	for i = 1, GetNumFactions() do
-	local name, _, _, _, _, earnedValue, _, canToggleAtWar, _, _, _, _, _ = GetFactionInfo(i);
-		res[i] = {["N"] = name, ["V"] = earnedValue, ["F"] = (canToggleAtWar or 0)};
+	for i = 1, 1200 do -- maximum 1160 for 3.3.5a
+		local _, _, _, _, _, barValue = GetFactionInfoByID(i);
+		if barValue and barValue ~= 0 then
+			res[i] = barValue;
+		end
 	end
 
 	return res;
