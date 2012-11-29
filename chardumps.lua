@@ -110,7 +110,7 @@ function CHD_OnVariablesLoaded()
 	end
 	if CHD_CLIENT.achievement then
 		frmMainchbAchievementsText:SetText(L.chbAchievements .. string.format(" (%d)",
-			CHD_GetTableCount(CHD_CLIENT.achievement)));
+			#CHD_CLIENT.achievement));
 	end
 	if CHD_CLIENT.skill then
 		frmMainchbSkillsText:SetText(L.chbSkills .. string.format(" (%d)",
@@ -149,6 +149,10 @@ function CHD_OnVariablesLoaded()
 		m = #CHD_CLIENT.ignore;
 	end
 	frmMainchbFriendText:SetText(L.chbFriend .. string.format(" (%d, %d)", n, m));
+
+	if CHD_CLIENT.arena then
+		frmMainchbArenaText:SetText(L.chbArena .. string.format(" (%d)", #CHD_CLIENT.arena));
+	end
 
 	-- server
 	if CHD_SERVER.taxi then
@@ -242,6 +246,7 @@ function CHD_OnLoad(self)
 	frmMainchbQuestlogText:SetText(L.chbEquipment);
 	frmMainchbMacroText:SetText(L.chbMacro);
 	frmMainchbFriendText:SetText(L.chbFriend);
+	frmMainchbArenaText:SetText(L.chbArena);
 
 	frmMainchbBankText:SetText(L.chbBank);
 	frmMainchbQuestsText:SetText(L.chbQuests);
@@ -286,6 +291,7 @@ function CHD_OnLoad(self)
 	AddTooltip(frmMainchbQuestlog, L.chbQuestlog, L.ttchbQuestlog);
 	AddTooltip(frmMainchbMacro, L.chbMacro, L.ttchbMacro);
 	AddTooltip(frmMainchbFriend, L.chbFriend, L.ttchbFriend);
+	AddTooltip(frmMainchbArena, L.chbArena, L.ttchbArena);
 
 	AddTooltip(frmMainchbBank, L.chbBank, L.ttchbBank);
 	AddTooltip(frmMainchbQuests, L.chbQuests, L.ttchbQuests);
@@ -295,6 +301,9 @@ function CHD_OnLoad(self)
 	AddTooltip(frmMainbtnMinimize, L.ttbtnMinimize, "");
 	AddTooltip(frmMainbtnClientDump, L.btnClientDump, L.ttbtnClientDump);
 	AddTooltip(frmMainbtnQuestQuery, L.btnServerQuery, L.ttbtnServerQuery);
+	AddTooltip(frmMainbtnBankDel, L.chbBank, L.ttbtnBankDel);
+	AddTooltip(frmMainbtnQuestDel, L.chbQuests, L.ttbtnQuestDel);
+	AddTooltip(frmMainbtnTaxiDel, L.chbTaxi, L.ttbtnTaxiDel);
 
 	CHD_Message(L.loadmessage);
 end
@@ -316,6 +325,21 @@ function OnfrmMainbtnHideClLick()
 		frmMainpanSystem:Hide();
 	end
 	frmMain:Hide();
+end
+
+function OnfrmMainbtnBankDelCLick()
+	CHD_SERVER.bank = nil;
+	frmMainchbBankText:SetText(L.chbBank);
+end
+
+function OnfrmMainbtnQuestDelCLick()
+	CHD_SERVER.quest = nil;
+	frmMainchbQuestsText:SetText(L.chbQuests);
+end
+
+function OnfrmMainbtnTaxiDelCLick()
+	CHD_SERVER.taxi = nil;
+	frmMainchbTaxiText:SetText(L.chbTaxi);
 end
 
 function CHD_OnRecieveQuestsClick()
@@ -464,12 +488,51 @@ function CHD_GetAchievementInfo()
 
 	CHD_Message(L.GetAchievement);
 
-	for i = 1, 100000 do
+	local count = 0;
+	for i = 1, 5000 do
 		local IDNumber, _, _, Completed, Month, Day, Year = GetAchievementInfo(i);
-		if Completed then
+		if IDNumber and Completed then
 			local posixtime = time{year = 2000 + Year, month = Month, day = Day};
 			if posixtime then
-				res[IDNumber] = posixtime;
+				count = count + 1;
+				res[count] = {["I"] = IDNumber, ["T"] = posixtime};
+			end
+		end
+	end
+
+	return res;
+end
+
+function CHD_GetCriteriaCompleted()
+	local res = {};
+
+	for i = 1, 5000 do
+		local _, _, _, Completed = GetAchievementInfo(i);
+		if Completed then
+			for j = 1, GetAchievementNumCriteria(i) do
+				local _, _, completed, quantity, _, _, _, _, _, criteriaID = GetAchievementCriteriaInfo(i, j);
+				if quantity and quantity > 0 then
+					res[criteriaID] = quantity;
+				end
+			end
+		end
+	end
+
+	return res;
+end
+
+function CHD_GetCriteriaProgress()
+	local res = {};
+
+	local count = 0;
+	for i = 1, 5000 do
+		local id, _, _, Completed = GetAchievementInfo(i);
+		if id and not Completed then
+			for j = 1, GetAchievementNumCriteria(i) do
+				local _, _, completed, quantity, _, _, _, _, _, criteriaID = GetAchievementCriteriaInfo(i, j);
+				if quantity and quantity > 0 then
+					res[criteriaID] = quantity;
+				end
 			end
 		end
 	end
@@ -618,7 +681,7 @@ function CHD_GetAMacroInfo()
 	return res;
 end
 
-function GetFriendsInfo()
+function CHD_GetFriendsInfo()
 	local res = {};
 
 	CHD_Message(L.GetFriends);
@@ -630,7 +693,7 @@ function GetFriendsInfo()
 	return res;
 end
 
-function GetIgnoresInfo()
+function CHD_GetIgnoresInfo()
 	local res = {};
 
 	CHD_Message(L.GetIgnores);
@@ -638,6 +701,21 @@ function GetIgnoresInfo()
 		local name = GetIgnoreName(i);
 		res[i] = name;
 	end;
+
+	return res;
+end
+
+function CHD_GetArenaInfo()
+	local res = {};
+
+	CHD_Message(L.GetArena);
+	for i = 1, 3 do
+		local teamName, teamSize, teamRating, _, _, seasonTeamPlayed, seasonTeamWins, _, seasonPlayerPlayed, _, playerRating = GetArenaTeam(i);
+		print(teamName, teamSize, teamRating);
+		if teamName then
+			res[i] = {["N"] = teamName, ["R"] = teamRating, ["TP"] = seasonTeamPlayed, ["TW"] = seasonTeamWins, ["PP"] = seasonPlayerPlayed, ["PR"] = playerRating};
+		end
+	end
 
 	return res;
 end
@@ -777,7 +855,8 @@ function CHD_OnClientDumpClick()
 	else
 		dump.critter = {};
 	end
-	frmMainchbCrittersText:SetText(L.chbCritters .. string.format(" (%d)", #dump.critter))
+	frmMainchbCrittersText:SetText(L.chbCritters .. string.format(" (%d)", #dump.critter));
+
 	if frmMainchbReputation:GetChecked() then
 		dump.reputation    = CHD_trycall(CHD_GetRepInfo)         or {};
 	else
@@ -785,13 +864,19 @@ function CHD_OnClientDumpClick()
 	end;
 	frmMainchbReputationText:SetText(L.chbReputation .. string.format(" (%d)",
 		CHD_GetTableCount(dump.reputation)));
+
 	if frmMainchbAchievements:GetChecked() then
-		dump.achievement   = CHD_trycall(CHD_GetAchievementInfo) or {};
+		dump.achievement   = CHD_trycall(CHD_GetAchievementInfo)   or {};
+		dump.criteria1     = CHD_trycall(CHD_GetCriteriaCompleted) or {};
+		dump.criteria0     = CHD_trycall(CHD_GetCriteriaProgress)  or {};
 	else
 		dump.achievement = {};
+		dump.criteria1 = {};
+		dump.criteria0 = {};
 	end
 	frmMainchbAchievementsText:SetText(L.chbAchievements .. string.format(" (%d)",
-		CHD_GetTableCount(dump.achievement)));
+		#dump.achievement));
+
 	if frmMainchbSkills:GetChecked() then
 		dump.skill         = CHD_trycall(CHD_GetSkillInfo)       or {};
 	else
@@ -840,14 +925,21 @@ function CHD_OnClientDumpClick()
 		#dump.pmacro + #dump.amacro));
 
 	if frmMainchbFriend:GetChecked() then
-		dump.friend = CHD_trycall(GetFriendsInfo) or {};
-		dump.ignore = CHD_trycall(GetIgnoresInfo) or {};
+		dump.friend = CHD_trycall(CHD_GetFriendsInfo) or {};
+		dump.ignore = CHD_trycall(CHD_GetIgnoresInfo) or {};
 	else
 		dump.friend = {};
 		dump.ignore = {};
 	end
 	frmMainchbFriendText:SetText(L.chbFriend .. string.format(" (%d, %d)",
 		#dump.friend, #dump.ignore));
+
+	if frmMainchbArena:GetChecked() then
+		dump.arena = CHD_trycall(CHD_GetArenaInfo) or {};
+	else
+		dump.arena = {};
+	end
+	frmMainchbArenaText:SetText(L.chbArena .. string.format(" (%d)", #dump.arena));
 
 	CHD_Message(L.CreatedDump);
 	CHD_Message(L.DumpDone);
