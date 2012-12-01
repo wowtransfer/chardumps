@@ -450,8 +450,8 @@ function CHD_GetMountInfo()
 
 	CHD_Message();
 	for i = 1, GetNumCompanions("MOUNT") do
-		local creatureID = GetCompanionInfo("MOUNT", i);
-		res[i] = creatureID;
+		local _, _, spellID = GetCompanionInfo("MOUNT", i);
+		res[i] = spellID;
 	end
 	sort(res);
 
@@ -463,8 +463,8 @@ function CHD_GetCritterInfo()
 
 	CHD_Message(L.GetCritter);
 	for i = 1, GetNumCompanions("CRITTER") do
-		local creatureID = GetCompanionInfo("CRITTER", i);
-		res[i] = creatureID;
+		local _, _, spellID = GetCompanionInfo("CRITTER", i);
+		res[i] = spellID;
 	end
 	sort(res);
 
