@@ -15,7 +15,6 @@ local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
 CHD = {};
 CHD_CLIENT = CHD_CLIENT or {};
 CHD_SERVER = CHD_SERVER or {};
-CHD_SERVER.taxi = CHD_SERVER.taxi or {};
 
 local MAX_NUM_CONTINENT = 4 -- 1..4
 
@@ -73,10 +72,10 @@ function CHD_SlashCmdHandler(cmd)
 	local cmdlist = {strsplit(" ", cmd)};
 
 	if cmdlist[1] == "show" then
-		frmMainpanSystem:SetBackdrop(nil);
-		frmMainpanSystem:SetParent(frmMain);
-		frmMainpanSystem:Show();
-		frmMain:Show();
+		CHD_frmMainpanSystem:SetBackdrop(nil);
+		CHD_frmMainpanSystem:SetParent(CHD_frmMain);
+		CHD_frmMainpanSystem:Show();
+		CHD_frmMain:Show();
 	else
 		CHD_Message(L.help1);
 		CHD_Message(L.help2);
@@ -87,49 +86,49 @@ end
 function CHD_OnVariablesLoaded()
 	-- client
 	if CHD_CLIENT.glyph then
-		frmMainchbGlyphsText:SetText(L.chbGlyphs .. string.format(" (%d)",
+		CHD_frmMainchbGlyphsText:SetText(L.chbGlyphs .. string.format(" (%d)",
 			CHD_GetTableCount(CHD_CLIENT.glyph)));
 	end
 	if CHD_CLIENT.currency then
-		frmMainchbCurrencyText:SetText(L.chbCurrency .. string.format(" (%d)",
+		CHD_frmMainchbCurrencyText:SetText(L.chbCurrency .. string.format(" (%d)",
 			CHD_GetTableCount(CHD_CLIENT.currency)));
 	end
 	if CHD_CLIENT.spell then
-		frmMainchbSpellsText:SetText(L.chbSpells .. string.format(" (%d)",
+		CHD_frmMainchbSpellsText:SetText(L.chbSpells .. string.format(" (%d)",
 			CHD_GetTableCount(CHD_CLIENT.spell)));
 	end
 	if CHD_CLIENT.mount then
-		frmMainchbMountsText:SetText(L.chbMounts .. string.format(" (%d)", #CHD_CLIENT.mount))
+		CHD_frmMainchbMountsText:SetText(L.chbMounts .. string.format(" (%d)", #CHD_CLIENT.mount))
 	end
 	if CHD_CLIENT.critter then
-		frmMainchbCrittersText:SetText(L.chbCritters .. string.format(" (%d)", #CHD_CLIENT.critter))
+		CHD_frmMainchbCrittersText:SetText(L.chbCritters .. string.format(" (%d)", #CHD_CLIENT.critter))
 	end
 	if CHD_CLIENT.reputation then
-		frmMainchbReputationText:SetText(L.chbReputation .. string.format(" (%d)",
+		CHD_frmMainchbReputationText:SetText(L.chbReputation .. string.format(" (%d)",
 			CHD_GetTableCount(CHD_CLIENT.reputation)));
 	end
 	if CHD_CLIENT.achievement then
-		frmMainchbAchievementsText:SetText(L.chbAchievements .. string.format(" (%d)",
+		CHD_frmMainchbAchievementsText:SetText(L.chbAchievements .. string.format(" (%d)",
 			#CHD_CLIENT.achievement));
 	end
 	if CHD_CLIENT.skill then
-		frmMainchbSkillsText:SetText(L.chbSkills .. string.format(" (%d)",
+		CHD_frmMainchbSkillsText:SetText(L.chbSkills .. string.format(" (%d)",
 			CHD_GetTableCount(CHD_CLIENT.skill)));
 	end
 	if CHD_CLIENT.bag then
-		frmMainchbBagsText:SetText(L.chbBags .. string.format(" (%d)",
+		CHD_frmMainchbBagsText:SetText(L.chbBags .. string.format(" (%d)",
 			CHD_GetTableCount(CHD_CLIENT.bag)));
 	end
 	if CHD_CLIENT.inventory then
-		frmMainchbInventoryText:SetText(L.chbInventory .. string.format(" (%d)",
+		CHD_frmMainchbInventoryText:SetText(L.chbInventory .. string.format(" (%d)",
 			CHD_GetTableCount(CHD_CLIENT.inventory)));
 	end
 	if CHD_CLIENT.equipment then
-		frmMainchbEquipmentText:SetText(L.chbEquipment .. string.format(" (%d)",
+		CHD_frmMainchbEquipmentText:SetText(L.chbEquipment .. string.format(" (%d)",
 			#CHD_CLIENT.equipment));
 	end
 	if CHD_CLIENT.questlog then
-		frmMainchbQuestlogText:SetText(L.chbQuestlog .. string.format(" (%d)",
+		CHD_frmMainchbQuestlogText:SetText(L.chbQuestlog .. string.format(" (%d)",
 			#CHD_CLIENT.questlog));
 	end
 	local n = 0;
@@ -139,7 +138,7 @@ function CHD_OnVariablesLoaded()
 	if CHD_CLIENT.amacro then
 		n = n + #CHD_CLIENT.amacro;
 	end
-	frmMainchbMacroText:SetText(L.chbMacro .. string.format(" (%d)", n));
+	CHD_frmMainchbMacroText:SetText(L.chbMacro .. string.format(" (%d)", n));
 
 	local m = 0;
 	if CHD_CLIENT.friend then
@@ -148,49 +147,50 @@ function CHD_OnVariablesLoaded()
 	if CHD_CLIENT.ignore then
 		m = #CHD_CLIENT.ignore;
 	end
-	frmMainchbFriendText:SetText(L.chbFriend .. string.format(" (%d, %d)", n, m));
+	CHD_frmMainchbFriendText:SetText(L.chbFriend .. string.format(" (%d, %d)", n, m));
 
 	if CHD_CLIENT.arena then
-		frmMainchbArenaText:SetText(L.chbArena .. string.format(" (%d)", #CHD_CLIENT.arena));
+		CHD_frmMainchbArenaText:SetText(L.chbArena .. string.format(" (%d)", #CHD_CLIENT.arena));
 	end
 
 	-- server
-	if CHD_SERVER.taxi then
-		for i = 1, MAX_NUM_CONTINENT do
-			if not CHD_SERVER.taxi[i] then
-				CHD_SERVER.taxi[i] = {};
-			end
-		end
-		frmMainchbTaxiText:SetText(L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
-			#CHD_SERVER.taxi[1],
-			#CHD_SERVER.taxi[2],
-			#CHD_SERVER.taxi[3],
-			#CHD_SERVER.taxi[4])
-		);
+	if not CHD_SERVER.taxi then
+		CHD_SERVER.taxi = {};
 	end
+	for i = 1, MAX_NUM_CONTINENT do
+		if not CHD_SERVER.taxi[i] then
+			CHD_SERVER.taxi[i] = {};
+		end
+	end
+	CHD_frmMainchbTaxiText:SetText(L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
+		#CHD_SERVER.taxi[1],
+		#CHD_SERVER.taxi[2],
+		#CHD_SERVER.taxi[3],
+		#CHD_SERVER.taxi[4])
+	);
 	if CHD_SERVER.quest then
-		frmMainchbQuestsText:SetText(L.chbQuests .. string.format(" (%d)", #CHD_SERVER.quest));
+		CHD_frmMainchbQuestsText:SetText(L.chbQuests .. string.format(" (%d)", #CHD_SERVER.quest));
 	end
 	if CHD_SERVER.bank then
-		frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)",
+		CHD_frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)",
 			CHD_GetTableCount(CHD_SERVER.bank)));
 	end
 end
 
 function CHD_OnEvent(self, event, ...)
 	if "TAXIMAP_OPENED" == event then
-		if frmMainchbTaxi:GetChecked() then
+		if CHD_frmMainchbTaxi:GetChecked() then
 			CHD_SetTaxiInfo();
 		end
 	elseif "VARIABLES_LOADED" == event then
 		CHD_OnVariablesLoaded();
 	elseif "BANKFRAME_OPENED" == event then
-		if frmMainchbBank:GetChecked() then
+		if CHD_frmMainchbBank:GetChecked() then
 			CHD_SERVER.bank = CHD_trycall(CHD_GetBankInfo) or {};
 		else
 			CHD_SERVER.bank = {};
 		end
-		frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)",
+		CHD_frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)",
 			CHD_GetTableCount(CHD_SERVER.bank)));
 	end
 end
@@ -304,131 +304,134 @@ function CHD_OnLoad(self)
 	SLASH_CHD2 = "/chd";
 
 	-- localization
-	frmMainchbGlyphsText:SetText(L.chbGlyphs);
-	frmMainchbCurrencyText:SetText(L.chbCurrency);
-	frmMainchbSpellsText:SetText(L.chbSpells);
-	frmMainchbMountsText:SetText(L.chbMounts);
-	frmMainchbCrittersText:SetText(L.chbCritters);
-	frmMainchbReputationText:SetText(L.chbReputation);
-	frmMainchbAchievementsText:SetText(L.chbAchievements);
-	frmMainchbSkillsText:SetText(L.chbSkills);
-	frmMainchbInventoryText:SetText(L.chbInventory);
-	frmMainchbBagsText:SetText(L.chbBags);
-	frmMainchbEquipmentText:SetText(L.chbEquipment);
-	frmMainchbQuestlogText:SetText(L.chbEquipment);
-	frmMainchbMacroText:SetText(L.chbMacro);
-	frmMainchbFriendText:SetText(L.chbFriend);
-	frmMainchbArenaText:SetText(L.chbArena);
+	CHD_frmMainchbGlyphsText:SetText(L.chbGlyphs);
+	CHD_frmMainchbCurrencyText:SetText(L.chbCurrency);
+	CHD_frmMainchbSpellsText:SetText(L.chbSpells);
+	CHD_frmMainchbMountsText:SetText(L.chbMounts);
+	CHD_frmMainchbCrittersText:SetText(L.chbCritters);
+	CHD_frmMainchbReputationText:SetText(L.chbReputation);
+	CHD_frmMainchbAchievementsText:SetText(L.chbAchievements);
+	CHD_frmMainchbSkillsText:SetText(L.chbSkills);
+	CHD_frmMainchbInventoryText:SetText(L.chbInventory);
+	CHD_frmMainchbBagsText:SetText(L.chbBags);
+	CHD_frmMainchbEquipmentText:SetText(L.chbEquipment);
+	CHD_frmMainchbQuestlogText:SetText(L.chbEquipment);
+	CHD_frmMainchbMacroText:SetText(L.chbMacro);
+	CHD_frmMainchbFriendText:SetText(L.chbFriend);
+	CHD_frmMainchbArenaText:SetText(L.chbArena);
 
-	frmMainchbBankText:SetText(L.chbBank);
-	frmMainchbQuestsText:SetText(L.chbQuests);
-	frmMainbtnQuestQueryText:SetText(L.btnServerQuery);
-	frmMainchbTaxiText:SetText(L.chbTaxi);
+	CHD_frmMainchbBankText:SetText(L.chbBank);
+	CHD_frmMainchbQuestsText:SetText(L.chbQuests);
+	CHD_frmMainbtnQuestQueryText:SetText(L.btnServerQuery);
+	CHD_frmMainchbTaxiText:SetText(L.chbTaxi);
 
-	frmMainbtnClientDumpText:SetText(L.btnClientDump);
+	CHD_frmMainbtnClientDumpText:SetText(L.btnClientDump);
 
 	self:SetScript("OnEvent", CHD_OnEvent);
 	self:RegisterEvent("TAXIMAP_OPENED");
 	self:RegisterEvent("VARIABLES_LOADED");
 	self:RegisterEvent("BANKFRAME_OPENED");
 
-	frmMain:SetBackdrop(CHD_GetBackdrop());
+	CHD_frmMain:SetBackdrop(CHD_GetBackdrop());
 
-	local btnW = frmMainbtnHide:GetWidth();
-	frmMainbtnHide:SetParent(frmMainpanSystem);
-	frmMainbtnHide:ClearAllPoints();
-	frmMainbtnHide:SetPoint("CENTER", frmMainpanSystem, 0, 0);
-	frmMainbtnHide:SetPoint("RIGHT", frmMainpanSystem, -11, 0);
-	frmMainbtnMinimize:SetParent(frmMainpanSystem);
-	frmMainbtnMinimize:ClearAllPoints();
-	frmMainbtnMinimize:SetPoint("CENTER", frmMainpanSystem, 0, 0);
-	frmMainbtnMinimize:SetPoint("RIGHT", frmMainpanSystem, -14 - btnW, 0);
+	local btnW = CHD_frmMainbtnHide:GetWidth();
+	CHD_frmMainbtnHide:SetParent(CHD_frmMainpanSystem);
+	CHD_frmMainbtnHide:ClearAllPoints();
+	CHD_frmMainbtnHide:SetPoint("CENTER", CHD_frmMainpanSystem, 0, 0);
+	CHD_frmMainbtnHide:SetPoint("RIGHT", CHD_frmMainpanSystem, -11, 0);
+	CHD_frmMainbtnMinimize:SetParent(CHD_frmMainpanSystem);
+	CHD_frmMainbtnMinimize:ClearAllPoints();
+	CHD_frmMainbtnMinimize:SetPoint("CENTER", CHD_frmMainpanSystem, 0, 0);
+	CHD_frmMainbtnMinimize:SetPoint("RIGHT", CHD_frmMainpanSystem, -14 - btnW, 0);
 
-	frmMainpanSystem:ClearAllPoints();
-	frmMainpanSystem:SetPoint("TOPRIGHT", frmMain);
-	frmMainpanSystem:SetPoint("TOPRIGHT", 0, 0);
-	frmMainpanSystem:SetWidth(5 + 5 + btnW*2 + 3*3 + 5);
+	CHD_frmMainpanSystem:ClearAllPoints();
+	CHD_frmMainpanSystem:SetPoint("TOPRIGHT", CHD_CHD_frmMain);
+	CHD_frmMainpanSystem:SetPoint("TOPRIGHT", 0, 0);
+	CHD_frmMainpanSystem:SetWidth(5 + 5 + btnW*2 + 3*3 + 5);
 
-	AddTooltip(frmMainchbGlyphs, L.chbGlyphs, L.ttchbGlyphs);
-	AddTooltip(frmMainchbCurrency, L.chbCurrency, L.ttchbCurrency);
-	AddTooltip(frmMainchbSpells, L.chbSpells, L.ttchbSpells);
-	AddTooltip(frmMainchbMounts, L.chbMounts, L.ttchbMounts);
-	AddTooltip(frmMainchbCritters, L.chbCritters, L.ttchbCritters);
-	AddTooltip(frmMainchbReputation, L.chbReputation, L.ttchbReputation);
-	AddTooltip(frmMainchbAchievements, L.chbAchievements, L.ttchbAchievements);
-	AddTooltip(frmMainchbSkills, L.chbSkills, L.ttchbSkills);
-	AddTooltip(frmMainchbInventory, L.chbInventory, L.ttchbInventory);
-	AddTooltip(frmMainchbBags, L.chbBags, L.ttchbBags);
-	AddTooltip(frmMainchbEquipment, L.chbEquipment, L.ttchbEquipment);
-	AddTooltip(frmMainchbQuestlog, L.chbQuestlog, L.ttchbQuestlog);
-	AddTooltip(frmMainchbMacro, L.chbMacro, L.ttchbMacro);
-	AddTooltip(frmMainchbFriend, L.chbFriend, L.ttchbFriend);
-	AddTooltip(frmMainchbArena, L.chbArena, L.ttchbArena);
+	AddTooltip(CHD_frmMainchbGlyphs, L.chbGlyphs, L.ttchbGlyphs);
+	AddTooltip(CHD_frmMainchbCurrency, L.chbCurrency, L.ttchbCurrency);
+	AddTooltip(CHD_frmMainchbSpells, L.chbSpells, L.ttchbSpells);
+	AddTooltip(CHD_frmMainchbMounts, L.chbMounts, L.ttchbMounts);
+	AddTooltip(CHD_frmMainchbCritters, L.chbCritters, L.ttchbCritters);
+	AddTooltip(CHD_frmMainchbReputation, L.chbReputation, L.ttchbReputation);
+	AddTooltip(CHD_frmMainchbAchievements, L.chbAchievements, L.ttchbAchievements);
+	AddTooltip(CHD_frmMainchbSkills, L.chbSkills, L.ttchbSkills);
+	AddTooltip(CHD_frmMainchbInventory, L.chbInventory, L.ttchbInventory);
+	AddTooltip(CHD_frmMainchbBags, L.chbBags, L.ttchbBags);
+	AddTooltip(CHD_frmMainchbEquipment, L.chbEquipment, L.ttchbEquipment);
+	AddTooltip(CHD_frmMainchbQuestlog, L.chbQuestlog, L.ttchbQuestlog);
+	AddTooltip(CHD_frmMainchbMacro, L.chbMacro, L.ttchbMacro);
+	AddTooltip(CHD_frmMainchbFriend, L.chbFriend, L.ttchbFriend);
+	AddTooltip(CHD_frmMainchbArena, L.chbArena, L.ttchbArena);
 
-	AddTooltip(frmMainchbBank, L.chbBank, L.ttchbBank);
-	AddTooltip(frmMainchbQuests, L.chbQuests, L.ttchbQuests);
-	AddTooltip(frmMainchbTaxi, L.chbTaxi, L.ttchbTaxi);
+	AddTooltip(CHD_frmMainchbBank, L.chbBank, L.ttchbBank);
+	AddTooltip(CHD_frmMainchbQuests, L.chbQuests, L.ttchbQuests);
+	AddTooltip(CHD_frmMainchbTaxi, L.chbTaxi, L.ttchbTaxi);
 
-	AddTooltip(frmMainbtnHide, L.ttbtnHide, "");
-	AddTooltip(frmMainbtnMinimize, L.ttbtnMinimize, "");
-	AddTooltip(frmMainbtnClientDump, L.btnClientDump, L.ttbtnClientDump);
-	AddTooltip(frmMainbtnQuestQuery, L.btnServerQuery, L.ttbtnServerQuery);
-	AddTooltip(frmMainbtnBankDel, L.chbBank, L.ttbtnBankDel);
-	AddTooltip(frmMainbtnQuestDel, L.chbQuests, L.ttbtnQuestDel);
-	AddTooltip(frmMainbtnTaxiDel, L.chbTaxi, L.ttbtnTaxiDel);
+	AddTooltip(CHD_frmMainbtnHide, L.ttbtnHide, "");
+	AddTooltip(CHD_frmMainbtnMinimize, L.ttbtnMinimize, "");
+	AddTooltip(CHD_frmMainbtnClientDump, L.btnClientDump, L.ttbtnClientDump);
+	AddTooltip(CHD_frmMainbtnQuestQuery, L.btnServerQuery, L.ttbtnServerQuery);
+	AddTooltip(CHD_frmMainbtnBankDel, L.chbBank, L.ttbtnBankDel);
+	AddTooltip(CHD_frmMainbtnQuestDel, L.chbQuests, L.ttbtnQuestDel);
+	AddTooltip(CHD_frmMainbtnTaxiDel, L.chbTaxi, L.ttbtnTaxiDel);
 
 	CHD_CreateMessageBox();
 
 	CHD_Message(L.loadmessage);
 end
 
-function OnfrmMainbtnMinimizeClLick()
-	if frmMain:IsVisible() then
-		frmMainpanSystem:SetBackdrop(CHD_GetBackdrop());
-		frmMainpanSystem:SetParent("UIParent");
-		frmMain:Hide();
+function OnCHD_frmMainbtnMinimizeClLick()
+	if CHD_frmMain:IsVisible() then
+		CHD_frmMainpanSystem:SetBackdrop(CHD_GetBackdrop());
+		CHD_frmMainpanSystem:SetParent("UIParent");
+		CHD_frmMain:Hide();
 	else
-		frmMainpanSystem:SetBackdrop(nil);
-		frmMainpanSystem:SetParent(frmMain);
-		frmMain:Show();
+		CHD_frmMainpanSystem:SetBackdrop(nil);
+		CHD_frmMainpanSystem:SetParent(CHD_frmMain);
+		CHD_frmMain:Show();
 	end
 end
 
-function OnfrmMainbtnHideClLick()
-	if frmMainpanSystem:IsVisible() then
-		frmMainpanSystem:Hide();
+function OnCHD_frmMainbtnHideClLick()
+	if CHD_frmMainpanSystem:IsVisible() then
+		CHD_frmMainpanSystem:Hide();
 	end
-	frmMain:Hide();
+	CHD_frmMain:Hide();
 end
 
 function CHD_BankDel()
-	CHD_SERVER.bank = nil;
-	frmMainchbBankText:SetText(L.chbBank);
+	CHD_SERVER.bank = {};
+	CHD_frmMainchbBankText:SetText(L.chbBank);
+	CHD_Message(L.DeleteBank);
 end;
 
-function OnfrmMainbtnBankDelCLick()
+function OnCHD_frmMainbtnBankDelCLick()
 	CHD.MessageBox.Title:SetText(L.DeleteBank);
 	CHD.MessageBox.OnOK = CHD_BankDel;
 	CHD.MessageBox:Show();
 end
 
 function CHD_QuestDel()
-	CHD_SERVER.quest = nil;
-	frmMainchbQuestsText:SetText(L.chbQuests);
+	CHD_SERVER.quest = {};
+	CHD_frmMainchbQuestsText:SetText(L.chbQuests);
+	CHD_Message(L.DeleteQuests);
 end;
 
-function OnfrmMainbtnQuestDelCLick()
+function OnCHD_frmMainbtnQuestDelCLick()
 	CHD.MessageBox.Title:SetText(L.DeleteQuests);
 	CHD.MessageBox.OnOK = CHD_QuestDel;
 	CHD.MessageBox:Show();
 end
 
 function CHD_TaxiDel()
-	CHD_SERVER.taxi = nil;
-	frmMainchbTaxiText:SetText(L.chbTaxi);
+	CHD_SERVER.taxi = {};
+	CHD_frmMainchbTaxiText:SetText(L.chbTaxi);
+	CHD_Message(L.DeleteTaxi);
 end;
 
-function OnfrmMainbtnTaxiDelCLick()
+function OnCHD_frmMainbtnTaxiDelCLick()
 	CHD.MessageBox.Title:SetText(L.DeleteTaxi);
 	CHD.MessageBox.OnOK = CHD_TaxiDel;
 	CHD.MessageBox:Show();
@@ -436,13 +439,13 @@ end
 
 function CHD_OnRecieveQuestsClick()
 	QueryQuestsCompleted();
-	if frmMainchbQuests:GetChecked() then
+	if CHD_frmMainchbQuests:GetChecked() then
 		CHD_SERVER.quest       = CHD_trycall(CHD_GetQuestInfo)       or {};
-		frmMainchbQuestsText:SetText(L.chbQuests .. string.format(" (%d)",
+		CHD_frmMainchbQuestsText:SetText(L.chbQuests .. string.format(" (%d)",
 			CHD_GetTableCount(CHD_SERVER.quest)));
 	else
 		CHD_SERVER.quest = {};
-		frmMainchbQuestsText:SetText(L.chbQuests .. " (0)");
+		CHD_frmMainchbQuestsText:SetText(L.chbQuests .. " (0)");
 	end
 end;
 
@@ -870,10 +873,14 @@ function CHD_SetTaxiInfo(continent)
 		local name = TaxiNodeName(i);
 		res[i] = name;
 	end
-
+	for i = 1, MAX_NUM_CONTINENT do
+		if not CHD_SERVER.taxi[i] then
+			CHD_SERVER.taxi[i] = {};
+		end
+	end
 	CHD_SERVER.taxi[continent] = res;
 
-	frmMainchbTaxiText:SetText(L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
+	CHD_frmMainchbTaxiText:SetText(L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
 		(#CHD_SERVER.taxi[1] or 0),
 		(#CHD_SERVER.taxi[2] or 0),
 		(#CHD_SERVER.taxi[3] or 0),
@@ -928,49 +935,49 @@ function CHD_OnClientDumpClick()
 	CHD_Message(L.CreatingDump);
 	dump.global      = CHD_trycall(CHD_GetGlobalInfo)      or {};
 	dump.player      = CHD_trycall(CHD_GetPlayerInfo)      or {};
-	if frmMainchbGlyphs:GetChecked() then
+	if CHD_frmMainchbGlyphs:GetChecked() then
 		dump.glyph         = CHD_trycall(CHD_GetGlyphInfo)       or {};
 	else
 		dump.glyph = {};
 	end
-	frmMainchbGlyphsText:SetText(L.chbGlyphs .. string.format(" (%d)",
+	CHD_frmMainchbGlyphsText:SetText(L.chbGlyphs .. string.format(" (%d)",
 		CHD_GetTableCount(dump.glyph)));
-	if frmMainchbCurrency:GetChecked() then
+	if CHD_frmMainchbCurrency:GetChecked() then
 		dump.currency      = CHD_trycall(CHD_GetCurrencyInfo)    or {};
 	else
 		dump.currency = {};
 	end
-	frmMainchbCurrencyText:SetText(L.chbCurrency .. string.format(" (%d)",
+	CHD_frmMainchbCurrencyText:SetText(L.chbCurrency .. string.format(" (%d)",
 		CHD_GetTableCount(dump.currency)));
-	if frmMainchbSpells:GetChecked() then
+	if CHD_frmMainchbSpells:GetChecked() then
 		dump.spell         = CHD_trycall(CHD_GetSpellInfo)       or {};
 	else
 		dump.spell = {};
 	end
-	frmMainchbSpellsText:SetText(L.chbSpells .. string.format(" (%d)",
+	CHD_frmMainchbSpellsText:SetText(L.chbSpells .. string.format(" (%d)",
 		CHD_GetTableCount(dump.spell)));
-	if frmMainchbMounts:GetChecked() then
+	if CHD_frmMainchbMounts:GetChecked() then
 		dump.mount         = CHD_trycall(CHD_GetMountInfo)       or {};
 	else
 		dump.mount = {};
 	end
-	frmMainchbMountsText:SetText(L.chbMounts .. string.format(" (%d)", #dump.mount))
-	if frmMainchbCritters:GetChecked() then
+	CHD_frmMainchbMountsText:SetText(L.chbMounts .. string.format(" (%d)", #dump.mount))
+	if CHD_frmMainchbCritters:GetChecked() then
 		dump.critter       = CHD_trycall(CHD_GetCritterInfo)     or {};
 	else
 		dump.critter = {};
 	end
-	frmMainchbCrittersText:SetText(L.chbCritters .. string.format(" (%d)", #dump.critter));
+	CHD_frmMainchbCrittersText:SetText(L.chbCritters .. string.format(" (%d)", #dump.critter));
 
-	if frmMainchbReputation:GetChecked() then
+	if CHD_frmMainchbReputation:GetChecked() then
 		dump.reputation    = CHD_trycall(CHD_GetRepInfo)         or {};
 	else
 		dump.reputation = {};
 	end;
-	frmMainchbReputationText:SetText(L.chbReputation .. string.format(" (%d)",
+	CHD_frmMainchbReputationText:SetText(L.chbReputation .. string.format(" (%d)",
 		CHD_GetTableCount(dump.reputation)));
 
-	if frmMainchbAchievements:GetChecked() then
+	if CHD_frmMainchbAchievements:GetChecked() then
 		dump.achievement   = CHD_trycall(CHD_GetAchievementInfo)   or {};
 		dump.criteria1     = CHD_trycall(CHD_GetCriteriaCompleted) or {};
 		dump.criteria0     = CHD_trycall(CHD_GetCriteriaProgress)  or {};
@@ -979,72 +986,72 @@ function CHD_OnClientDumpClick()
 		dump.criteria1 = {};
 		dump.criteria0 = {};
 	end
-	frmMainchbAchievementsText:SetText(L.chbAchievements .. string.format(" (%d)",
+	CHD_frmMainchbAchievementsText:SetText(L.chbAchievements .. string.format(" (%d)",
 		#dump.achievement));
 
-	if frmMainchbSkills:GetChecked() then
+	if CHD_frmMainchbSkills:GetChecked() then
 		dump.skill         = CHD_trycall(CHD_GetSkillInfo)       or {};
 	else
 		dump.skill = {};
 	end
-	frmMainchbSkillsText:SetText(L.chbSkills .. string.format(" (%d)",
+	CHD_frmMainchbSkillsText:SetText(L.chbSkills .. string.format(" (%d)",
 		CHD_GetTableCount(dump.skill)));
-	if frmMainchbInventory:GetChecked() then
+	if CHD_frmMainchbInventory:GetChecked() then
 		dump.inventory     = CHD_trycall(CHD_GetInventoryInfo)   or {};
 	else
 		dump.inventory = {};
 	end
-	frmMainchbInventoryText:SetText(L.chbInventory .. string.format(" (%d)",
+	CHD_frmMainchbInventoryText:SetText(L.chbInventory .. string.format(" (%d)",
 		CHD_GetTableCount(dump.inventory)));
-	if frmMainchbBags:GetChecked() then
+	if CHD_frmMainchbBags:GetChecked() then
 		dump.bag           = CHD_trycall(CHD_GetBagInfo)         or {};
 	else
 		dump.bag = {};
 	end
-	frmMainchbBagsText:SetText(L.chbBags .. string.format(" (%d)",
+	CHD_frmMainchbBagsText:SetText(L.chbBags .. string.format(" (%d)",
 		CHD_GetTableCount(dump.bag)));
-	if frmMainchbEquipment:GetChecked() then
+	if CHD_frmMainchbEquipment:GetChecked() then
 		dump.equipment = CHD_trycall(CHD_GetEquipmentInfo) or {};
 	else
 		dump.equipment = {};
 	end
-	frmMainchbEquipmentText:SetText(L.chbEquipment .. string.format(" (%d)",
+	CHD_frmMainchbEquipmentText:SetText(L.chbEquipment .. string.format(" (%d)",
 		#dump.equipment));
 	-- TODO: returns this place
-	if frmMainchbQuestlog:GetChecked() then
+	if CHD_frmMainchbQuestlog:GetChecked() then
 		dump.questlog = CHD_trycall(CHD_GetQuestlogInfo) or {};
 	else
 		dump.questlog = {};
 	end
-	frmMainchbQuestlogText:SetText(L.chbQuestlog .. string.format(" (%d)",
+	CHD_frmMainchbQuestlogText:SetText(L.chbQuestlog .. string.format(" (%d)",
 		#dump.questlog));
 
-	if frmMainchbMacro:GetChecked() then
+	if CHD_frmMainchbMacro:GetChecked() then
 		dump.pmacro = CHD_trycall(CHD_GetPMacroInfo) or {};
 		dump.amacro = CHD_trycall(CHD_GetAMacroInfo) or {};
 	else
 		dump.pmacro = {};
 		dump.amacro = {};
 	end
-	frmMainchbMacroText:SetText(L.chbMacro .. string.format(" (%d)",
+	CHD_frmMainchbMacroText:SetText(L.chbMacro .. string.format(" (%d)",
 		#dump.pmacro + #dump.amacro));
 
-	if frmMainchbFriend:GetChecked() then
+	if CHD_frmMainchbFriend:GetChecked() then
 		dump.friend = CHD_trycall(CHD_GetFriendsInfo) or {};
 		dump.ignore = CHD_trycall(CHD_GetIgnoresInfo) or {};
 	else
 		dump.friend = {};
 		dump.ignore = {};
 	end
-	frmMainchbFriendText:SetText(L.chbFriend .. string.format(" (%d, %d)",
+	CHD_frmMainchbFriendText:SetText(L.chbFriend .. string.format(" (%d, %d)",
 		#dump.friend, #dump.ignore));
 
-	if frmMainchbArena:GetChecked() then
+	if CHD_frmMainchbArena:GetChecked() then
 		dump.arena = CHD_trycall(CHD_GetArenaInfo) or {};
 	else
 		dump.arena = {};
 	end
-	frmMainchbArenaText:SetText(L.chbArena .. string.format(" (%d)", #dump.arena));
+	CHD_frmMainchbArenaText:SetText(L.chbArena .. string.format(" (%d)", #dump.arena));
 
 	CHD_Message(L.CreatedDump);
 	CHD_Message(L.DumpDone);
