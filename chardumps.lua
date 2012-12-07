@@ -12,9 +12,9 @@
 chardumps = LibStub('AceAddon-3.0'):NewAddon('chardumps');
 local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
 
+CHD = {};
 CHD_CLIENT = CHD_CLIENT or {};
 CHD_SERVER = CHD_SERVER or {};
-
 CHD_SERVER.taxi = CHD_SERVER.taxi or {};
 
 local MAX_NUM_CONTINENT = 4 -- 1..4
@@ -195,6 +195,78 @@ function CHD_OnEvent(self, event, ...)
 	end
 end
 
+function CHD_CreateMessageBox()
+	local theFrame = CreateFrame("Frame", nil, UIParent);
+
+	theFrame:ClearAllPoints();
+	theFrame:SetPoint("CENTER", UIParent);
+	theFrame:SetHeight(78);
+	theFrame:SetWidth(200);
+
+	theFrame:SetBackdrop({
+		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16,
+		edgeFile = "Interface\\AddOns\\Recount\\textures\\otravi-semi-full-border", edgeSize = 32,
+		insets = {left = 1, right = 1, top = 20, bottom = 1},
+	});
+	theFrame:SetBackdropBorderColor(1.0, 0.0, 0.0);
+	theFrame:SetBackdropColor(24/255, 24/255, 24/255);
+
+	theFrame:EnableMouse(true)
+	theFrame:SetMovable(true)
+
+	theFrame:SetScript("OnMouseDown", function(this)
+		if ( ( ( not this.isLocked ) or ( this.isLocked == 0 ) ) and ( arg1 == "LeftButton" ) ) then
+			this:StartMoving();
+			this.isMoving = true;
+		end
+	end);
+	theFrame:SetScript("OnMouseUp", function(this)
+		if ( this.isMoving ) then
+			this:StopMovingOrSizing();
+			this.isMoving = false;
+		end
+	end);
+	theFrame:SetScript("OnHide", function(this)
+		if ( this.isMoving ) then
+			this:StopMovingOrSizing();
+			this.isMoving = false;
+		end
+	end);
+
+	theFrame.Title = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
+	theFrame.Title:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 6, -15);
+	theFrame.Title:SetTextColor(1.0,1.0,1.0,1.0);
+	theFrame.Title:SetText("null");
+
+	theFrame.Text = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
+	theFrame.Text:SetPoint("CENTER",theFrame,"CENTER",0,-3);
+	theFrame.Text:SetTextColor(1.0,1.0,1.0);
+	theFrame.Text:SetText(L.areyousure);
+
+	theFrame.YesButton = CreateFrame("Button", nil, theFrame, "OptionsButtonTemplate");
+	theFrame.YesButton:SetWidth(90);
+	theFrame.YesButton:SetHeight(24);
+	theFrame.YesButton:SetPoint("BOTTOMRIGHT", theFrame, "BOTTOM", -4, 4);
+	theFrame.YesButton:SetScript("OnClick", function()
+		if theFrame.OnOK then
+			theFrame:OnOK();
+		end
+		theFrame:Hide();
+	end);
+	theFrame.YesButton:SetText(L.Yes);
+
+	theFrame.NoButton = CreateFrame("Button", nil, theFrame, "OptionsButtonTemplate");
+	theFrame.NoButton:SetWidth(90);
+	theFrame.NoButton:SetHeight(24);
+	theFrame.NoButton:SetPoint("BOTTOMLEFT", theFrame, "BOTTOM", 4, 4);
+	theFrame.NoButton:SetScript("OnClick", function() theFrame:Hide() end);
+	theFrame.NoButton:SetText(L.No);
+
+	theFrame:Hide();
+
+	CHD.MessageBox = theFrame;
+end
+
 function AddTooltip(theFrame, Title, TooltipText)
 	theFrame.title = Title;
 	theFrame.tooltiptext = TooltipText;
@@ -305,6 +377,8 @@ function CHD_OnLoad(self)
 	AddTooltip(frmMainbtnQuestDel, L.chbQuests, L.ttbtnQuestDel);
 	AddTooltip(frmMainbtnTaxiDel, L.chbTaxi, L.ttbtnTaxiDel);
 
+	CHD_CreateMessageBox();
+
 	CHD_Message(L.loadmessage);
 end
 
@@ -327,19 +401,37 @@ function OnfrmMainbtnHideClLick()
 	frmMain:Hide();
 end
 
-function OnfrmMainbtnBankDelCLick()
+function CHD_BankDel()
 	CHD_SERVER.bank = nil;
 	frmMainchbBankText:SetText(L.chbBank);
+end;
+
+function OnfrmMainbtnBankDelCLick()
+	CHD.MessageBox.Title:SetText(L.DeleteBank);
+	CHD.MessageBox.OnOK = CHD_BankDel;
+	CHD.MessageBox:Show();
 end
 
-function OnfrmMainbtnQuestDelCLick()
+function CHD_QuestDel()
 	CHD_SERVER.quest = nil;
 	frmMainchbQuestsText:SetText(L.chbQuests);
+end;
+
+function OnfrmMainbtnQuestDelCLick()
+	CHD.MessageBox.Title:SetText(L.DeleteQuests);
+	CHD.MessageBox.OnOK = CHD_QuestDel;
+	CHD.MessageBox:Show();
 end
 
-function OnfrmMainbtnTaxiDelCLick()
+function CHD_TaxiDel()
 	CHD_SERVER.taxi = nil;
 	frmMainchbTaxiText:SetText(L.chbTaxi);
+end;
+
+function OnfrmMainbtnTaxiDelCLick()
+	CHD.MessageBox.Title:SetText(L.DeleteTaxi);
+	CHD.MessageBox.OnOK = CHD_TaxiDel;
+	CHD.MessageBox:Show();
 end
 
 function CHD_OnRecieveQuestsClick()
@@ -712,10 +804,21 @@ function CHD_GetArenaInfo()
 
 	CHD_Message(L.GetArena);
 	for i = 1, 3 do
-		local teamName, teamSize, teamRating, _, _, seasonTeamPlayed, seasonTeamWins, _, seasonPlayerPlayed, _, playerRating = GetArenaTeam(i);
+		local teamName, teamSize, teamRating, _, _, seasonTeamPlayed, seasonTeamWins, _, seasonPlayerPlayed, _, playerRating, bg_red, bg_green, bg_blue, emblem, emblem_red, emblem_green, emblem_blue, border, border_red, border_green, border_blue = GetArenaTeam(i);
 		print(teamName, teamSize, teamRating);
 		if teamName then
-			res[i] = {["N"] = teamName, ["R"] = teamRating, ["TP"] = seasonTeamPlayed, ["TW"] = seasonTeamWins, ["PP"] = seasonPlayerPlayed, ["PR"] = playerRating};
+			local arena = {};
+			arena.teamSize           = teamSize;
+			arena.teamName           = teamName;
+			arena.teamRating         = teamRating;
+			arena.seasonTeamPlayed   = seasonTeamPlayed;
+			arena.seasonTeamWins     = seasonTeamWins;
+			arena.seasonPlayerPlayed = seasonPlayerPlayed;
+			arena.playerRating       = playerRating;
+			arena.bg = {["R"] = bg_red, ["G"] = bg_green, ["B"] = bg_blue};
+			arena.emblem = {["S"] = emblem, ["R"] = emblem_red, ["G"] = emblem_green, ["B"] = emblem_blue};
+			arena.border = {["S"] = border, ["R"] = border_red, ["G"] = border_green, ["B"] = border_blue};
+			res[i] = arena;
 		end
 	end
 
