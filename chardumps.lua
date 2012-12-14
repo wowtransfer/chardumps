@@ -25,7 +25,7 @@ local MAX_NUM_CONTINENT = 4 -- 1..4
 function CHD_Message(...)
 	local x = {...};
 	for k,v in pairs(x) do
-		print("\124cFF9F3FFFchardump:\124r ", tostring(v));
+		print("\124cFF9F3FFFchardumps:\124r ", tostring(v));
 	end
 end
 
@@ -639,6 +639,13 @@ end
 
 function CHD_GetSkillInfo()
 	local res = {};
+
+	for i = 1,100 do -- 100 >> skill count
+		local _,isHeader,isExpanded = GetSkillLineInfo(i);
+		if isHeader and not isExpanded then
+			ExpandSkillHeader(i);
+		end
+	end
 
 	CHD_Message(L.GetSkill);
 	for i = 1, GetNumSkillLines() do
