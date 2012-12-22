@@ -110,4 +110,12 @@ L.btnClientDump   = "Дамп с клиента"
 L.btnServerDump   = "Дамп с сервера"
 L.CreatingDump    = "Создание дампа..."
 L.CreatedDump     = "Создание дампа прошло успешно"
-L.DumpDone        = "Создано! Дамп находится здесь: каталог WoW/WTF/Account/%ИмяАккаунта%/%ИмяРеалма%/%ИмяПерсонажа%/SavedVariables/\124cFF00FF00chardumps.lua\124r"
+L.DumpDone        = "Создано! Дамп находится здесь:\
+каталог WoW/\
+ WTF/\
+  Account/\
+   %ИмяАккаунта%/\
+    %ИмяРеалма%/\
+     %ИмяПерсонажа%/\
+      SavedVariables/\
+       \124cFF00FF00chardumps.lua\124r"

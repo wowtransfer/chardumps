@@ -110,4 +110,12 @@ L.btnClientDump   = "Client dump"
 L.btnServerDump   = "Server dump"
 L.CreatingDump    = "Creating dump..."
 L.CreatedDump     = "Creation of dump was successful"
-L.DumpDone        = "DONE! You can find dump here: WoW Folder /WTF/Account/%AccountName%/%RealmName%/%PlayerName%/SavedVariables/chardumps.lua"
+L.DumpDone        = "DONE! You can find dump here:\
+WoW Folder/\
+ WTF/\
+  Account/\
+   %AccountName%/\
+    %RealmName%/\
+     %PlayerName%/\
+      SavedVariables/\
+       \124cFF00FF00chardumps.lua\124r"

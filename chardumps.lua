@@ -9,10 +9,6 @@
 	thanks Sun`s chardump, reforged
 ]]
 local crypt_lib = crypt_lib;
-print("chardumps crypt ", crypt_lib);
-print("chardumps encode ", crypt_lib.encode);
-print("chardumps decode ", crypt_lib.decode);
-
 chardumps = LibStub('AceAddon-3.0'):NewAddon('chardumps');
 local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
 
@@ -92,97 +88,30 @@ end
 function CHD_OnVariablesLoaded()
 	-- client
 	CHD_CLIENT = {};
---[[	if type(CHD_CLIENT) == "string" then
-		CHD_CLIENT = crypt_lib.decode(CHD_CLIENT);
-	end
-	if CHD_CLIENT.glyph then
-		CHD_frmMainchbGlyphsText:SetText(L.chbGlyphs .. string.format(" (%d)",
-			CHD_GetTableCount(CHD_CLIENT.glyph)));
-	end
-	if CHD_CLIENT.currency then
-		CHD_frmMainchbCurrencyText:SetText(L.chbCurrency .. string.format(" (%d)",
-			CHD_GetTableCount(CHD_CLIENT.currency)));
-	end
-	if CHD_CLIENT.spell then
-		CHD_frmMainchbSpellsText:SetText(L.chbSpells .. string.format(" (%d)",
-			CHD_GetTableCount(CHD_CLIENT.spell)));
-	end
-	if CHD_CLIENT.mount then
-		CHD_frmMainchbMountsText:SetText(L.chbMounts .. string.format(" (%d)", #CHD_CLIENT.mount))
-	end
-	if CHD_CLIENT.critter then
-		CHD_frmMainchbCrittersText:SetText(L.chbCritters .. string.format(" (%d)", #CHD_CLIENT.critter))
-	end
-	if CHD_CLIENT.reputation then
-		CHD_frmMainchbReputationText:SetText(L.chbReputation .. string.format(" (%d)",
-			CHD_GetTableCount(CHD_CLIENT.reputation)));
-	end
-	if CHD_CLIENT.achievement then
-		CHD_frmMainchbAchievementsText:SetText(L.chbAchievements .. string.format(" (%d)",
-			#CHD_CLIENT.achievement));
-	end
-	if CHD_CLIENT.skill then
-		CHD_frmMainchbSkillsText:SetText(L.chbSkills .. string.format(" (%d)",
-			CHD_GetTableCount(CHD_CLIENT.skill)));
-	end
-	if CHD_CLIENT.bag then
-		CHD_frmMainchbBagsText:SetText(L.chbBags .. string.format(" (%d)",
-			CHD_GetTableCount(CHD_CLIENT.bag)));
-	end
-	if CHD_CLIENT.inventory then
-		CHD_frmMainchbInventoryText:SetText(L.chbInventory .. string.format(" (%d)",
-			CHD_GetTableCount(CHD_CLIENT.inventory)));
-	end
-	if CHD_CLIENT.equipment then
-		CHD_frmMainchbEquipmentText:SetText(L.chbEquipment .. string.format(" (%d)",
-			#CHD_CLIENT.equipment));
-	end
-	if CHD_CLIENT.questlog then
-		CHD_frmMainchbQuestlogText:SetText(L.chbQuestlog .. string.format(" (%d)",
-			#CHD_CLIENT.questlog));
-	end
-	local n = 0;
-	if CHD_CLIENT.pmacro then
-		n = #CHD_CLIENT.pmacro;
-	end
-	if CHD_CLIENT.amacro then
-		n = n + #CHD_CLIENT.amacro;
-	end
-	CHD_frmMainchbMacroText:SetText(L.chbMacro .. string.format(" (%d)", n));
 
-	local m = 0;
-	if CHD_CLIENT.friend then
-		n = #CHD_CLIENT.friend;
-	end
-	if CHD_CLIENT.ignore then
-		m = #CHD_CLIENT.ignore;
-	end
-	CHD_frmMainchbFriendText:SetText(L.chbFriend .. string.format(" (%d, %d)", n, m));
-
-	if CHD_CLIENT.arena then
-		CHD_frmMainchbArenaText:SetText(L.chbArena .. string.format(" (%d)", #CHD_CLIENT.arena));
-	end
---]]
 	-- server
-	if type(CHD_SERVER) == "string" then
-		CHD_SERVER_LOCAL = crypt_lib.decode(CHD_SERVER);
-	else
-		CHD_SERVER_LOCAL = {};
-	end
-	if not CHD_SERVER_LOCAL.taxi then
-		CHD_SERVER_LOCAL.taxi = {};
+--	if type(CHD_SERVER) == "string" then
+--		CHD_SERVER_LOCAL = crypt_lib.decode(CHD_SERVER);
+--	else
+--		CHD_SERVER_LOCAL = {};
+--	end
+	CHD_SERVER_LOCAL = {};
+
+	if not CHD_TAXI then
+		CHD_TAXI = {};
 	end
 	for i = 1, MAX_NUM_CONTINENT do
-		if not CHD_SERVER_LOCAL.taxi[i] then
-			CHD_SERVER_LOCAL.taxi[i] = {};
+		if not CHD_TAXI[i] then
+			CHD_TAXI[i] = {};
 		end
 	end
+	CHD_SERVER_LOCAL.taxi = CHD_TAXI;
 
 	CHD_frmMainchbTaxiText:SetText(L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
-		#CHD_SERVER_LOCAL.taxi[1],
-		#CHD_SERVER_LOCAL.taxi[2],
-		#CHD_SERVER_LOCAL.taxi[3],
-		#CHD_SERVER_LOCAL.taxi[4])
+		#CHD_TAXI[1],
+		#CHD_TAXI[2],
+		#CHD_TAXI[3],
+		#CHD_TAXI[4])
 	);
 	if CHD_SERVER_LOCAL.quest then
 		CHD_frmMainchbQuestsText:SetText(L.chbQuests .. string.format(" (%d)", #CHD_SERVER_LOCAL.quest));
@@ -446,6 +375,7 @@ function OnCHD_frmMainbtnQuestDelCLick()
 end
 
 function CHD_TaxiDel()
+	CHD_TAXI = {};
 	CHD_SERVER_LOCAL.taxi = {};
 	CHD_frmMainchbTaxiText:SetText(L.chbTaxi);
 	CHD_Message(L.DeleteTaxi);
@@ -878,7 +808,6 @@ end
 
 function CHD_SetTaxiInfo(continent)
 	local res = {};
-
 --[[
 -1 - if showing the cosmic map or a Battleground map. Also when showing The Scarlet Enclave, the Death Knights' starting area. 
 0 - if showing the entire world of Azeroth
@@ -900,21 +829,24 @@ function CHD_SetTaxiInfo(continent)
 		local name = TaxiNodeName(i);
 		res[i] = name;
 	end
+	if not CHD_TAXI then
+		CHD_TAXI = {};
+	end
 	for i = 1, MAX_NUM_CONTINENT do
-		if not CHD_SERVER_LOCAL.taxi[i] then
-			CHD_SERVER_LOCAL.taxi[i] = {};
+		if not CHD_TAXI[i] then
+			CHD_TAXI[i] = {};
 		end
 	end
-	CHD_SERVER_LOCAL.taxi[continent] = res;
+	CHD_TAXI[continent] = res;
 
 	CHD_frmMainchbTaxiText:SetText(L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
-		(#CHD_SERVER_LOCAL.taxi[1] or 0),
-		(#CHD_SERVER_LOCAL.taxi[2] or 0),
-		(#CHD_SERVER_LOCAL.taxi[3] or 0),
-		(#CHD_SERVER_LOCAL.taxi[4] or 0))
+		(#CHD_TAXI[1] or 0),
+		(#CHD_TAXI[2] or 0),
+		(#CHD_TAXI[3] or 0),
+		(#CHD_TAXI[4] or 0))
 	);
 
-	CHD_Message(L.CountOfTaxi .. tostring(#CHD_SERVER_LOCAL.taxi[continent]));
+	CHD_Message(L.CountOfTaxi .. tostring(#CHD_TAXI[continent]));
 
 	return true;
 end
@@ -1088,6 +1020,7 @@ function CHD_OnClientDumpClick()
 end
 
 function CHD_OnServerDumpClick()
+	CHD_SERVER_LOCAL.taxi = CHD_TAXI;
 	CHD_SERVER = crypt_lib.encode(CHD_SERVER_LOCAL);
 	CHD_Message(L.DumpDone);
 end

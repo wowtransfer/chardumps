@@ -7,10 +7,10 @@
 ## OptionalDeps: Ace3
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
-## SavedVariablesPerCharacter: CHD_CLIENT,CHD_SERVER,CHD_KEY
+## SavedVariablesPerCharacter: CHD_CLIENT,CHD_SERVER,CHD_KEY,CHD_TAXI
 embeds.xml
 localization.xml
-crypt_lib.lua
+crypt_client.lua
 chardumps.lua
 chardumpsForm.xml
 options.xml
