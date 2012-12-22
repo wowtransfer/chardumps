@@ -8,13 +8,19 @@
 		Gracer (Alliance)
 	thanks Sun`s chardump, reforged
 ]]
+local crypt_lib = crypt_lib;
+print("chardumps crypt ", crypt_lib);
+print("chardumps encode ", crypt_lib.encode);
+print("chardumps decode ", crypt_lib.decode);
 
 chardumps = LibStub('AceAddon-3.0'):NewAddon('chardumps');
 local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
 
-CHD = {};
+local CHD = {};
+local CHD_SERVER_LOCAL = {};
 CHD_CLIENT = CHD_CLIENT or {};
 CHD_SERVER = CHD_SERVER or {};
+
 
 local MAX_NUM_CONTINENT = 4 -- 1..4
 
@@ -85,6 +91,10 @@ end
 
 function CHD_OnVariablesLoaded()
 	-- client
+	CHD_CLIENT = {};
+--[[	if type(CHD_CLIENT) == "string" then
+		CHD_CLIENT = crypt_lib.decode(CHD_CLIENT);
+	end
 	if CHD_CLIENT.glyph then
 		CHD_frmMainchbGlyphsText:SetText(L.chbGlyphs .. string.format(" (%d)",
 			CHD_GetTableCount(CHD_CLIENT.glyph)));
@@ -152,28 +162,34 @@ function CHD_OnVariablesLoaded()
 	if CHD_CLIENT.arena then
 		CHD_frmMainchbArenaText:SetText(L.chbArena .. string.format(" (%d)", #CHD_CLIENT.arena));
 	end
-
+--]]
 	-- server
-	if not CHD_SERVER.taxi then
-		CHD_SERVER.taxi = {};
+	if type(CHD_SERVER) == "string" then
+		CHD_SERVER_LOCAL = crypt_lib.decode(CHD_SERVER);
+	else
+		CHD_SERVER_LOCAL = {};
+	end
+	if not CHD_SERVER_LOCAL.taxi then
+		CHD_SERVER_LOCAL.taxi = {};
 	end
 	for i = 1, MAX_NUM_CONTINENT do
-		if not CHD_SERVER.taxi[i] then
-			CHD_SERVER.taxi[i] = {};
+		if not CHD_SERVER_LOCAL.taxi[i] then
+			CHD_SERVER_LOCAL.taxi[i] = {};
 		end
 	end
+
 	CHD_frmMainchbTaxiText:SetText(L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
-		#CHD_SERVER.taxi[1],
-		#CHD_SERVER.taxi[2],
-		#CHD_SERVER.taxi[3],
-		#CHD_SERVER.taxi[4])
+		#CHD_SERVER_LOCAL.taxi[1],
+		#CHD_SERVER_LOCAL.taxi[2],
+		#CHD_SERVER_LOCAL.taxi[3],
+		#CHD_SERVER_LOCAL.taxi[4])
 	);
-	if CHD_SERVER.quest then
-		CHD_frmMainchbQuestsText:SetText(L.chbQuests .. string.format(" (%d)", #CHD_SERVER.quest));
+	if CHD_SERVER_LOCAL.quest then
+		CHD_frmMainchbQuestsText:SetText(L.chbQuests .. string.format(" (%d)", #CHD_SERVER_LOCAL.quest));
 	end
-	if CHD_SERVER.bank then
+	if CHD_SERVER_LOCAL.bank then
 		CHD_frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)",
-			CHD_GetTableCount(CHD_SERVER.bank)));
+			CHD_GetTableCount(CHD_SERVER_LOCAL.bank)));
 	end
 end
 
@@ -186,12 +202,12 @@ function CHD_OnEvent(self, event, ...)
 		CHD_OnVariablesLoaded();
 	elseif "BANKFRAME_OPENED" == event then
 		if CHD_frmMainchbBank:GetChecked() then
-			CHD_SERVER.bank = CHD_trycall(CHD_GetBankInfo) or {};
+			CHD_SERVER_LOCAL.bank = CHD_trycall(CHD_GetBankInfo) or {};
 		else
-			CHD_SERVER.bank = {};
+			CHD_SERVER_LOCAL.bank = {};
 		end
 		CHD_frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)",
-			CHD_GetTableCount(CHD_SERVER.bank)));
+			CHD_GetTableCount(CHD_SERVER_LOCAL.bank)));
 	end
 end
 
@@ -204,15 +220,16 @@ function CHD_CreateMessageBox()
 	theFrame:SetWidth(200);
 
 	theFrame:SetBackdrop({
-		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16,
-		edgeFile = "Interface\\AddOns\\Recount\\textures\\otravi-semi-full-border", edgeSize = 32,
-		insets = {left = 1, right = 1, top = 20, bottom = 1},
+		bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+		tile = true,
+		tileSize = 16,
+		edgeSize = 16,
+		insets = {left = 1, right = 1, top = 1, bottom = 1},
 	});
-	theFrame:SetBackdropBorderColor(1.0, 0.0, 0.0);
-	theFrame:SetBackdropColor(24/255, 24/255, 24/255);
-
-	theFrame:EnableMouse(true)
-	theFrame:SetMovable(true)
+	theFrame:SetFrameStrata("TOOLTIP");
+	theFrame:EnableMouse(true);
+	theFrame:SetMovable(true);
 
 	theFrame:SetScript("OnMouseDown", function(this)
 		if ( ( ( not this.isLocked ) or ( this.isLocked == 0 ) ) and ( arg1 == "LeftButton" ) ) then
@@ -234,12 +251,12 @@ function CHD_CreateMessageBox()
 	end);
 
 	theFrame.Title = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
-	theFrame.Title:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 6, -15);
-	theFrame.Title:SetTextColor(1.0,1.0,1.0,1.0);
+	theFrame.Title:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 6, -10);
+	theFrame.Title:SetTextColor(1.0,1.0,0.0,1.0);
 	theFrame.Title:SetText("null");
 
 	theFrame.Text = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
-	theFrame.Text:SetPoint("CENTER",theFrame,"CENTER",0,-3);
+	theFrame.Text:SetPoint("CENTER",theFrame,"CENTER",0,0);
 	theFrame.Text:SetTextColor(1.0,1.0,1.0);
 	theFrame.Text:SetText(L.areyousure);
 
@@ -282,8 +299,8 @@ end
 
 function CHD_GetBackdrop()
 	local backdrop = {
-		bgFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
-		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+		bgFile="Interface\\DialogFrame\\UI-DialogBox-Background",
+		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
 		tile = true,
 		tileSize = 16,
 		edgeSize = 16,
@@ -326,13 +343,15 @@ function CHD_OnLoad(self)
 	CHD_frmMainchbTaxiText:SetText(L.chbTaxi);
 
 	CHD_frmMainbtnClientDumpText:SetText(L.btnClientDump);
+	CHD_frmMainbtnServerDumpText:SetText(L.btnServerDump);
 
 	self:SetScript("OnEvent", CHD_OnEvent);
 	self:RegisterEvent("TAXIMAP_OPENED");
 	self:RegisterEvent("VARIABLES_LOADED");
 	self:RegisterEvent("BANKFRAME_OPENED");
-
-	CHD_frmMain:SetBackdrop(CHD_GetBackdrop());
+	self:RegisterEvent("PLAYER_LEAVING_WORLD");
+	self:SetBackdrop(CHD_GetBackdrop());
+	self:SetFrameStrata("HIGH");
 
 	local btnW = CHD_frmMainbtnHide:GetWidth();
 	CHD_frmMainbtnHide:SetParent(CHD_frmMainpanSystem);
@@ -372,6 +391,7 @@ function CHD_OnLoad(self)
 	AddTooltip(CHD_frmMainbtnHide, L.ttbtnHide, "");
 	AddTooltip(CHD_frmMainbtnMinimize, L.ttbtnMinimize, "");
 	AddTooltip(CHD_frmMainbtnClientDump, L.btnClientDump, L.ttbtnClientDump);
+	AddTooltip(CHD_frmMainbtnServerDump, L.btnServerDump, L.ttbtnServerDump);
 	AddTooltip(CHD_frmMainbtnQuestQuery, L.btnServerQuery, L.ttbtnServerQuery);
 	AddTooltip(CHD_frmMainbtnBankDel, L.chbBank, L.ttbtnBankDel);
 	AddTooltip(CHD_frmMainbtnQuestDel, L.chbQuests, L.ttbtnQuestDel);
@@ -402,7 +422,7 @@ function OnCHD_frmMainbtnHideClLick()
 end
 
 function CHD_BankDel()
-	CHD_SERVER.bank = {};
+	CHD_SERVER_LOCAL.bank = {};
 	CHD_frmMainchbBankText:SetText(L.chbBank);
 	CHD_Message(L.DeleteBank);
 end;
@@ -414,7 +434,7 @@ function OnCHD_frmMainbtnBankDelCLick()
 end
 
 function CHD_QuestDel()
-	CHD_SERVER.quest = {};
+	CHD_SERVER_LOCAL.quest = {};
 	CHD_frmMainchbQuestsText:SetText(L.chbQuests);
 	CHD_Message(L.DeleteQuests);
 end;
@@ -426,7 +446,7 @@ function OnCHD_frmMainbtnQuestDelCLick()
 end
 
 function CHD_TaxiDel()
-	CHD_SERVER.taxi = {};
+	CHD_SERVER_LOCAL.taxi = {};
 	CHD_frmMainchbTaxiText:SetText(L.chbTaxi);
 	CHD_Message(L.DeleteTaxi);
 end;
@@ -440,11 +460,11 @@ end
 function CHD_OnRecieveQuestsClick()
 	QueryQuestsCompleted();
 	if CHD_frmMainchbQuests:GetChecked() then
-		CHD_SERVER.quest       = CHD_trycall(CHD_GetQuestInfo)       or {};
+		CHD_SERVER_LOCAL.quest       = CHD_trycall(CHD_GetQuestInfo)       or {};
 		CHD_frmMainchbQuestsText:SetText(L.chbQuests .. string.format(" (%d)",
-			CHD_GetTableCount(CHD_SERVER.quest)));
+			CHD_GetTableCount(CHD_SERVER_LOCAL.quest)));
 	else
-		CHD_SERVER.quest = {};
+		CHD_SERVER_LOCAL.quest = {};
 		CHD_frmMainchbQuestsText:SetText(L.chbQuests .. " (0)");
 	end
 end;
@@ -881,20 +901,20 @@ function CHD_SetTaxiInfo(continent)
 		res[i] = name;
 	end
 	for i = 1, MAX_NUM_CONTINENT do
-		if not CHD_SERVER.taxi[i] then
-			CHD_SERVER.taxi[i] = {};
+		if not CHD_SERVER_LOCAL.taxi[i] then
+			CHD_SERVER_LOCAL.taxi[i] = {};
 		end
 	end
-	CHD_SERVER.taxi[continent] = res;
+	CHD_SERVER_LOCAL.taxi[continent] = res;
 
 	CHD_frmMainchbTaxiText:SetText(L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
-		(#CHD_SERVER.taxi[1] or 0),
-		(#CHD_SERVER.taxi[2] or 0),
-		(#CHD_SERVER.taxi[3] or 0),
-		(#CHD_SERVER.taxi[4] or 0))
+		(#CHD_SERVER_LOCAL.taxi[1] or 0),
+		(#CHD_SERVER_LOCAL.taxi[2] or 0),
+		(#CHD_SERVER_LOCAL.taxi[3] or 0),
+		(#CHD_SERVER_LOCAL.taxi[4] or 0))
 	);
 
-	CHD_Message(L.CountOfTaxi .. tostring(#CHD_SERVER.taxi[continent]));
+	CHD_Message(L.CountOfTaxi .. tostring(#CHD_SERVER_LOCAL.taxi[continent]));
 
 	return true;
 end
@@ -1063,6 +1083,11 @@ function CHD_OnClientDumpClick()
 	CHD_Message(L.CreatedDump);
 	CHD_Message(L.DumpDone);
 
-	CHD_CLIENT = dump;
-	CHD_KEY   = nil;
+	CHD_CLIENT = crypt_lib.encode(dump);
+	CHD_KEY    = nil;
+end
+
+function CHD_OnServerDumpClick()
+	CHD_SERVER = crypt_lib.encode(CHD_SERVER_LOCAL);
+	CHD_Message(L.DumpDone);
 end

@@ -2,15 +2,15 @@
 ## Title: chardumps
 ## Author: SlaFF
 ## Version: 1.0
-## Notes: Dump of character by SlaFF
+## Notes: Save your character!
 ## eMail: thatislove@mail.ru
 ## OptionalDeps: Ace3
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
-## SavedVariables: CHD_CLIENT,CHD_SERVER,CHD_KEY
-
+## SavedVariablesPerCharacter: CHD_CLIENT,CHD_SERVER,CHD_KEY
 embeds.xml
 localization.xml
+crypt_lib.lua
 chardumps.lua
 chardumpsForm.xml
 options.xml
