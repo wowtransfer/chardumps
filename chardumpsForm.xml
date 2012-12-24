@@ -3,7 +3,7 @@
   <Frame name="CHD_frmMain" movable="true" enableMouse="true">
     <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508883-59c2-4f83-ae10-27aaad48391b" />-->
     <Size>
-      <AbsDimension x="357" y="418" />
+      <AbsDimension x="357" y="425" />
     </Size>
     <Anchors>
       <Anchor point="CENTER" relativeTo="UIParent">
@@ -64,6 +64,26 @@
       </Layer>
     </Layers>
     <Frames>
+      <CheckButton name="$parentchbActive" checked="true">
+        <!--<FrameSkin skinid="f15d4970-d66d-444e-bb2d-1ad102c87fed" frameid="f15d4974-d66d-444e-bb2d-1ad102c87fed" />-->
+        <Size>
+          <AbsDimension x="24" y="24" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="3" y="-2" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+        <PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+        <DisabledTexture />
+        <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+        <PushedTextOffset x="0" y="0" />
+        <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+        <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+      </CheckButton>
       <Button name="$parentbtnBankDel" text="-">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508884-59c2-4f83-ae10-27aaad48391b" />-->
         <Size>
@@ -1200,7 +1220,8 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>CHD_OnServerDumpClick()</OnClick>
+          <OnClick>CHD_OnServerDumpClick()
+</OnClick>
         </Scripts>
         <NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">
           <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
@@ -1224,6 +1245,26 @@
         <DisabledFont style="GameFontDisable" />
         <PushedTextOffset x="0" y="0" />
       </Button>
+      <CheckButton name="$parentchbCrypt" checked="true">
+        <!--<FrameSkin skinid="f15d4970-d66d-444e-bb2d-1ad102c87fed" frameid="f15d4974-d66d-444e-bb2d-1ad102c87fed" />-->
+        <Size>
+          <AbsDimension x="24" y="24" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="38" y="-3" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+        <PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+        <DisabledTexture />
+        <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+        <PushedTextOffset x="0" y="0" />
+        <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+        <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+      </CheckButton>
     </Frames>
     <Scripts>
       <OnLoad>CHD_OnLoad(self)

@@ -14,9 +14,9 @@ local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
 
 local CHD = {};
 local CHD_SERVER_LOCAL = {};
-CHD_CLIENT = CHD_CLIENT or {};
-CHD_SERVER = CHD_SERVER or {};
-
+CHD_CLIENT  = CHD_CLIENT  or {};
+CHD_SERVER  = CHD_SERVER  or {};
+CHD_OPTIONS = CHD_OPTIONS or {};
 
 local MAX_NUM_CONTINENT = 4 -- 1..4
 
@@ -85,16 +85,96 @@ function CHD_SlashCmdHandler(cmd)
 	end
 end
 
+
+function CHD_SetOptionsDef()
+	CHD_OPTIONS = {};
+
+	CHD_OPTIONS.chbCrypt = true;
+	CHD_OPTIONS.chbActive = true;
+
+	CHD_OPTIONS.chbSpells = true;
+	CHD_OPTIONS.chbMounts = true;
+	CHD_OPTIONS.chbCritters = true;
+	CHD_OPTIONS.chbReputation = true;
+	CHD_OPTIONS.chbAchievements = true;
+	CHD_OPTIONS.chbEquipment = true;
+	CHD_OPTIONS.chbMacro = true;
+	CHD_OPTIONS.chbArena = true;
+
+	CHD_OPTIONS.chbGlyph = true;
+	CHD_OPTIONS.chbCurrency = true;
+	CHD_OPTIONS.chbInventory = true;
+	CHD_OPTIONS.chbBags = true;
+	CHD_OPTIONS.chbSkills = true;
+	CHD_OPTIONS.chbQuestlog = true;
+	CHD_OPTIONS.chbFriend = true;
+
+	CHD_OPTIONS.chbBank = true;
+	CHD_OPTIONS.chbQuests = true;
+	CHD_OPTIONS.chbTaxi = true;
+
+	return true;
+end
+
+function CHD_SetOptions()
+	CHD_frmMainchbGlyphs:SetChecked(CHD_OPTIONS.chbGlyph);
+	CHD_frmMainchbCurrency:SetChecked(CHD_OPTIONS.chbCurrency);
+	CHD_frmMainchbSpells:SetChecked(CHD_OPTIONS.chbSpells);
+	CHD_frmMainchbMounts:SetChecked(CHD_OPTIONS.chbMounts);
+	CHD_frmMainchbCritters:SetChecked(CHD_OPTIONS.chbCritters);
+	CHD_frmMainchbReputation:SetChecked(CHD_OPTIONS.chbReputation);
+	CHD_frmMainchbAchievements:SetChecked(CHD_OPTIONS.chbAchievements);
+	CHD_frmMainchbSkills:SetChecked(CHD_OPTIONS.chbSkills);
+	CHD_frmMainchbInventory:SetChecked(CHD_OPTIONS.chbInventory);
+	CHD_frmMainchbBags:SetChecked(CHD_OPTIONS.chbBags);
+	CHD_frmMainchbEquipment:SetChecked(CHD_OPTIONS.chbEquipment);
+	CHD_frmMainchbQuestlog:SetChecked(CHD_OPTIONS.chbQuestlog);
+	CHD_frmMainchbMacro:SetChecked(CHD_OPTIONS.chbMacro);
+	CHD_frmMainchbFriend:SetChecked(CHD_OPTIONS.chbFriend);
+	CHD_frmMainchbArena:SetChecked(CHD_OPTIONS.chbArena);
+
+	CHD_frmMainchbTaxi:SetChecked(CHD_OPTIONS.chbTaxi);
+	CHD_frmMainchbQuests:SetChecked(CHD_OPTIONS.chbQuests);
+	CHD_frmMainchbBank:SetChecked(CHD_OPTIONS.chbBank);
+
+	CHD_frmMainchbActive:SetChecked(CHD_OPTIONS.chbActive);
+	CHD_frmMainchbCrypt:SetChecked(CHD_OPTIONS.chbCrypt);
+
+	return true;
+end
+
+function CHD_SaveOptions()
+	CHD_OPTIONS.chbGlyph        = CHD_frmMainchbGlyphs:GetChecked();
+	CHD_OPTIONS.chbCurrency     = CHD_frmMainchbCurrency:GetChecked();
+	CHD_OPTIONS.chbSpells       = CHD_frmMainchbSpells:GetChecked();
+	CHD_OPTIONS.chbMounts       = CHD_frmMainchbMounts:GetChecked();
+	CHD_OPTIONS.chbCritters     = CHD_frmMainchbCritters:GetChecked();
+	CHD_OPTIONS.chbReputation   = CHD_frmMainchbReputation:GetChecked();
+	CHD_OPTIONS.chbAchievements = CHD_frmMainchbAchievements:GetChecked();
+	CHD_OPTIONS.chbSkills       = CHD_frmMainchbSkills:GetChecked();
+	CHD_OPTIONS.chbInventory    = CHD_frmMainchbInventory:GetChecked();
+	CHD_OPTIONS.chbBags         = CHD_frmMainchbBags:GetChecked();
+	CHD_OPTIONS.chbEquipment    = CHD_frmMainchbEquipment:GetChecked();
+	CHD_OPTIONS.chbQuestlog     = CHD_frmMainchbQuestlog:GetChecked();
+	CHD_OPTIONS.chbMacro        = CHD_frmMainchbMacro:GetChecked();
+	CHD_OPTIONS.chbFriend       = CHD_frmMainchbFriend:GetChecked();
+	CHD_OPTIONS.chbArena        = CHD_frmMainchbArena:GetChecked();
+
+	CHD_OPTIONS.chbTaxi         = CHD_frmMainchbTaxi:GetChecked();
+	CHD_OPTIONS.chbQuests       = CHD_frmMainchbQuests:GetChecked();
+	CHD_OPTIONS.chbBank         = CHD_frmMainchbBank:GetChecked();
+
+	CHD_OPTIONS.chbActive       = CHD_frmMainchbActive:GetChecked();
+	CHD_OPTIONS.chbCrypt        = CHD_frmMainchbCrypt:GetChecked();
+
+	return true;
+end
+
 function CHD_OnVariablesLoaded()
 	-- client
 	CHD_CLIENT = {};
 
 	-- server
---	if type(CHD_SERVER) == "string" then
---		CHD_SERVER_LOCAL = crypt_lib.decode(CHD_SERVER);
---	else
---		CHD_SERVER_LOCAL = {};
---	end
 	CHD_SERVER_LOCAL = {};
 
 	if not CHD_TAXI then
@@ -120,16 +200,19 @@ function CHD_OnVariablesLoaded()
 		CHD_frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)",
 			CHD_GetTableCount(CHD_SERVER_LOCAL.bank)));
 	end
+
+	local res = CHD_trycall(CHD_SetOptions);
+	print(res);
+	if nil == res then
+		CHD_SetOptionsDef();
+		CHD_trycall(CHD_SetOptions);
+	end
+
+	return true;
 end
 
 function CHD_OnEvent(self, event, ...)
-	if "TAXIMAP_OPENED" == event then
-		if CHD_frmMainchbTaxi:GetChecked() then
-			CHD_SetTaxiInfo();
-		end
-	elseif "VARIABLES_LOADED" == event then
-		CHD_OnVariablesLoaded();
-	elseif "BANKFRAME_OPENED" == event then
+	if "BANKFRAME_OPENED" == event then
 		if CHD_frmMainchbBank:GetChecked() then
 			CHD_SERVER_LOCAL.bank = CHD_trycall(CHD_GetBankInfo) or {};
 		else
@@ -137,6 +220,15 @@ function CHD_OnEvent(self, event, ...)
 		end
 		CHD_frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)",
 			CHD_GetTableCount(CHD_SERVER_LOCAL.bank)));
+	elseif "PLAYER_LEAVING_WORLD" == event then
+		print(event);
+		CHD_SaveOptions();
+	elseif "TAXIMAP_OPENED" == event then
+		if CHD_frmMainchbTaxi:GetChecked() then
+			CHD_SetTaxiInfo();
+		end
+	elseif "VARIABLES_LOADED" == event then
+		CHD_OnVariablesLoaded();
 	end
 end
 
@@ -271,6 +363,9 @@ function CHD_OnLoad(self)
 	CHD_frmMainbtnQuestQueryText:SetText(L.btnServerQuery);
 	CHD_frmMainchbTaxiText:SetText(L.chbTaxi);
 
+	CHD_frmMainchbCrypt:SetText("");
+	CHD_frmMainchbActive:SetText("");
+
 	CHD_frmMainbtnClientDumpText:SetText(L.btnClientDump);
 	CHD_frmMainbtnServerDumpText:SetText(L.btnServerDump);
 
@@ -297,6 +392,14 @@ function CHD_OnLoad(self)
 	CHD_frmMainpanSystem:SetPoint("TOPRIGHT", 0, 0);
 	CHD_frmMainpanSystem:SetWidth(5 + 5 + btnW*2 + 3*3 + 5);
 
+	btnW = CHD_frmMainchbCrypt:GetWidth();
+	CHD_frmMainchbActive:ClearAllPoints();
+	CHD_frmMainchbActive:SetPoint("TOPLEFT", self);
+	CHD_frmMainchbActive:SetPoint("TOPLEFT", 8, -8);
+	CHD_frmMainchbCrypt:ClearAllPoints();
+	CHD_frmMainchbCrypt:SetPoint("TOPLEFT", self);
+	CHD_frmMainchbCrypt:SetPoint("TOPLEFT", 8 + 3 + btnW, -8);
+
 	AddTooltip(CHD_frmMainchbGlyphs, L.chbGlyphs, L.ttchbGlyphs);
 	AddTooltip(CHD_frmMainchbCurrency, L.chbCurrency, L.ttchbCurrency);
 	AddTooltip(CHD_frmMainchbSpells, L.chbSpells, L.ttchbSpells);
@@ -316,6 +419,9 @@ function CHD_OnLoad(self)
 	AddTooltip(CHD_frmMainchbBank, L.chbBank, L.ttchbBank);
 	AddTooltip(CHD_frmMainchbQuests, L.chbQuests, L.ttchbQuests);
 	AddTooltip(CHD_frmMainchbTaxi, L.chbTaxi, L.ttchbTaxi);
+
+	AddTooltip(CHD_frmMainchbActive, L.chbActive, L.ttchbActive);
+	AddTooltip(CHD_frmMainchbCrypt, L.chbCrypt, L.ttchbCrypt);
 
 	AddTooltip(CHD_frmMainbtnHide, L.ttbtnHide, "");
 	AddTooltip(CHD_frmMainbtnMinimize, L.ttbtnMinimize, "");
@@ -885,7 +991,7 @@ end
 --]]
 
 function CHD_Debug()
-
+	CHD_SaveOptions();
 end
 
 function CHD_OnClientDumpClick()
@@ -1015,12 +1121,21 @@ function CHD_OnClientDumpClick()
 	CHD_Message(L.CreatedDump);
 	CHD_Message(L.DumpDone);
 
-	CHD_CLIENT = crypt_lib.encode(dump);
+	if CHD_frmMainchbCrypt:GetChecked() then
+		CHD_CLIENT = crypt_lib.encode(dump);
+	else
+		CHD_CLIENT = dump;
+	end
+
 	CHD_KEY    = nil;
 end
 
 function CHD_OnServerDumpClick()
 	CHD_SERVER_LOCAL.taxi = CHD_TAXI;
-	CHD_SERVER = crypt_lib.encode(CHD_SERVER_LOCAL);
+	if CHD_frmMainchbCrypt:GetChecked() then
+		CHD_SERVER = crypt_lib.encode(CHD_SERVER_LOCAL);
+	else
+		CHD_SERVER = CHD_SERVER_LOCAL;
+	end
 	CHD_Message(L.DumpDone);
 end

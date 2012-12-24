@@ -33,6 +33,9 @@ L.chbBank         = "Bank"
 L.chbQuests       = "Quests"
 L.chbTaxi         = "Taxi"
 
+L.chbActive       = "Active"
+L.chbCrypt        = "Crypt"
+
 L.loadmessage = "Addon is loaded, created by \124cff0000ffSlaFF\124r"
 
 -- Get...
@@ -91,6 +94,9 @@ L.ttchbArena      = "On/Off save of arena"
 L.ttchbBank       = "On/Off save of items in the bank"
 L.ttchbQuests     = "On/Off save of completed quests"
 L.ttchbTaxi       = "On/Off save of taxi\n(1, 2, 3, 4)\n1 -- taxi in Kalimdor\n2 -- taxi in Eastern Kingdoms\n3 -- taxi in Outland\n4 -- taxi in Northrend"
+
+L.ttchbActive     = "Enable / Disable addon"
+L.ttchbCrypt      = "Enable / Disable crypt of data"
 
 L.ttbtnClientDump = "Create the client dump of player"
 L.ttbtnServerDump = "Create the server (dynamic) dump of player"
