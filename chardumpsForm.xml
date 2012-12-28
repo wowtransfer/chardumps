@@ -72,7 +72,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="3" y="-2" />
+              <AbsDimension x="3" y="-3" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -217,7 +217,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="317" y="-13" />
+              <AbsDimension x="333" y="-3" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -295,7 +295,7 @@
       <CheckButton name="$parentchbGlyphs" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;158&lt;/Width&gt;
+  &lt;Width&gt;133&lt;/Width&gt;
   &lt;Height&gt;24&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
@@ -385,7 +385,7 @@
       <CheckButton name="$parentchbCurrency" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;158&lt;/Width&gt;
+  &lt;Width&gt;133&lt;/Width&gt;
   &lt;Height&gt;24&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
@@ -565,7 +565,7 @@
       <CheckButton name="$parentchbSkills" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;158&lt;/Width&gt;
+  &lt;Width&gt;133&lt;/Width&gt;
   &lt;Height&gt;24&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
@@ -655,7 +655,7 @@
       <CheckButton name="$parentchbBags" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;158&lt;/Width&gt;
+  &lt;Width&gt;133&lt;/Width&gt;
   &lt;Height&gt;24&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
@@ -700,7 +700,7 @@
       <CheckButton name="$parentchbInventory" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;158&lt;/Width&gt;
+  &lt;Width&gt;133&lt;/Width&gt;
   &lt;Height&gt;24&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
@@ -878,7 +878,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="290" y="-13" />
+              <AbsDimension x="306" y="-3" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -956,7 +956,7 @@
       <CheckButton name="$parentchbFriend" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;158&lt;/Width&gt;
+  &lt;Width&gt;133&lt;/Width&gt;
   &lt;Height&gt;24&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
@@ -1046,7 +1046,7 @@
       <CheckButton name="$parentchbQuestlog" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;158&lt;/Width&gt;
+  &lt;Width&gt;133&lt;/Width&gt;
   &lt;Height&gt;24&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
@@ -1253,7 +1253,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="38" y="-3" />
+              <AbsDimension x="33" y="-3" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1265,6 +1265,117 @@
         <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
         <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
       </CheckButton>
+      <Button name="$parentbtnCheckAll" text="+">
+        <!--<FrameSkin skinid="f15d4970-d66d-444e-bb2d-1ad102c87fed" frameid="f15d4973-d66d-444e-bb2d-1ad102c87fed" />-->
+        <Size>
+          <AbsDimension x="21" y="21" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="317" y="-45" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>OnCHD_frmMainbtnCheckAllClLick()</OnClick>
+        </Scripts>
+        <NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </NormalTexture>
+        <PushedTexture file="Interface\Buttons\UI-Panel-Button-Down">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </PushedTexture>
+        <DisabledTexture file="Interface\Buttons\UI-Panel-Button-Disabled">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </DisabledTexture>
+        <HighlightTexture file="Interface\Buttons\UI-Panel-Button-Highlight" alphaMode="ADD">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </HighlightTexture>
+        <ButtonText name="$parentText">
+          <FontHeight>
+            <AbsValue val="10" />
+          </FontHeight>
+        </ButtonText>
+        <NormalFont style="GameFontNormal" />
+        <HighlightFont style="GameFontHighlight" />
+        <DisabledFont style="GameFontDisable" />
+        <PushedTextOffset x="0" y="0" />
+      </Button>
+      <Button name="$parentbtnCheckNone" text="-">
+        <!--<FrameSkin skinid="f15d4970-d66d-444e-bb2d-1ad102c87fed" frameid="f15d4973-d66d-444e-bb2d-1ad102c87fed" />-->
+        <Size>
+          <AbsDimension x="21" y="21" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="317" y="-72" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>OnCHD_frmMainbtnCheckNoneClLick()</OnClick>
+        </Scripts>
+        <NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </NormalTexture>
+        <PushedTexture file="Interface\Buttons\UI-Panel-Button-Down">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </PushedTexture>
+        <DisabledTexture file="Interface\Buttons\UI-Panel-Button-Disabled">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </DisabledTexture>
+        <HighlightTexture file="Interface\Buttons\UI-Panel-Button-Highlight" alphaMode="ADD">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </HighlightTexture>
+        <ButtonText name="$parentText">
+          <FontHeight>
+            <AbsValue val="10" />
+          </FontHeight>
+        </ButtonText>
+        <NormalFont style="GameFontNormal" />
+        <HighlightFont style="GameFontHighlight" />
+        <DisabledFont style="GameFontDisable" />
+        <PushedTextOffset x="0" y="0" />
+      </Button>
+      <Button name="$parentbtnCheckInv" text="±">
+        <!--<FrameSkin skinid="f15d4970-d66d-444e-bb2d-1ad102c87fed" frameid="f15d4973-d66d-444e-bb2d-1ad102c87fed" />-->
+        <Size>
+          <AbsDimension x="21" y="21" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="317" y="-99" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>OnCHD_frmMainbtnCheckInvClLick()</OnClick>
+        </Scripts>
+        <NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </NormalTexture>
+        <PushedTexture file="Interface\Buttons\UI-Panel-Button-Down">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </PushedTexture>
+        <DisabledTexture file="Interface\Buttons\UI-Panel-Button-Disabled">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </DisabledTexture>
+        <HighlightTexture file="Interface\Buttons\UI-Panel-Button-Highlight" alphaMode="ADD">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </HighlightTexture>
+        <ButtonText name="$parentText">
+          <FontHeight>
+            <AbsValue val="10" />
+          </FontHeight>
+        </ButtonText>
+        <NormalFont style="GameFontNormal" />
+        <HighlightFont style="GameFontHighlight" />
+        <DisabledFont style="GameFontDisable" />
+        <PushedTextOffset x="0" y="0" />
+      </Button>
     </Frames>
     <Scripts>
       <OnLoad>CHD_OnLoad(self)

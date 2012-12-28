@@ -14,8 +14,9 @@ local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
 
 local CHD = {};
 local CHD_SERVER_LOCAL = {};
-CHD_CLIENT  = CHD_CLIENT  or {};
-CHD_SERVER  = CHD_SERVER  or {};
+local CHD_gArrCheckboxes = {};
+CHD_CLIENT  = {};
+CHD_SERVER  = {};
 CHD_OPTIONS = CHD_OPTIONS or {};
 
 local MAX_NUM_CONTINENT = 4 -- 1..4
@@ -84,7 +85,6 @@ function CHD_SlashCmdHandler(cmd)
 		CHD_Message(L.help3);
 	end
 end
-
 
 function CHD_SetOptionsDef()
 	CHD_OPTIONS = {};
@@ -201,14 +201,31 @@ function CHD_OnVariablesLoaded()
 			CHD_GetTableCount(CHD_SERVER_LOCAL.bank)));
 	end
 
-	local res = CHD_trycall(CHD_SetOptions);
-	print(res);
-	if nil == res then
+	if not CHD_trycall(CHD_SetOptions) then
 		CHD_SetOptionsDef();
 		CHD_trycall(CHD_SetOptions);
 	end
 
 	return true;
+end
+
+function OnCHD_frmMainbtnCheckAllClLick()
+	for k,v in pairs(CHD_gArrCheckboxes) do
+		v:SetChecked();
+	end
+end
+
+function OnCHD_frmMainbtnCheckNoneClLick()
+	for k,v in pairs(CHD_gArrCheckboxes) do
+		v:SetChecked(nil);
+	end
+end
+
+function OnCHD_frmMainbtnCheckInvClLick()
+	for k,v in pairs(CHD_gArrCheckboxes) do
+		local b = v:GetChecked();
+		v:SetChecked(not b);
+	end
 end
 
 function CHD_OnEvent(self, event, ...)
@@ -432,7 +449,32 @@ function CHD_OnLoad(self)
 	AddTooltip(CHD_frmMainbtnQuestDel, L.chbQuests, L.ttbtnQuestDel);
 	AddTooltip(CHD_frmMainbtnTaxiDel, L.chbTaxi, L.ttbtnTaxiDel);
 
+	AddTooltip(CHD_frmMainbtnCheckAll, L.Comboboxes, L.ttbtnCheckAll);
+	AddTooltip(CHD_frmMainbtnCheckNone, L.Comboboxes, L.ttbtnCheckNone);
+	AddTooltip(CHD_frmMainbtnCheckInv, L.Comboboxes, L.ttbtnCheckInv);
+
 	CHD_CreateMessageBox();
+
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbSpells);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbMounts);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbCritters);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbReputation);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbAchievements);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbEquipment);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbMacro);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbArena);
+
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbGlyphs);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbCurrency);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbInventory);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbBags);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbSkills);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbQuestlog);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbFriend);
+
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbBank);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbQuests);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbTaxi);
 
 	CHD_Message(L.loadmessage);
 end

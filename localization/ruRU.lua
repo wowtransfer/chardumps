@@ -104,6 +104,9 @@ L.ttbtnServerQuery = "Получить выполненные задания с 
 L.ttbtnBankDel    = "Удалить информацию о предметах в банке"
 L.ttbtnQuestDel   = "Удалить информацию о заданиях"
 L.ttbtnTaxiDel    = "Удалить информацию о полетах"
+L.ttbtnCheckAll   = "Установить все"
+L.ttbtnCheckNone  = "Выключить все"
+L.ttbtnCheckInv   = "Инвертировать"
 
 L.DeleteBank      = "Удаление банка"
 L.DeleteQuests    = "Удаление заданий"
@@ -116,6 +119,7 @@ L.btnClientDump   = "Дамп с клиента"
 L.btnServerDump   = "Дамп с сервера"
 L.CreatingDump    = "Создание дампа..."
 L.CreatedDump     = "Создание дампа прошло успешно"
+L.Comboboxes      = "Переключатели"
 L.DumpDone        = "Создано! Дамп находится здесь:\
 каталог WoW/\
  WTF/\

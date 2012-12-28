@@ -104,6 +104,9 @@ L.ttbtnServerQuery = "Receive the completed quests from server"
 L.ttbtnBankDel    = "Delete bank`s information"
 L.ttbtnQuestDel   = "Delete quest`s information"
 L.ttbtnTaxiDel    = "Delete taxi`s information"
+L.ttbtnCheckAll   = "Set all"
+L.ttbtnCheckNone  = "Set none"
+L.ttbtnCheckInv   = "Invert"
 
 L.DeleteBank      = "Delete the bank"
 L.DeleteQuests    = "Delete the quests"
@@ -116,6 +119,7 @@ L.btnClientDump   = "Client dump"
 L.btnServerDump   = "Server dump"
 L.CreatingDump    = "Creating dump..."
 L.CreatedDump     = "Creation of dump was successful"
+L.Comboboxes      = "Checkboxes"
 L.DumpDone        = "DONE! You can find dump here:\
 WoW Folder/\
  WTF/\
