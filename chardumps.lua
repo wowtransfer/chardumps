@@ -7,7 +7,7 @@
 	Created by SlaFF
 		Gracer (Alliance)
 	thanks Sun`s chardump, reforged
-]]
+--]]
 local crypt_lib = crypt_lib;
 chardumps = LibStub('AceAddon-3.0'):NewAddon('chardumps');
 local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
@@ -370,7 +370,7 @@ function CHD_OnLoad(self)
 	CHD_frmMainchbInventoryText:SetText(L.chbInventory);
 	CHD_frmMainchbBagsText:SetText(L.chbBags);
 	CHD_frmMainchbEquipmentText:SetText(L.chbEquipment);
-	CHD_frmMainchbQuestlogText:SetText(L.chbEquipment);
+	CHD_frmMainchbQuestlogText:SetText(L.chbQuestlog);
 	CHD_frmMainchbMacroText:SetText(L.chbMacro);
 	CHD_frmMainchbFriendText:SetText(L.chbFriend);
 	CHD_frmMainchbArenaText:SetText(L.chbArena);
@@ -608,10 +608,24 @@ end
 function CHD_GetCurrencyInfo()
 	local res = {};
 
+	local i = 1;
+	while true do
+		local name, isHeader = GetCurrencyListInfo(i);
+		if (not name) then
+			break;
+		end
+		if isHeader then
+			ExpandCurrencyList(i, 1);
+		end
+		i = i + 1;
+	end
+
 	CHD_Message(L.GetCurrency);
 	for i = 1, GetCurrencyListSize() do
-		local _, _, _, _, _, count, _, _, itemID = GetCurrencyListInfo(i);
-		res[itemID] = count;
+		local _, isHeader, _, _, _, count, extraCurrencyType, _, itemID = GetCurrencyListInfo(i);
+		if (not isHeader) and (extraCurrencyType == 0) then
+			res[itemID] = count;
+		end
 	end
 
 	return res;
@@ -670,7 +684,7 @@ function CHD_GetRepInfo()
 	CHD_Message(L.GetReputation);
 	for i = 1, 1200 do -- maximum 1160 for 3.3.5a
 		local _, _, _, _, _, barValue = GetFactionInfoByID(i);
-		if barValue and barValue ~= 0 then
+		if barValue and (barValue ~= 0) then
 			res[i] = barValue;
 		end
 	end
@@ -738,11 +752,16 @@ end
 function CHD_GetSkillInfo()
 	local res = {};
 
-	for i = 1,100 do -- 100 >> skill count
-		local _,isHeader,isExpanded = GetSkillLineInfo(i);
-		if isHeader and not isExpanded then
-			ExpandSkillHeader(i);
+	local i = 1;
+	while true do
+		local name, isHeader = GetSkillLineInfo(i);
+		if not name then
+			break;
 		end
+		if isHeader then
+			ExpandSkillHeader(i, 1);
+		end
+		i = i + 1;
 	end
 
 	CHD_Message(L.GetSkill);
