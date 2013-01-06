@@ -680,12 +680,23 @@ end
 
 function CHD_GetRepInfo()
 	local res = {};
+	local tblRep = {};
 
 	CHD_Message(L.GetReputation);
-	for i = 1, 1200 do -- maximum 1160 for 3.3.5a
-		local _, _, _, _, _, barValue = GetFactionInfoByID(i);
-		if barValue and (barValue ~= 0) then
-			res[i] = barValue;
+	ExpandAllFactionHeaders();
+	for i = 1, GetNumFactions() do
+		local name = GetFactionInfo(i);
+		tblRep[name] = true;
+	end
+
+	for i = 1, 1160 do -- maximum 1160 for 3.3.5a
+		local name, _, _, _, _, barValue, atWarWith, canToggleAtWar, isHeader, _, _, isWatched = GetFactionInfoByID(i);
+		if name and tblRep[name] then
+			local flags = 1;
+			if canToggleAtWar and atWarWith then
+				flags = bit.bor(1, 2);
+			end
+			table.insert(res, i, {["V"] = barValue, ["F"] = flags});
 		end
 	end
 
@@ -776,22 +787,16 @@ end
 function CHD_GetInventoryInfo()
 	local res = {};
 
-	local arrSlotName = {"HeadSlot", "NeckSlot", "ShoulderSlot", "BackSlot", "ChestSlot",
-		"ShirtSlot", "TabardSlot", "WristSlot", "HandsSlot", "WaistSlot", "LegsSlot",
-		"FeetSlot", "Finger0Slot", "Finger1Slot", "Trinket0Slot", "Trinket1Slot",
-		"MainHandSlot", "SecondaryHandSlot", "RangedSlot", "AmmoSlot", "Bag0Slot",
-		"Bag1Slot", "Bag2Slot", "Bag3Slot"};
-	local lenSlotName = #arrSlotName; -- 24
-
 	CHD_Message(L.GetInventory);
-	for i = 1, lenSlotName do
-		local slotId = GetInventorySlotInfo(arrSlotName[i]);
-		local itemLink = GetInventoryItemLink("player", slotId);
+	for i = 1, 24 do
+		local itemLink = GetInventoryItemLink("player", i);
 		if itemLink then
-			local count = GetInventoryItemCount("player", slotId);
-			local gem1, gem2, gem3 = GetInventoryItemGems(slotId);
+			local count = GetInventoryItemCount("player", i);
+			local gem1, gem2, gem3 = GetInventoryItemGems(i);
 			local itemID = tonumber(strmatch(itemLink, "Hitem:(%d+)"));
 			res[i] = {["I"] = itemID, ["N"] = count, ["G1"] = gem1, ["G2"] = gem2, ["G3"] = gem3};
+		else
+			res[i] = nil;
 		end
 	end
 
