@@ -1,4 +1,32 @@
-	Chardumps - аддон для игры World of Warcraft под версию 3.3.5a. Позволяет сохранить информацию о персонаже в файл, который может использоваться для переноса персонажа на другой сервер.
+	Chardumps - the addon for World od Warcraft game, supported version 3.3.5a. Allow to save information, the game process, about every character to file. This file may be use for character transfer to some servers.
+
+	The addon can save:
+- Common information (language, realm, realmlist, client version)
+- Basic Character information (name, class, race, level, gender, kills, money, double specialisation, honor points and arena points)
+- Achievements
+- Items in the bags
+- Items in the bank
+- Criterias of completed achievements
+- Criterias of non completed achievements
+- Critters
+- Currency
+- Glyphs
+- Equipment manager
+- Friends
+- Inventory
+- Macroses
+- Mounts
+- Pets (no)
+- Quests
+- Quest log
+- Reputation
+- Skills
+- Spells
+- Taxi
+
+--------------------------------
+
+Chardumps - аддон для игры World of Warcraft под версию 3.3.5a. Позволяет сохранить информацию о персонаже в файл, который может использоваться для переноса персонажа на другой сервер.
 
 	Сохраняет:
 Общее

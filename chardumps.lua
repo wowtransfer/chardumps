@@ -17,6 +17,7 @@ local CHD_SERVER_LOCAL = {};
 local CHD_gArrCheckboxes = {};
 CHD_CLIENT  = {};
 CHD_SERVER  = {};
+CHD_FIELD_COUNT = {};
 CHD_OPTIONS = CHD_OPTIONS or {};
 
 local MAX_NUM_CONTINENT = 4 -- 1..4
@@ -91,6 +92,7 @@ function CHD_SetOptionsDef()
 
 	CHD_OPTIONS.chbCrypt = true;
 	CHD_OPTIONS.chbActive = true;
+	CHD_OPTIONS.chdMinimize = false;
 
 	CHD_OPTIONS.chbSpells = true;
 	CHD_OPTIONS.chbMounts = true;
@@ -140,6 +142,10 @@ function CHD_SetOptions()
 	CHD_frmMainchbActive:SetChecked(CHD_OPTIONS.chbActive);
 	CHD_frmMainchbCrypt:SetChecked(CHD_OPTIONS.chbCrypt);
 
+	if (CHD_OPTIONS.chdMinimize) then
+		OnCHD_frmMainbtnMinimizeClLick();
+	end;
+
 	return true;
 end
 
@@ -166,6 +172,65 @@ function CHD_SaveOptions()
 
 	CHD_OPTIONS.chbActive       = CHD_frmMainchbActive:GetChecked();
 	CHD_OPTIONS.chbCrypt        = CHD_frmMainchbCrypt:GetChecked();
+
+	return true;
+end
+
+function CHD_FillFieldCountClient(dump)
+	if not CHD_FIELD_COUNT then
+		CHD_FIELD_COUNT = {};
+	end;
+
+	if not dump then
+		return false;
+	end
+
+	CHD_FIELD_COUNT.achievement = #dump.achievement;
+	CHD_FIELD_COUNT.criteria1 = #dump.criteria1;
+	CHD_FIELD_COUNT.criteria0 = #dump.criteria0;
+	CHD_FIELD_COUNT.arena = 0;
+	CHD_FIELD_COUNT.critter = #dump.critter;
+	CHD_FIELD_COUNT.mount = #dump.mount;
+	CHD_FIELD_COUNT.bag = CHD_GetTableCount(dump.bag);
+	CHD_FIELD_COUNT.currency = #dump.currency;
+	CHD_FIELD_COUNT.equipment = #dump.equipment;
+	CHD_FIELD_COUNT.reputation = #dump.reputation;
+	CHD_FIELD_COUNT.glyph = #dump.glyph;
+	CHD_FIELD_COUNT.inventory = #dump.inventory;
+	CHD_FIELD_COUNT.questlog = #dump.questlog;
+	CHD_FIELD_COUNT.spell = CHD_GetTableCount(dump.spell);
+	CHD_FIELD_COUNT.skill = #dump.skill;
+	CHD_FIELD_COUNT.macro = #dump.pmacro;
+	CHD_FIELD_COUNT.friend = #dump.friend;
+	CHD_FIELD_COUNT.pet = 0;
+
+	return true;
+end
+
+function CHD_FillFieldCountServer()
+	if not CHD_FIELD_COUNT then
+		CHD_FIELD_COUNT = {};
+	end;
+
+	if not CHD_SERVER_LOCAL then
+		return false;
+	end
+
+	if (CHD_SERVER_LOCAL.bank) then
+		CHD_FIELD_COUNT.bank = #CHD_SERVER_LOCAL.bank;
+	else
+		CHD_FIELD_COUNT.bank = 0;
+	end;
+	if (CHD_SERVER_LOCAL.taxi) then
+		CHD_FIELD_COUNT.taxi = #CHD_SERVER_LOCAL.taxi;
+	else
+		CHD_FIELD_COUNT.taxi = 0;
+	end;
+	if (CHD_SERVER_LOCAL.quest) then
+		CHD_FIELD_COUNT.quest = #CHD_SERVER_LOCAL.quest;
+	else
+		CHD_FIELD_COUNT.quest = 0;
+	end;
 
 	return true;
 end
@@ -204,6 +269,7 @@ function CHD_OnVariablesLoaded()
 	if not CHD_trycall(CHD_SetOptions) then
 		CHD_SetOptionsDef();
 		CHD_trycall(CHD_SetOptions);
+		OnCHD_frmMainbtnHideClLick(); -- first loading
 	end
 
 	return true;
@@ -238,7 +304,6 @@ function CHD_OnEvent(self, event, ...)
 		CHD_frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)",
 			CHD_GetTableCount(CHD_SERVER_LOCAL.bank)));
 	elseif "PLAYER_LEAVING_WORLD" == event then
-		print(event);
 		CHD_SaveOptions();
 	elseif "TAXIMAP_OPENED" == event then
 		if CHD_frmMainchbTaxi:GetChecked() then
@@ -374,10 +439,12 @@ function CHD_OnLoad(self)
 	CHD_frmMainchbMacroText:SetText(L.chbMacro);
 	CHD_frmMainchbFriendText:SetText(L.chbFriend);
 	CHD_frmMainchbArenaText:SetText(L.chbArena);
-
-	CHD_frmMainchbBankText:SetText(L.chbBank);
 	CHD_frmMainchbQuestsText:SetText(L.chbQuests);
 	CHD_frmMainbtnQuestQueryText:SetText(L.btnServerQuery);
+	CHD_frmMainchbPetText:SetText(L.chbPet);
+	CHD_frmMainchbPet:Disable();
+
+	CHD_frmMainchbBankText:SetText(L.chbBank);
 	CHD_frmMainchbTaxiText:SetText(L.chbTaxi);
 
 	CHD_frmMainchbCrypt:SetText("");
@@ -392,7 +459,7 @@ function CHD_OnLoad(self)
 	self:RegisterEvent("BANKFRAME_OPENED");
 	self:RegisterEvent("PLAYER_LEAVING_WORLD");
 	self:SetBackdrop(CHD_GetBackdrop());
-	self:SetFrameStrata("HIGH");
+	self:SetFrameStrata("DIALOG");
 
 	local btnW = CHD_frmMainbtnHide:GetWidth();
 	CHD_frmMainbtnHide:SetParent(CHD_frmMainpanSystem);
@@ -432,9 +499,10 @@ function CHD_OnLoad(self)
 	AddTooltip(CHD_frmMainchbMacro, L.chbMacro, L.ttchbMacro);
 	AddTooltip(CHD_frmMainchbFriend, L.chbFriend, L.ttchbFriend);
 	AddTooltip(CHD_frmMainchbArena, L.chbArena, L.ttchbArena);
+	AddTooltip(CHD_frmMainchbQuests, L.chbQuests, L.ttchbQuests);
+	AddTooltip(CHD_frmMainchbPet, L.chbPet, L.ttchbPet);
 
 	AddTooltip(CHD_frmMainchbBank, L.chbBank, L.ttchbBank);
-	AddTooltip(CHD_frmMainchbQuests, L.chbQuests, L.ttchbQuests);
 	AddTooltip(CHD_frmMainchbTaxi, L.chbTaxi, L.ttchbTaxi);
 
 	AddTooltip(CHD_frmMainchbActive, L.chbActive, L.ttchbActive);
@@ -471,9 +539,10 @@ function CHD_OnLoad(self)
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbSkills);
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbQuestlog);
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbFriend);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbQuests);
+--	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbPet);
 
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbBank);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbQuests);
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbTaxi);
 
 	CHD_Message(L.loadmessage);
@@ -484,10 +553,12 @@ function OnCHD_frmMainbtnMinimizeClLick()
 		CHD_frmMainpanSystem:SetBackdrop(CHD_GetBackdrop());
 		CHD_frmMainpanSystem:SetParent("UIParent");
 		CHD_frmMain:Hide();
+		CHD_OPTIONS.chdMinimize = true;
 	else
 		CHD_frmMainpanSystem:SetBackdrop(nil);
 		CHD_frmMainpanSystem:SetParent(CHD_frmMain);
 		CHD_frmMain:Show();
+		CHD_OPTIONS.chdMinimize = false;
 	end
 end
 
@@ -624,7 +695,7 @@ function CHD_GetCurrencyInfo()
 	for i = 1, GetCurrencyListSize() do
 		local _, isHeader, _, _, _, count, extraCurrencyType, _, itemID = GetCurrencyListInfo(i);
 		if (not isHeader) and (extraCurrencyType == 0) then
-			res[itemID] = count;
+			table.insert(res, {itemID, count});
 		end
 	end
 
@@ -644,7 +715,7 @@ function CHD_GetSpellInfo()
 			local spellLink = GetSpellLink(j, BOOKTYPE_SPELL);
 			if spellLink then
 				local spellid = tonumber(strmatch(spellLink, "Hspell:(%d+)"));
-				res[spellid] = i;
+				table.insert(res, {spellid, i});
 			end
 		end
 	end
@@ -696,7 +767,7 @@ function CHD_GetRepInfo()
 			if canToggleAtWar and atWarWith then
 				flags = bit.bor(1, 2);
 			end
-			table.insert(res, i, {["V"] = barValue, ["F"] = flags});
+			table.insert(res, {["I"] = i, ["V"] = barValue, ["F"] = flags});
 		end
 	end
 
@@ -708,14 +779,12 @@ function CHD_GetAchievementInfo()
 
 	CHD_Message(L.GetAchievement);
 
-	local count = 0;
 	for i = 1, 5000 do
 		local IDNumber, _, _, Completed, Month, Day, Year = GetAchievementInfo(i);
 		if IDNumber and Completed then
 			local posixtime = time{year = 2000 + Year, month = Month, day = Day};
 			if posixtime then
-				count = count + 1;
-				res[count] = {["I"] = IDNumber, ["T"] = posixtime};
+				table.insert(res, {["I"] = IDNumber, ["T"] = posixtime});
 			end
 		end
 	end
@@ -723,20 +792,29 @@ function CHD_GetAchievementInfo()
 	return res;
 end
 
+function compCriteria(e1, e2)
+	if e1[1] < e2[1] then
+		return true;
+	end
+	return false;
+end;
+
 function CHD_GetCriteriaCompleted()
 	local res = {};
+	local n = 50;
 
 	for i = 1, 5000 do
 		local _, _, _, Completed = GetAchievementInfo(i);
 		if Completed then
 			for j = 1, GetAchievementNumCriteria(i) do
-				local _, _, completed, quantity, _, _, _, _, _, criteriaID = GetAchievementCriteriaInfo(i, j);
-				if quantity and quantity > 0 then
-					res[criteriaID] = quantity;
+				local description, type, completed, quantity, requiredQuantity, characterName, flags, assetID, quantityString, criteriaID = GetAchievementCriteriaInfo(i, j);
+				if completed and quantity and quantity > 0 then
+					table.insert(res, {criteriaID, quantity});
 				end
 			end
 		end
 	end
+	table.sort(res, compCriteria);
 
 	return res;
 end
@@ -744,18 +822,20 @@ end
 function CHD_GetCriteriaProgress()
 	local res = {};
 
-	local count = 0;
 	for i = 1, 5000 do
 		local id, _, _, Completed = GetAchievementInfo(i);
 		if id and not Completed then
 			for j = 1, GetAchievementNumCriteria(i) do
 				local _, _, completed, quantity, _, _, _, _, _, criteriaID = GetAchievementCriteriaInfo(i, j);
 				if quantity and quantity > 0 then
-					res[criteriaID] = quantity;
+					table.insert(res, {criteriaID, quantity});
 				end
 			end
 		end
 	end
+	print("count = ", #res);
+	table.sort(res, compCriteria);
+	print("count = ", #res);
 
 	return res;
 end
@@ -1192,6 +1272,7 @@ function CHD_OnClientDumpClick()
 	else
 		CHD_CLIENT = dump;
 	end
+	CHD_FillFieldCountClient(dump);
 
 	CHD_KEY    = nil;
 end
@@ -1203,5 +1284,6 @@ function CHD_OnServerDumpClick()
 	else
 		CHD_SERVER = CHD_SERVER_LOCAL;
 	end
+	CHD_FillFieldCountServer();
 	CHD_Message(L.DumpDone);
 end

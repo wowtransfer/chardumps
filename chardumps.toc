@@ -1,13 +1,13 @@
 ## Interface: 30300
 ## Title: chardumps
 ## Author: SlaFF
-## Version: 1.0
+## Version: 1.4
 ## Notes: Save your character!
-## eMail: thatislove@mail.ru
+## eMail: gracerpro@gmail.com
 ## OptionalDeps: Ace3
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
-## SavedVariablesPerCharacter: CHD_CLIENT,CHD_SERVER,CHD_KEY,CHD_TAXI,CHD_OPTIONS
+## SavedVariablesPerCharacter: CHD_CLIENT,CHD_SERVER,CHD_KEY,CHD_TAXI,CHD_OPTIONS,CHD_FIELD_COUNT
 embeds.xml
 localization.xml
 crypt_client.lua

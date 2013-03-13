@@ -3,7 +3,7 @@
   <Frame name="CHD_frmMain" movable="true" enableMouse="true">
     <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508883-59c2-4f83-ae10-27aaad48391b" />-->
     <Size>
-      <AbsDimension x="357" y="425" />
+      <AbsDimension x="357" y="446" />
     </Size>
     <Anchors>
       <Anchor point="CENTER" relativeTo="UIParent">
@@ -39,7 +39,7 @@
           </Anchors>
           <TexCoords left="0.2" right="0.8" top="0" bottom="0.6" />
         </Texture>
-        <FontString name="$parentTitleString" font="Fonts\FRIZQT__.TTF" text="Chardumps 1.3">
+        <FontString name="$parentTitleString" font="Fonts\FRIZQT__.TTF" text="Chardumps 1.4">
           <Size>
             <AbsDimension x="140" y="0" />
           </Size>
@@ -92,7 +92,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-303" />
+              <AbsDimension x="34" y="-353" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -129,7 +129,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="253" y="-237" />
+              <AbsDimension x="217" y="-332" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -137,12 +137,12 @@
       <Button name="$parentbtnQuestQuery" text="Recieve quests">
         <!--<FrameSkin skinid="f15d4970-d66d-444e-bb2d-1ad102c87fed" frameid="f15d4973-d66d-444e-bb2d-1ad102c87fed" />-->
         <Size>
-          <AbsDimension x="158" y="22" />
+          <AbsDimension x="133" y="22" />
         </Size>
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="171" y="-329" />
+              <AbsDimension x="178" y="-304" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -180,7 +180,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="211" y="-298" />
+              <AbsDimension x="202" y="-376" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -619,7 +619,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="38" y="-295" />
+              <AbsDimension x="58" y="-346" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -745,7 +745,7 @@
       <CheckButton name="$parentchbQuests" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;127&lt;/Width&gt;
+  &lt;Width&gt;112&lt;/Width&gt;
   &lt;Height&gt;24&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
@@ -754,7 +754,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="38" y="-326" />
+              <AbsDimension x="38" y="-302" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -799,7 +799,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="38" y="-356" />
+              <AbsDimension x="58" y="-376" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -840,7 +840,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="107" y="-267" />
+              <AbsDimension x="93" y="-267" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1141,7 +1141,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-333" />
+              <AbsDimension x="14" y="-309" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1178,7 +1178,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-363" />
+              <AbsDimension x="34" y="-383" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1215,7 +1215,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="107" y="-386" />
+              <AbsDimension x="93" y="-406" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1278,7 +1278,8 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>OnCHD_frmMainbtnCheckAllClLick()</OnClick>
+          <OnClick>OnCHD_frmMainbtnCheckAllClLick()
+</OnClick>
         </Scripts>
         <NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">
           <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
@@ -1315,7 +1316,8 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>OnCHD_frmMainbtnCheckNoneClLick()</OnClick>
+          <OnClick>OnCHD_frmMainbtnCheckNoneClLick()
+</OnClick>
         </Scripts>
         <NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">
           <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
@@ -1352,7 +1354,8 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>OnCHD_frmMainbtnCheckInvClLick()</OnClick>
+          <OnClick>OnCHD_frmMainbtnCheckInvClLick()
+</OnClick>
         </Scripts>
         <NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">
           <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
@@ -1376,6 +1379,51 @@
         <DisabledFont style="GameFontDisable" />
         <PushedTextOffset x="0" y="0" />
       </Button>
+      <CheckButton name="$parentchbPet">
+        <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
+&lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;Width&gt;133&lt;/Width&gt;
+  &lt;Height&gt;24&lt;/Height&gt;
+&lt;/Size&gt;</Property></FrameSkin>-->
+        <Size>
+          <AbsDimension x="32" y="32" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="178" y="-237" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer>
+            <FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="Pets">
+              <Anchors>
+                <Anchor point="LEFT" relativePoint="RIGHT">
+                  <Offset>
+                    <AbsDimension x="-2" y="0" />
+                  </Offset>
+                </Anchor>
+              </Anchors>
+              <FontHeight>
+                <AbsValue val="10" />
+              </FontHeight>
+              <Color r="1" g="0.8196079" b="0" />
+              <Shadow>
+                <Color r="0" g="0" b="0" />
+                <Offset>
+                  <AbsDimension x="1" y="-1" />
+                </Offset>
+              </Shadow>
+            </FontString>
+          </Layer>
+        </Layers>
+        <NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+        <PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+        <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+        <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+        <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+      </CheckButton>
     </Frames>
     <Scripts>
       <OnLoad>CHD_OnLoad(self)
