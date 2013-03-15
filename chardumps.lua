@@ -3,7 +3,7 @@
 		Main module
 	Chardumps
 		Dump of character.
-	version 1.0
+	version 1.5
 	Created by SlaFF
 		Gracer (Alliance)
 	thanks Sun`s chardump, reforged
@@ -16,7 +16,6 @@ local CHD = {};
 local CHD_SERVER_LOCAL = {};
 local CHD_gArrCheckboxes = {};
 CHD_CLIENT  = {};
-CHD_SERVER  = {};
 CHD_FIELD_COUNT = {};
 CHD_OPTIONS = CHD_OPTIONS or {};
 
@@ -188,7 +187,7 @@ function CHD_FillFieldCountClient(dump)
 	CHD_FIELD_COUNT.achievement = #dump.achievement;
 	CHD_FIELD_COUNT.criteria1 = #dump.criteria1;
 	CHD_FIELD_COUNT.criteria0 = #dump.criteria0;
-	CHD_FIELD_COUNT.arena = 0;
+	CHD_FIELD_COUNT.arena = #dump.arena;
 	CHD_FIELD_COUNT.critter = #dump.critter;
 	CHD_FIELD_COUNT.mount = #dump.mount;
 	CHD_FIELD_COUNT.bag = CHD_GetTableCount(dump.bag);
@@ -198,39 +197,15 @@ function CHD_FillFieldCountClient(dump)
 	CHD_FIELD_COUNT.glyph = #dump.glyph;
 	CHD_FIELD_COUNT.inventory = #dump.inventory;
 	CHD_FIELD_COUNT.questlog = #dump.questlog;
-	CHD_FIELD_COUNT.spell = CHD_GetTableCount(dump.spell);
+	CHD_FIELD_COUNT.spell = #dump.spell;
 	CHD_FIELD_COUNT.skill = #dump.skill;
 	CHD_FIELD_COUNT.macro = #dump.pmacro;
 	CHD_FIELD_COUNT.friend = #dump.friend;
 	CHD_FIELD_COUNT.pet = 0;
 
-	return true;
-end
-
-function CHD_FillFieldCountServer()
-	if not CHD_FIELD_COUNT then
-		CHD_FIELD_COUNT = {};
-	end;
-
-	if not CHD_SERVER_LOCAL then
-		return false;
-	end
-
-	if (CHD_SERVER_LOCAL.bank) then
-		CHD_FIELD_COUNT.bank = #CHD_SERVER_LOCAL.bank;
-	else
-		CHD_FIELD_COUNT.bank = 0;
-	end;
-	if (CHD_SERVER_LOCAL.taxi) then
-		CHD_FIELD_COUNT.taxi = #CHD_SERVER_LOCAL.taxi;
-	else
-		CHD_FIELD_COUNT.taxi = 0;
-	end;
-	if (CHD_SERVER_LOCAL.quest) then
-		CHD_FIELD_COUNT.quest = #CHD_SERVER_LOCAL.quest;
-	else
-		CHD_FIELD_COUNT.quest = 0;
-	end;
+	CHD_FIELD_COUNT.bank = CHD_GetTableCount(dump.bank);
+	CHD_FIELD_COUNT.taxi = #dump.taxi;
+	CHD_FIELD_COUNT.quest = #dump.quest;
 
 	return true;
 end
@@ -251,6 +226,9 @@ function CHD_OnVariablesLoaded()
 		end
 	end
 	CHD_SERVER_LOCAL.taxi = CHD_TAXI;
+	CHD_SERVER_LOCAL.quest = {};
+	CHD_SERVER_LOCAL.bank = {};
+	CHD_SERVER_LOCAL.bank.mainbank = {};
 
 	CHD_frmMainchbTaxiText:SetText(L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
 		#CHD_TAXI[1],
@@ -258,18 +236,13 @@ function CHD_OnVariablesLoaded()
 		#CHD_TAXI[3],
 		#CHD_TAXI[4])
 	);
-	if CHD_SERVER_LOCAL.quest then
-		CHD_frmMainchbQuestsText:SetText(L.chbQuests .. string.format(" (%d)", #CHD_SERVER_LOCAL.quest));
-	end
-	if CHD_SERVER_LOCAL.bank then
-		CHD_frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)",
-			CHD_GetTableCount(CHD_SERVER_LOCAL.bank)));
-	end
+	CHD_frmMainchbQuestsText:SetText(L.chbQuests);
+	CHD_frmMainchbBankText:SetText(L.chbBank);
 
 	if not CHD_trycall(CHD_SetOptions) then
 		CHD_SetOptionsDef();
 		CHD_trycall(CHD_SetOptions);
-		OnCHD_frmMainbtnHideClLick(); -- first loading
+		OnCHD_frmMainbtnHideClLick(); -- first loading, TODO: delete?
 	end
 
 	return true;
@@ -301,8 +274,7 @@ function CHD_OnEvent(self, event, ...)
 		else
 			CHD_SERVER_LOCAL.bank = {};
 		end
-		CHD_frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)",
-			CHD_GetTableCount(CHD_SERVER_LOCAL.bank)));
+		CHD_frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)", CHD_GetTableCount(CHD_SERVER_LOCAL.bank) - 1));
 	elseif "PLAYER_LEAVING_WORLD" == event then
 		CHD_SaveOptions();
 	elseif "TAXIMAP_OPENED" == event then
@@ -450,8 +422,7 @@ function CHD_OnLoad(self)
 	CHD_frmMainchbCrypt:SetText("");
 	CHD_frmMainchbActive:SetText("");
 
-	CHD_frmMainbtnClientDumpText:SetText(L.btnClientDump);
-	CHD_frmMainbtnServerDumpText:SetText(L.btnServerDump);
+	CHD_frmMainbtnDumpText:SetText(L.btnDump);
 
 	self:SetScript("OnEvent", CHD_OnEvent);
 	self:RegisterEvent("TAXIMAP_OPENED");
@@ -510,8 +481,7 @@ function CHD_OnLoad(self)
 
 	AddTooltip(CHD_frmMainbtnHide, L.ttbtnHide, "");
 	AddTooltip(CHD_frmMainbtnMinimize, L.ttbtnMinimize, "");
-	AddTooltip(CHD_frmMainbtnClientDump, L.btnClientDump, L.ttbtnClientDump);
-	AddTooltip(CHD_frmMainbtnServerDump, L.btnServerDump, L.ttbtnServerDump);
+	AddTooltip(CHD_frmMainbtnDump, L.btnDump, L.ttbtnDump);
 	AddTooltip(CHD_frmMainbtnQuestQuery, L.btnServerQuery, L.ttbtnServerQuery);
 	AddTooltip(CHD_frmMainbtnBankDel, L.chbBank, L.ttbtnBankDel);
 	AddTooltip(CHD_frmMainbtnQuestDel, L.chbQuests, L.ttbtnQuestDel);
@@ -571,6 +541,7 @@ end
 
 function CHD_BankDel()
 	CHD_SERVER_LOCAL.bank = {};
+	CHD_SERVER_LOCAL.bank.mainbank = {};
 	CHD_frmMainchbBankText:SetText(L.chbBank);
 	CHD_Message(L.DeleteBank);
 end;
@@ -609,9 +580,8 @@ end
 function CHD_OnRecieveQuestsClick()
 	QueryQuestsCompleted();
 	if CHD_frmMainchbQuests:GetChecked() then
-		CHD_SERVER_LOCAL.quest       = CHD_trycall(CHD_GetQuestInfo)       or {};
-		CHD_frmMainchbQuestsText:SetText(L.chbQuests .. string.format(" (%d)",
-			CHD_GetTableCount(CHD_SERVER_LOCAL.quest)));
+		CHD_SERVER_LOCAL.quest = CHD_trycall(CHD_GetQuestInfo) or {};
+		CHD_frmMainchbQuestsText:SetText(L.chbQuests .. string.format(" (%d)", #CHD_SERVER_LOCAL.quest));
 	else
 		CHD_SERVER_LOCAL.quest = {};
 		CHD_frmMainchbQuestsText:SetText(L.chbQuests .. " (0)");
@@ -1136,7 +1106,6 @@ function CHD_GetBankInfo()
 				res.mainbank[i] = {["I"] = tonumber(id), ["N"] = count, ["H"] = tonumber(enchant), ["G1"] = tonumber(gem1), ["G2"] = tonumber(gem2), ["G3"] = tonumber(gem3)};
 			end
 		end
-		print(itemLink);
 	end
 
 	CHD_Message(L.GetBank);
@@ -1168,48 +1137,57 @@ function CHD_Debug()
 	CHD_SaveOptions();
 end
 
-function CHD_OnClientDumpClick()
+function table.copy(t)
+	local u = {};
+
+	for k, v in pairs(t) do
+		u[k] = v;
+	end
+
+	return setmetatable(u, getmetatable(t));
+end
+
+function CHD_OnDumpClick()
 	local dump = {};
 
 	CHD_Message(L.CreatingDump);
-	dump.global      = CHD_trycall(CHD_GetGlobalInfo)      or {};
-	dump.player      = CHD_trycall(CHD_GetPlayerInfo)      or {};
+	dump.global = CHD_trycall(CHD_GetGlobalInfo) or {};
+	dump.player = CHD_trycall(CHD_GetPlayerInfo) or {};
 	if CHD_frmMainchbGlyphs:GetChecked() then
-		dump.glyph         = CHD_trycall(CHD_GetGlyphInfo)       or {};
+		dump.glyph = CHD_trycall(CHD_GetGlyphInfo) or {};
 	else
 		dump.glyph = {};
 	end
 	CHD_frmMainchbGlyphsText:SetText(L.chbGlyphs .. string.format(" (%d)",
 		CHD_GetTableCount(dump.glyph)));
 	if CHD_frmMainchbCurrency:GetChecked() then
-		dump.currency      = CHD_trycall(CHD_GetCurrencyInfo)    or {};
+		dump.currency = CHD_trycall(CHD_GetCurrencyInfo) or {};
 	else
 		dump.currency = {};
 	end
 	CHD_frmMainchbCurrencyText:SetText(L.chbCurrency .. string.format(" (%d)",
 		CHD_GetTableCount(dump.currency)));
 	if CHD_frmMainchbSpells:GetChecked() then
-		dump.spell         = CHD_trycall(CHD_GetSpellInfo)       or {};
+		dump.spell = CHD_trycall(CHD_GetSpellInfo) or {};
 	else
 		dump.spell = {};
 	end
-	CHD_frmMainchbSpellsText:SetText(L.chbSpells .. string.format(" (%d)",
-		CHD_GetTableCount(dump.spell)));
+	CHD_frmMainchbSpellsText:SetText(L.chbSpells .. string.format(" (%d)", #dump.spell));
 	if CHD_frmMainchbMounts:GetChecked() then
-		dump.mount         = CHD_trycall(CHD_GetMountInfo)       or {};
+		dump.mount = CHD_trycall(CHD_GetMountInfo) or {};
 	else
 		dump.mount = {};
 	end
 	CHD_frmMainchbMountsText:SetText(L.chbMounts .. string.format(" (%d)", #dump.mount))
 	if CHD_frmMainchbCritters:GetChecked() then
-		dump.critter       = CHD_trycall(CHD_GetCritterInfo)     or {};
+		dump.critter = CHD_trycall(CHD_GetCritterInfo) or {};
 	else
 		dump.critter = {};
 	end
 	CHD_frmMainchbCrittersText:SetText(L.chbCritters .. string.format(" (%d)", #dump.critter));
 
 	if CHD_frmMainchbReputation:GetChecked() then
-		dump.reputation    = CHD_trycall(CHD_GetRepInfo)         or {};
+		dump.reputation = CHD_trycall(CHD_GetRepInfo) or {};
 	else
 		dump.reputation = {};
 	end;
@@ -1217,9 +1195,9 @@ function CHD_OnClientDumpClick()
 		CHD_GetTableCount(dump.reputation)));
 
 	if CHD_frmMainchbAchievements:GetChecked() then
-		dump.achievement   = CHD_trycall(CHD_GetAchievementInfo)   or {};
-		dump.criteria1     = CHD_trycall(CHD_GetCriteriaCompleted) or {};
-		dump.criteria0     = CHD_trycall(CHD_GetCriteriaProgress)  or {};
+		dump.achievement = CHD_trycall(CHD_GetAchievementInfo) or {};
+		dump.criteria1 = CHD_trycall(CHD_GetCriteriaCompleted) or {};
+		dump.criteria0 = CHD_trycall(CHD_GetCriteriaProgress) or {};
 	else
 		dump.achievement = {};
 		dump.criteria1 = {};
@@ -1229,21 +1207,21 @@ function CHD_OnClientDumpClick()
 		#dump.achievement));
 
 	if CHD_frmMainchbSkills:GetChecked() then
-		dump.skill         = CHD_trycall(CHD_GetSkillInfo)       or {};
+		dump.skill = CHD_trycall(CHD_GetSkillInfo) or {};
 	else
 		dump.skill = {};
 	end
 	CHD_frmMainchbSkillsText:SetText(L.chbSkills .. string.format(" (%d)",
 		CHD_GetTableCount(dump.skill)));
 	if CHD_frmMainchbInventory:GetChecked() then
-		dump.inventory     = CHD_trycall(CHD_GetInventoryInfo)   or {};
+		dump.inventory = CHD_trycall(CHD_GetInventoryInfo) or {};
 	else
 		dump.inventory = {};
 	end
 	CHD_frmMainchbInventoryText:SetText(L.chbInventory .. string.format(" (%d)",
 		CHD_GetTableCount(dump.inventory)));
 	if CHD_frmMainchbBags:GetChecked() then
-		dump.bag           = CHD_trycall(CHD_GetBagInfo)         or {};
+		dump.bag = CHD_trycall(CHD_GetBagInfo) or {};
 	else
 		dump.bag = {};
 	end
@@ -1292,26 +1270,24 @@ function CHD_OnClientDumpClick()
 	end
 	CHD_frmMainchbArenaText:SetText(L.chbArena .. string.format(" (%d)", #dump.arena));
 
-	CHD_Message(L.CreatedDump);
-	CHD_Message(L.DumpDone);
+	dump.taxi = CHD_SERVER_LOCAL.taxi;
+	dump.quest = CHD_SERVER_LOCAL.quest;
+	local bankTable = table.copy(CHD_SERVER_LOCAL.bank);
+	for i = 40, 74 do
+		dump.inventory[i] = bankTable.mainbank[i];
+	end
+	bankTable.mainbank = nil;
+	dump.bank = bankTable;
 
+	CHD_FillFieldCountClient(dump);
 	if CHD_frmMainchbCrypt:GetChecked() then
 		CHD_CLIENT = crypt_lib.encode(dump);
 	else
 		CHD_CLIENT = dump;
 	end
-	CHD_FillFieldCountClient(dump);
 
-	CHD_KEY    = nil;
-end
-
-function CHD_OnServerDumpClick()
-	CHD_SERVER_LOCAL.taxi = CHD_TAXI;
-	if CHD_frmMainchbCrypt:GetChecked() then
-		CHD_SERVER = crypt_lib.encode(CHD_SERVER_LOCAL);
-	else
-		CHD_SERVER = CHD_SERVER_LOCAL;
-	end
-	CHD_FillFieldCountServer();
+	CHD_Message(L.CreatedDump);
 	CHD_Message(L.DumpDone);
+
+	CHD_KEY = nil;
 end
