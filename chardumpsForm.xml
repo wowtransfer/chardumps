@@ -883,7 +883,7 @@
           </Anchor>
         </Anchors>
         <Scripts>
-          <OnClick>OnCHD_frmMainbtnMinimizeClLick()
+          <OnClick>OnCHD_frmMainbtnMinimizeClick()
 </OnClick>
         </Scripts>
         <NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">

@@ -71,6 +71,16 @@ function CHD_GetTableCount(t)
 	return size;
 end
 
+function table.copy(t)
+	local u = {};
+
+	for k, v in pairs(t) do
+		u[k] = v;
+	end
+
+	return setmetatable(u, getmetatable(t));
+end
+
 function CHD_SlashCmdHandler(cmd)
 	local cmdlist = {strsplit(" ", cmd)};
 
@@ -142,7 +152,7 @@ function CHD_SetOptions()
 	CHD_frmMainchbCrypt:SetChecked(CHD_OPTIONS.chbCrypt);
 
 	if (CHD_OPTIONS.chdMinimize) then
-		OnCHD_frmMainbtnMinimizeClLick();
+		OnCHD_frmMainbtnMinimizeClick();
 	end;
 
 	return true;
@@ -190,6 +200,7 @@ function CHD_FillFieldCountClient(dump)
 	CHD_FIELD_COUNT.arena = #dump.arena;
 	CHD_FIELD_COUNT.critter = #dump.critter;
 	CHD_FIELD_COUNT.mount = #dump.mount;
+
 	CHD_FIELD_COUNT.bag = CHD_GetTableCount(dump.bag);
 	CHD_FIELD_COUNT.currency = #dump.currency;
 	CHD_FIELD_COUNT.equipment = #dump.equipment;
@@ -518,7 +529,7 @@ function CHD_OnLoad(self)
 	CHD_Message(L.loadmessage);
 end
 
-function OnCHD_frmMainbtnMinimizeClLick()
+function OnCHD_frmMainbtnMinimizeClick()
 	if CHD_frmMain:IsVisible() then
 		CHD_frmMainpanSystem:SetBackdrop(CHD_GetBackdrop());
 		CHD_frmMainpanSystem:SetParent("UIParent");
@@ -885,20 +896,18 @@ function CHD_GetBagInfo()
 
 	CHD_Message(L.GetBag);
 
-	i = 0;
 	for bag = 1,NUM_BAG_SLOTS do
 		local nCount = 0;
 		for slot = 1, GetContainerNumSlots(bag) do
 			local itemLink = GetContainerItemLink(bag, slot);
-			if itemLink then
-				local _, count = GetContainerItemInfo(bag, slot);
-				for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink,".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do 
-					res[i*100 + slot] = {["I"] = tonumber(id), ["N"] = count, ["H"] = tonumber(enchant), ["G1"] = tonumber(gem1), ["G2"] = tonumber(gem2), ["G3"] = tonumber(gem3)};
+			local _, count = GetContainerItemInfo(bag, slot);
+			if itemLink and count then
+				for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink,".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do
+					table.insert(res, (bag-1)*100 + slot, {["I"] = tonumber(id), ["N"] = count, ["H"] = tonumber(enchant), ["G1"] = tonumber(gem1), ["G2"] = tonumber(gem2), ["G3"] = tonumber(gem3)});
 				end
 				nCount = nCount + 1;
 			end
 		end
-		i = i + 1;
 		CHD_Message(string.format(L.ScaningBagTotal, bag, nCount));
 	end
 
@@ -917,6 +926,13 @@ function CHD_GetEquipmentInfo()
 	end
 
 	return res;
+end
+
+function compQuestlog(e1, e2)
+	if e1.Q < e2.Q then
+		return true;
+	end
+	return false;
 end
 
 function CHD_GetQuestlogInfo()
@@ -944,6 +960,7 @@ function CHD_GetQuestlogInfo()
 			j = j + 1;
 		end
 	end
+	table.sort(res, compQuestlog);
 
 	return res;
 end
@@ -1034,15 +1051,12 @@ function CHD_GetQuestInfo()
 	CHD_Message(L.GetQuest);
 
 	local questTable = GetQuestsCompleted(nil);
-	local count = 1;
-	-- k - quest`s ID
-	-- v - always true
-	for k, v in pairs(questTable) do
-		res[count] = k;
-		count = count + 1;
+	for k, _ in pairs(questTable) do
+		table.insert(res, k);
 	end
 	sort(res);
-	CHD_Message(L.CountOfCompletedQuests .. string.format(" (%d)", count - 1));
+
+	CHD_Message(L.CountOfCompletedQuests .. string.format(" (%d)", #res));
 
 	return res;
 end
@@ -1135,16 +1149,6 @@ end
 
 function CHD_Debug()
 	CHD_SaveOptions();
-end
-
-function table.copy(t)
-	local u = {};
-
-	for k, v in pairs(t) do
-		u[k] = v;
-	end
-
-	return setmetatable(u, getmetatable(t));
 end
 
 function CHD_OnDumpClick()
