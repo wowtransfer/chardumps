@@ -4,6 +4,7 @@
 - Common information (language, realm, realmlist, client version)
 - Basic Character information (name, class, race, level, gender, kills, money, double specialisation, honor points and arena points)
 - Achievements
+- Actions
 - Items in the bags
 - Items in the bank
 - Criterias of completed achievements
