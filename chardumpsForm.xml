@@ -3,7 +3,7 @@
   <Frame name="CHD_frmMain" movable="true" enableMouse="true">
     <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508883-59c2-4f83-ae10-27aaad48391b" />-->
     <Size>
-      <AbsDimension x="357" y="406" />
+      <AbsDimension x="357" y="432" />
     </Size>
     <Anchors>
       <Anchor point="CENTER" relativeTo="UIParent">
@@ -92,7 +92,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-304" />
+              <AbsDimension x="16" y="-332" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -129,7 +129,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="202" y="-295" />
+              <AbsDimension x="204" y="-323" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -142,7 +142,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="167" y="-267" />
+              <AbsDimension x="169" y="-298" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -180,7 +180,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="184" y="-334" />
+              <AbsDimension x="186" y="-362" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -619,7 +619,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="34" y="-297" />
+              <AbsDimension x="36" y="-325" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -754,7 +754,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="34" y="-267" />
+              <AbsDimension x="36" y="-295" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -799,7 +799,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="34" y="-327" />
+              <AbsDimension x="36" y="-355" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -840,7 +840,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="112" y="-357" />
+              <AbsDimension x="114" y="-385" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1141,7 +1141,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-274" />
+              <AbsDimension x="16" y="-302" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1178,7 +1178,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-334" />
+              <AbsDimension x="16" y="-362" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1360,6 +1360,51 @@
         <Layers>
           <Layer>
             <FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="Pets">
+              <Anchors>
+                <Anchor point="LEFT" relativePoint="RIGHT">
+                  <Offset>
+                    <AbsDimension x="-2" y="0" />
+                  </Offset>
+                </Anchor>
+              </Anchors>
+              <FontHeight>
+                <AbsValue val="10" />
+              </FontHeight>
+              <Color r="1" g="0.8196079" b="0" />
+              <Shadow>
+                <Color r="0" g="0" b="0" />
+                <Offset>
+                  <AbsDimension x="1" y="-1" />
+                </Offset>
+              </Shadow>
+            </FontString>
+          </Layer>
+        </Layers>
+        <NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+        <PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+        <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+        <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+        <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+      </CheckButton>
+      <CheckButton name="$parentchbActions" checked="true">
+        <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
+&lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;Width&gt;158&lt;/Width&gt;
+  &lt;Height&gt;24&lt;/Height&gt;
+&lt;/Size&gt;</Property></FrameSkin>-->
+        <Size>
+          <AbsDimension x="32" y="32" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="14" y="-265" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer>
+            <FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="Actions">
               <Anchors>
                 <Anchor point="LEFT" relativePoint="RIGHT">
                   <Offset>

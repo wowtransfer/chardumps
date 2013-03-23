@@ -108,6 +108,7 @@ function CHD_SetOptionsDef()
 	CHD_OPTIONS.chbCritters = true;
 	CHD_OPTIONS.chbReputation = true;
 	CHD_OPTIONS.chbAchievements = true;
+	CHD_OPTIONS.chbActions = true;
 	CHD_OPTIONS.chbEquipment = true;
 	CHD_OPTIONS.chbMacro = true;
 	CHD_OPTIONS.chbArena = true;
@@ -135,6 +136,7 @@ function CHD_SetOptions()
 	CHD_frmMainchbCritters:SetChecked(CHD_OPTIONS.chbCritters);
 	CHD_frmMainchbReputation:SetChecked(CHD_OPTIONS.chbReputation);
 	CHD_frmMainchbAchievements:SetChecked(CHD_OPTIONS.chbAchievements);
+	CHD_frmMainchbActions:SetChecked(CHD_OPTIONS.chbActions);
 	CHD_frmMainchbSkills:SetChecked(CHD_OPTIONS.chbSkills);
 	CHD_frmMainchbInventory:SetChecked(CHD_OPTIONS.chbInventory);
 	CHD_frmMainchbBags:SetChecked(CHD_OPTIONS.chbBags);
@@ -143,6 +145,7 @@ function CHD_SetOptions()
 	CHD_frmMainchbMacro:SetChecked(CHD_OPTIONS.chbMacro);
 	CHD_frmMainchbFriend:SetChecked(CHD_OPTIONS.chbFriend);
 	CHD_frmMainchbArena:SetChecked(CHD_OPTIONS.chbArena);
+
 
 	CHD_frmMainchbTaxi:SetChecked(CHD_OPTIONS.chbTaxi);
 	CHD_frmMainchbQuests:SetChecked(CHD_OPTIONS.chbQuests);
@@ -166,6 +169,7 @@ function CHD_SaveOptions()
 	CHD_OPTIONS.chbCritters     = CHD_frmMainchbCritters:GetChecked();
 	CHD_OPTIONS.chbReputation   = CHD_frmMainchbReputation:GetChecked();
 	CHD_OPTIONS.chbAchievements = CHD_frmMainchbAchievements:GetChecked();
+	CHD_OPTIONS.chbActions      = CHD_frmMainchbActions:GetChecked();
 	CHD_OPTIONS.chbSkills       = CHD_frmMainchbSkills:GetChecked();
 	CHD_OPTIONS.chbInventory    = CHD_frmMainchbInventory:GetChecked();
 	CHD_OPTIONS.chbBags         = CHD_frmMainchbBags:GetChecked();
@@ -195,6 +199,7 @@ function CHD_FillFieldCountClient(dump)
 	end
 
 	CHD_FIELD_COUNT.achievement = #dump.achievement;
+	CHD_FIELD_COUNT.action = CHD_GetTableCount(dump.action);
 	CHD_FIELD_COUNT.criteria1 = #dump.criteria1;
 	CHD_FIELD_COUNT.criteria0 = #dump.criteria0;
 	CHD_FIELD_COUNT.arena = #dump.arena;
@@ -210,7 +215,7 @@ function CHD_FillFieldCountClient(dump)
 	CHD_FIELD_COUNT.questlog = #dump.questlog;
 	CHD_FIELD_COUNT.spell = #dump.spell;
 	CHD_FIELD_COUNT.skill = #dump.skill;
-	CHD_FIELD_COUNT.macro = #dump.pmacro;
+	CHD_FIELD_COUNT.pmacro = #dump.pmacro;
 	CHD_FIELD_COUNT.friend = #dump.friend;
 	CHD_FIELD_COUNT.pet = 0;
 
@@ -285,7 +290,11 @@ function CHD_OnEvent(self, event, ...)
 		else
 			CHD_SERVER_LOCAL.bank = {};
 		end
-		CHD_frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)", CHD_GetTableCount(CHD_SERVER_LOCAL.bank) - 1));
+		local count = CHD_GetTableCount(CHD_SERVER_LOCAL.bank);
+		if CHD_SERVER_LOCAL.mainbank then
+			count = count - 1;
+		end;
+		CHD_frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)", count));
 	elseif "PLAYER_LEAVING_WORLD" == event then
 		CHD_SaveOptions();
 	elseif "TAXIMAP_OPENED" == event then
@@ -414,6 +423,7 @@ function CHD_OnLoad(self)
 	CHD_frmMainchbCrittersText:SetText(L.chbCritters);
 	CHD_frmMainchbReputationText:SetText(L.chbReputation);
 	CHD_frmMainchbAchievementsText:SetText(L.chbAchievements);
+	CHD_frmMainchbActionsText:SetText(L.chbActions);
 	CHD_frmMainchbSkillsText:SetText(L.chbSkills);
 	CHD_frmMainchbInventoryText:SetText(L.chbInventory);
 	CHD_frmMainchbBagsText:SetText(L.chbBags);
@@ -473,6 +483,7 @@ function CHD_OnLoad(self)
 	AddTooltip(CHD_frmMainchbCritters, L.chbCritters, L.ttchbCritters);
 	AddTooltip(CHD_frmMainchbReputation, L.chbReputation, L.ttchbReputation);
 	AddTooltip(CHD_frmMainchbAchievements, L.chbAchievements, L.ttchbAchievements);
+	AddTooltip(CHD_frmMainchbActions, L. chbActions, L.ttchbActions);
 	AddTooltip(CHD_frmMainchbSkills, L.chbSkills, L.ttchbSkills);
 	AddTooltip(CHD_frmMainchbInventory, L.chbInventory, L.ttchbInventory);
 	AddTooltip(CHD_frmMainchbBags, L.chbBags, L.ttchbBags);
@@ -509,6 +520,7 @@ function CHD_OnLoad(self)
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbCritters);
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbReputation);
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbAchievements);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbActions);
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbEquipment);
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbMacro);
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbArena);
@@ -600,7 +612,7 @@ function CHD_OnRecieveQuestsClick()
 end;
 
 --[[
-	Get client data
+	Get data
 --]]
 
 function CHD_GetGlobalInfo()
@@ -631,26 +643,29 @@ function CHD_GetPlayerInfo()
 	res.kills            = honorableKills;
 	res.honor            = GetHonorCurrency();
 	res.ap               = GetArenaCurrency();
-	res.money            = GetMoney();
+	res.money            = GetMoney() / 10000; -- convert to gold
 	res.specs            = GetNumTalentGroups();
 
 	return res;
 end
 
 function CHD_GetGlyphInfo()
-	local res = {};
-
+	local res ={ {}, {} };
+--[[
+The major glyph at the top of the user interface (level 15)
+The minor glyph at the bottom of the user interface (level 15)
+The minor glyph at the top left of the user interface (level 30)
+The major glyph at the bottom right of the user interface (level 50)
+The minor glyph at the top right of the user interface (level 70)
+The major glyph at the bottom left of the user interface (level 80)
+--]]
 	CHD_Message(L.GetPlyph);
-	for i = 1,2 do
-		res[i] = {};
-		local curid = {[1] = 1,[2] = 1};
-		for j = 1, GetNumGlyphSockets() do
-			local _, glyphType, glyphSpellID = GetGlyphSocketInfo(j, i);
-			if not res[i][glyphType] then -- glyphType 1 or 2, smal or big glyph
-				res[i][glyphType] = {};
+	for talentGroup = 1,2 do
+		for socket = 1, GetNumGlyphSockets() do -- GetNumGlyphSockets always returns 6?
+			local enabled, glyphType, glyphSpell = GetGlyphSocketInfo(socket, talentGroup);
+			if enabled and glyphType then
+				table.insert(res[talentGroup], glyphSpell);
 			end
-			res[i][glyphType][ curid[glyphType] ] = glyphSpellID;
-			curid[glyphType] = curid[glyphType] + 1;
 		end
 	end
 
@@ -773,6 +788,45 @@ function CHD_GetAchievementInfo()
 	return res;
 end
 
+function CHD_GetActionsInfo()
+	local res = {};
+
+--[[
+0 Spell
+1 Click
+32 Eq set
+64 Macro
+65 Click macro
+128 Item
+
+companion, equipmentset, flyout, item, macro, spell
+]]
+	-- "equipmentset", "flyout"
+	local arrType = {};
+	arrType.companion = 0;
+	arrType.item = 128;
+	arrType.macro = 64;
+	arrType.spell = 0;
+
+	CHD_Message(L.GetAction);
+	for i = 1, 120 do -- (6 + 4) panels * 12 buttons
+		local t, id, subType, spellID = GetActionInfo(i);
+		if t and arrType[t] then
+			local item = {};
+			item.T = arrType[t];
+			if t == "spell" or t == "companion" then
+				item.I = spellID;
+			else -- item and macro
+				item.I = id;
+			end
+			res[i] = item;
+			print(i, t, GetActionInfo(i));
+		end
+	end
+
+	return res;
+end
+
 function compCriteria(e1, e2)
 	if e1[1] < e2[1] then
 		return true;
@@ -818,6 +872,10 @@ function CHD_GetCriteriaProgress()
 	return res;
 end
 
+function compSkill(e1, e2)
+	return e1.N < e2.N;
+end
+
 function CHD_GetSkillInfo()
 	local res = {};
 
@@ -836,8 +894,11 @@ function CHD_GetSkillInfo()
 	CHD_Message(L.GetSkill);
 	for i = 1, GetNumSkillLines() do
 		local skillName, _, _, skillRank, _, _, skillMaxRank = GetSkillLineInfo(i);
-		res[i] = {["N"] = skillName, ["R"] = skillRank, ["M"] = skillMaxRank};
+		if skillName and (skillRank > 0) and (skillMaxRank > 0) then
+			table.insert(res, {["N"] = skillName, ["R"] = skillRank, ["M"] = skillMaxRank});
+		end
 	end
+	table.sort(res, compSkill)
 
 	return res;
 end
@@ -919,9 +980,11 @@ function CHD_GetEquipmentInfo()
 
 	CHD_Message(L.GetEquipment);
 	for i = 1, GetNumEquipmentSets() do
-		local name = GetEquipmentSetInfo(i);
+		local name, icon = GetEquipmentSetInfo(i);
 		if name then
 			res[i] = GetEquipmentSetItemIDs(name); -- return table 1..19
+			res[i].name = name;
+			res[i].icon = icon;
 		end
 	end
 
@@ -971,8 +1034,10 @@ function CHD_GetPMacroInfo()
 	CHD_Message(L.GetMacro);
 	local count = 1;
 	local _, numCharacterMacros = GetNumMacros();
+	local nIconPos = string.len("Interface\\Icons\\") + 1;
 	for i = 36 + 1, 36 + numCharacterMacros do
 		local name, texture, body = GetMacroInfo(i);
+		texture = string.sub(texture, nIconPos);
 		res[count] = {["N"] = name, ["T"] = texture, ["B"] = body};
 		count = count + 1;
 	end
@@ -985,8 +1050,10 @@ function CHD_GetAMacroInfo()
 
 	local count = 1;
 	local numAccountMacros = GetNumMacros();
+	local nIconPos = string.len("Interface\\Icons\\") + 1;
 	for i = 1, numAccountMacros do
 		local name, texture, body = GetMacroInfo(i);
+		texture = string.sub(texture, nIconPos);
 		res[count] = {["N"] = name, ["T"] = texture, ["B"] = body};
 		count = count + 1;
 	end
@@ -1061,7 +1128,7 @@ function CHD_GetQuestInfo()
 	return res;
 end
 
-function CHD_SetTaxiInfo(continent)
+function CHD_SetTaxiInfo()
 	local res = {};
 --[[
 -1 - if showing the cosmic map or a Battleground map. Also when showing The Scarlet Enclave, the Death Knights' starting area. 
@@ -1148,7 +1215,7 @@ end
 --]]
 
 function CHD_Debug()
-	CHD_SaveOptions();
+
 end
 
 function CHD_OnDumpClick()
@@ -1210,6 +1277,14 @@ function CHD_OnDumpClick()
 	CHD_frmMainchbAchievementsText:SetText(L.chbAchievements .. string.format(" (%d)",
 		#dump.achievement));
 
+	if CHD_frmMainchbActions:GetChecked() then
+		dump.action = CHD_trycall(CHD_GetActionsInfo) or {};
+	else
+		dump.action = {};
+	end
+	CHD_frmMainchbActionsText:SetText(L.chbActions .. string.format(" (%d)",
+		CHD_GetTableCount(dump.action)));
+
 	if CHD_frmMainchbSkills:GetChecked() then
 		dump.skill = CHD_trycall(CHD_GetSkillInfo) or {};
 	else
@@ -1238,7 +1313,6 @@ function CHD_OnDumpClick()
 	end
 	CHD_frmMainchbEquipmentText:SetText(L.chbEquipment .. string.format(" (%d)",
 		#dump.equipment));
-	-- TODO: returns this place
 	if CHD_frmMainchbQuestlog:GetChecked() then
 		dump.questlog = CHD_trycall(CHD_GetQuestlogInfo) or {};
 	else
@@ -1277,6 +1351,9 @@ function CHD_OnDumpClick()
 	dump.taxi = CHD_SERVER_LOCAL.taxi;
 	dump.quest = CHD_SERVER_LOCAL.quest;
 	local bankTable = table.copy(CHD_SERVER_LOCAL.bank);
+	if not bankTable.mainbank then
+		bankTable.mainbank = {};
+	end
 	for i = 40, 74 do
 		dump.inventory[i] = bankTable.mainbank[i];
 	end
