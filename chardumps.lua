@@ -820,7 +820,7 @@ companion, equipmentset, flyout, item, macro, spell
 				item.I = id;
 			end
 			res[i] = item;
-			print(i, t, GetActionInfo(i));
+		--	print(i, t, GetActionInfo(i));
 		end
 	end
 
