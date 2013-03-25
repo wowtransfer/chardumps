@@ -64,7 +64,7 @@ function CHD_GetTableCount(t)
 		return 0;
 	end
 
-	for _, _ in pairs(t) do
+	for k, v in pairs(t) do
 		size = size + 1
 	end
 
@@ -211,7 +211,7 @@ function CHD_FillFieldCountClient(dump)
 	CHD_FIELD_COUNT.equipment = #dump.equipment;
 	CHD_FIELD_COUNT.reputation = #dump.reputation;
 	CHD_FIELD_COUNT.glyph = #dump.glyph;
-	CHD_FIELD_COUNT.inventory = #dump.inventory;
+	CHD_FIELD_COUNT.inventory = CHD_GetTableCount(dump.inventory);
 	CHD_FIELD_COUNT.questlog = #dump.questlog;
 	CHD_FIELD_COUNT.spell = #dump.spell;
 	CHD_FIELD_COUNT.skill = #dump.skill;
@@ -1292,13 +1292,27 @@ function CHD_OnDumpClick()
 	end
 	CHD_frmMainchbSkillsText:SetText(L.chbSkills .. string.format(" (%d)",
 		CHD_GetTableCount(dump.skill)));
+
 	if CHD_frmMainchbInventory:GetChecked() then
 		dump.inventory = CHD_trycall(CHD_GetInventoryInfo) or {};
 	else
 		dump.inventory = {};
 	end
+
+	local bankTable = table.copy(CHD_SERVER_LOCAL.bank);
+	if not bankTable.mainbank then
+		bankTable.mainbank = {};
+	else
+		for i = 40, 74 do
+			dump.inventory[i] = bankTable.mainbank[i];
+		end
+	end
+	bankTable.mainbank = nil;
+	dump.bank = bankTable;
+
 	CHD_frmMainchbInventoryText:SetText(L.chbInventory .. string.format(" (%d)",
 		CHD_GetTableCount(dump.inventory)));
+
 	if CHD_frmMainchbBags:GetChecked() then
 		dump.bag = CHD_trycall(CHD_GetBagInfo) or {};
 	else
@@ -1350,15 +1364,6 @@ function CHD_OnDumpClick()
 
 	dump.taxi = CHD_SERVER_LOCAL.taxi;
 	dump.quest = CHD_SERVER_LOCAL.quest;
-	local bankTable = table.copy(CHD_SERVER_LOCAL.bank);
-	if not bankTable.mainbank then
-		bankTable.mainbank = {};
-	end
-	for i = 40, 74 do
-		dump.inventory[i] = bankTable.mainbank[i];
-	end
-	bankTable.mainbank = nil;
-	dump.bank = bankTable;
 
 	CHD_FillFieldCountClient(dump);
 	if CHD_frmMainchbCrypt:GetChecked() then
