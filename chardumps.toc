@@ -11,6 +11,7 @@
 embeds.xml
 localization.xml
 crypt_client.lua
+valid_bindings.lua
 chardumps.lua
 chardumpsForm.xml
 options.xml

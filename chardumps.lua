@@ -11,6 +11,7 @@
 local crypt_lib = crypt_lib;
 chardumps = LibStub('AceAddon-3.0'):NewAddon('chardumps');
 local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
+local CHD_bindings = CHD_bindings;
 
 local CHD = {};
 local CHD_SERVER_LOCAL = {};
@@ -33,9 +34,10 @@ function CHD_Message(...)
 end
 
 function CHD_PrintTable(table)
-	local t = table;
-	for k,v in pairs(t) do
-		print(string.format("%-20s%s", tostring(k), tostring(v)));
+	if type(table) == "table" then
+		for k,v in pairs(t) do
+			print(string.format("%-20s%s", tostring(k), tostring(v)));
+		end
 	end
 end
 
@@ -122,6 +124,7 @@ function CHD_SetOptionsDef()
 	CHD_OPTIONS.chbFriend = true;
 
 	CHD_OPTIONS.chbBank = true;
+	CHD_OPTIONS.chbBind = true;
 	CHD_OPTIONS.chbQuests = true;
 	CHD_OPTIONS.chbTaxi = true;
 
@@ -150,6 +153,7 @@ function CHD_SetOptions()
 	CHD_frmMainchbTaxi:SetChecked(CHD_OPTIONS.chbTaxi);
 	CHD_frmMainchbQuests:SetChecked(CHD_OPTIONS.chbQuests);
 	CHD_frmMainchbBank:SetChecked(CHD_OPTIONS.chbBank);
+	CHD_frmMainchbBind:SetChecked(CHD_OPTIONS.chbBind);
 
 	CHD_frmMainchbActive:SetChecked(CHD_OPTIONS.chbActive);
 	CHD_frmMainchbCrypt:SetChecked(CHD_OPTIONS.chbCrypt);
@@ -182,6 +186,7 @@ function CHD_SaveOptions()
 	CHD_OPTIONS.chbTaxi         = CHD_frmMainchbTaxi:GetChecked();
 	CHD_OPTIONS.chbQuests       = CHD_frmMainchbQuests:GetChecked();
 	CHD_OPTIONS.chbBank         = CHD_frmMainchbBank:GetChecked();
+	CHD_OPTIONS.chbBind         = CHD_frmMainchbBind:GetChecked();
 
 	CHD_OPTIONS.chbActive       = CHD_frmMainchbActive:GetChecked();
 	CHD_OPTIONS.chbCrypt        = CHD_frmMainchbCrypt:GetChecked();
@@ -220,6 +225,7 @@ function CHD_FillFieldCountClient(dump)
 	CHD_FIELD_COUNT.pet = 0;
 
 	CHD_FIELD_COUNT.bank = CHD_GetTableCount(dump.bank);
+	CHD_FIELD_COUNT.bind = #dump.bind;
 	CHD_FIELD_COUNT.taxi = #dump.taxi;
 	CHD_FIELD_COUNT.quest = #dump.quest;
 
@@ -438,6 +444,7 @@ function CHD_OnLoad(self)
 	CHD_frmMainchbPet:Disable();
 
 	CHD_frmMainchbBankText:SetText(L.chbBank);
+	CHD_frmMainchbBindText:SetText(L.chbBind);
 	CHD_frmMainchbTaxiText:SetText(L.chbTaxi);
 
 	CHD_frmMainchbCrypt:SetText("");
@@ -496,6 +503,7 @@ function CHD_OnLoad(self)
 	AddTooltip(CHD_frmMainchbPet, L.chbPet, L.ttchbPet);
 
 	AddTooltip(CHD_frmMainchbBank, L.chbBank, L.ttchbBank);
+	AddTooltip(CHD_frmMainchbBind, L.chbBind, L.ttchbBind);
 	AddTooltip(CHD_frmMainchbTaxi, L.chbTaxi, L.ttchbTaxi);
 
 	AddTooltip(CHD_frmMainchbActive, L.chbActive, L.ttchbActive);
@@ -536,6 +544,7 @@ function CHD_OnLoad(self)
 --	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbPet);
 
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbBank);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbBind);
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbTaxi);
 
 	CHD_Message(L.loadmessage);
@@ -1210,6 +1219,20 @@ function CHD_GetBankInfo()
 	return res;
 end
 
+function CHD_GetBindInfo()
+	local res = {};
+
+	CHD_Message(L.GetBind);
+	for i = 1, GetNumBindings() do
+		local commandName, binding1, binding2 = GetBinding(i);
+		if (binding1 or binding2) and (CHD_bindings[commandName]) then
+			table.insert(res, {commandName, binding1, binding2});
+		end
+	end
+
+	return res;
+end
+
 --[[
 	Saving data
 --]]
@@ -1312,6 +1335,13 @@ function CHD_OnDumpClick()
 
 	CHD_frmMainchbInventoryText:SetText(L.chbInventory .. string.format(" (%d)",
 		CHD_GetTableCount(dump.inventory)));
+
+	if CHD_frmMainchbBind:GetChecked() then
+		dump.bind = CHD_trycall(CHD_GetBindInfo) or {};
+	else
+		dump.bind = {};
+	end
+	CHD_frmMainchbBindText:SetText(L.chbBind .. " (" .. #dump.bind .. ")");
 
 	if CHD_frmMainchbBags:GetChecked() then
 		dump.bag = CHD_trycall(CHD_GetBagInfo) or {};
