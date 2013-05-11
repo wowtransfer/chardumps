@@ -1396,7 +1396,7 @@ function CHD_OnDumpClick()
 
 	CHD_FillFieldCountClient(dump);
 	if CHD_frmMainchbCrypt:GetChecked() then
-		CHD_CLIENT = crypt_lib.encode(dump);
+		CHD_CLIENT = b64_enc(crypt_lib.encode(dump));
 	else
 		CHD_CLIENT = dump;
 	end

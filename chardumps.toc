@@ -10,6 +10,7 @@
 ## SavedVariablesPerCharacter: CHD_CLIENT,CHD_KEY,CHD_TAXI,CHD_OPTIONS
 embeds.xml
 localization.xml
+b64.lua
 crypt_client.lua
 valid_bindings.lua
 chardumps.lua
