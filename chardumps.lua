@@ -17,7 +17,6 @@ local CHD = {};
 local CHD_SERVER_LOCAL = {};
 local CHD_gArrCheckboxes = {};
 CHD_CLIENT  = {};
-CHD_FIELD_COUNT = {};
 CHD_OPTIONS = CHD_OPTIONS or {};
 
 local MAX_NUM_CONTINENT = 4 -- 1..4
@@ -195,39 +194,39 @@ function CHD_SaveOptions()
 end
 
 function CHD_FillFieldCountClient(dump)
-	if not CHD_FIELD_COUNT then
-		CHD_FIELD_COUNT = {};
-	end;
-
 	if not dump then
 		return false;
 	end
 
-	CHD_FIELD_COUNT.achievement = #dump.achievement;
-	CHD_FIELD_COUNT.action = CHD_GetTableCount(dump.action);
-	CHD_FIELD_COUNT.criteria1 = #dump.criteria1;
-	CHD_FIELD_COUNT.criteria0 = #dump.criteria0;
-	CHD_FIELD_COUNT.arena = #dump.arena;
-	CHD_FIELD_COUNT.critter = #dump.critter;
-	CHD_FIELD_COUNT.mount = #dump.mount;
+	local res = {};
 
-	CHD_FIELD_COUNT.bag = CHD_GetTableCount(dump.bag);
-	CHD_FIELD_COUNT.currency = #dump.currency;
-	CHD_FIELD_COUNT.equipment = #dump.equipment;
-	CHD_FIELD_COUNT.reputation = #dump.reputation;
-	CHD_FIELD_COUNT.glyph = #dump.glyph;
-	CHD_FIELD_COUNT.inventory = CHD_GetTableCount(dump.inventory);
-	CHD_FIELD_COUNT.questlog = #dump.questlog;
-	CHD_FIELD_COUNT.spell = #dump.spell;
-	CHD_FIELD_COUNT.skill = #dump.skill;
-	CHD_FIELD_COUNT.pmacro = #dump.pmacro;
-	CHD_FIELD_COUNT.friend = #dump.friend;
-	CHD_FIELD_COUNT.pet = 0;
+	res.achievement = #dump.achievement;
+	res.action = CHD_GetTableCount(dump.action);
+	res.criteria1 = #dump.criteria1;
+	res.criteria0 = #dump.criteria0;
+	res.arena = #dump.arena;
+	res.critter = #dump.critter;
+	res.mount = #dump.mount;
 
-	CHD_FIELD_COUNT.bank = CHD_GetTableCount(dump.bank);
-	CHD_FIELD_COUNT.bind = #dump.bind;
-	CHD_FIELD_COUNT.taxi = #dump.taxi;
-	CHD_FIELD_COUNT.quest = #dump.quest;
+	res.bag = CHD_GetTableCount(dump.bag);
+	res.currency = #dump.currency;
+	res.equipment = #dump.equipment;
+	res.reputation = #dump.reputation;
+	res.glyph = #dump.glyph;
+	res.inventory = CHD_GetTableCount(dump.inventory);
+	res.questlog = #dump.questlog;
+	res.spell = #dump.spell;
+	res.skill = #dump.skill;
+	res.pmacro = #dump.pmacro;
+	res.friend = #dump.friend;
+	res.pet = 0;
+
+	res.bank = CHD_GetTableCount(dump.bank);
+	res.bind = #dump.bind;
+	res.taxi = #dump.taxi;
+	res.quest = #dump.quest;
+
+	dump.CHD_FIELD_COUNT = res;
 
 	return true;
 end
