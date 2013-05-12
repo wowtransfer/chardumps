@@ -446,8 +446,8 @@ function CHD_OnLoad(self)
 	CHD_frmMainchbBindText:SetText(L.chbBind);
 	CHD_frmMainchbTaxiText:SetText(L.chbTaxi);
 
-	CHD_frmMainchbCrypt:SetText("");
-	CHD_frmMainchbActive:SetText("");
+	CHD_frmMainchbCryptText:SetText(L.chbCrypt);
+--	CHD_frmMainchbActiveText:SetText("");
 
 	CHD_frmMainbtnDumpText:SetText(L.btnDump);
 
@@ -475,12 +475,12 @@ function CHD_OnLoad(self)
 	CHD_frmMainpanSystem:SetWidth(5 + 5 + btnW*2 + 3*3 + 5);
 
 	btnW = CHD_frmMainchbCrypt:GetWidth();
-	CHD_frmMainchbActive:ClearAllPoints();
-	CHD_frmMainchbActive:SetPoint("TOPLEFT", self);
-	CHD_frmMainchbActive:SetPoint("TOPLEFT", 8, -8);
 	CHD_frmMainchbCrypt:ClearAllPoints();
 	CHD_frmMainchbCrypt:SetPoint("TOPLEFT", self);
-	CHD_frmMainchbCrypt:SetPoint("TOPLEFT", 8 + 3 + btnW, -8);
+	CHD_frmMainchbCrypt:SetPoint("TOPLEFT", 5, -5);
+--	CHD_frmMainchbActive:ClearAllPoints();
+--	CHD_frmMainchbActive:SetPoint("TOPLEFT", self);
+--	CHD_frmMainchbActive:SetPoint("TOPLEFT", 8, -8);*/
 
 	AddTooltip(CHD_frmMainchbGlyphs, L.chbGlyphs, L.ttchbGlyphs);
 	AddTooltip(CHD_frmMainchbCurrency, L.chbCurrency, L.ttchbCurrency);
