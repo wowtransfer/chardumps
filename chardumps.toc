@@ -1,5 +1,5 @@
 ## Interface: 30300
-## Title: chardumps
+## Title: chardump|c00FF00FFs|r
 ## Author: SlaFF
 ## Version: 1.5
 ## Notes: Save your character!

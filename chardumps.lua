@@ -6,8 +6,9 @@
 	version 1.5
 	Created by SlaFF
 		Gracer (Alliance)
-	thanks Sun`s chardump, reforged
+	thanks Sun, myth.project.info@gmail.com
 --]]
+
 local crypt_lib = crypt_lib;
 chardumps = LibStub('AceAddon-3.0'):NewAddon('chardumps');
 local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
@@ -119,6 +120,7 @@ function CHD_SetOptionsDef()
 	CHD_OPTIONS.chbInventory = true;
 	CHD_OPTIONS.chbBags = true;
 	CHD_OPTIONS.chbSkills = true;
+	CHD_OPTIONS.chbSkillSpell = true;
 	CHD_OPTIONS.chbQuestlog = true;
 	CHD_OPTIONS.chbFriend = true;
 
@@ -140,6 +142,7 @@ function CHD_SetOptions()
 	CHD_frmMainchbAchievements:SetChecked(CHD_OPTIONS.chbAchievements);
 	CHD_frmMainchbActions:SetChecked(CHD_OPTIONS.chbActions);
 	CHD_frmMainchbSkills:SetChecked(CHD_OPTIONS.chbSkills);
+	CHD_frmMainchbSkillSpell:SetChecked(CHD_OPTIONS.chbSkillSpell);
 	CHD_frmMainchbInventory:SetChecked(CHD_OPTIONS.chbInventory);
 	CHD_frmMainchbBags:SetChecked(CHD_OPTIONS.chbBags);
 	CHD_frmMainchbEquipment:SetChecked(CHD_OPTIONS.chbEquipment);
@@ -174,6 +177,7 @@ function CHD_SaveOptions()
 	CHD_OPTIONS.chbAchievements = CHD_frmMainchbAchievements:GetChecked();
 	CHD_OPTIONS.chbActions      = CHD_frmMainchbActions:GetChecked();
 	CHD_OPTIONS.chbSkills       = CHD_frmMainchbSkills:GetChecked();
+	CHD_OPTIONS.chbSkillSpell   = CHD_frmMainchbSkillSpell:GetChecked();
 	CHD_OPTIONS.chbInventory    = CHD_frmMainchbInventory:GetChecked();
 	CHD_OPTIONS.chbBags         = CHD_frmMainchbBags:GetChecked();
 	CHD_OPTIONS.chbEquipment    = CHD_frmMainchbEquipment:GetChecked();
@@ -225,6 +229,7 @@ function CHD_FillFieldCountClient(dump)
 	res.bind = #dump.bind;
 	res.taxi = #dump.taxi;
 	res.quest = #dump.quest;
+	res.skillspell = #dump.skillspell;
 
 	dump.CHD_FIELD_COUNT = res;
 
@@ -250,6 +255,7 @@ function CHD_OnVariablesLoaded()
 	CHD_SERVER_LOCAL.quest = {};
 	CHD_SERVER_LOCAL.bank = {};
 	CHD_SERVER_LOCAL.bank.mainbank = {};
+	CHD_SERVER_LOCAL.skillspell = {};
 
 	CHD_frmMainchbTaxiText:SetText(L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
 		#CHD_TAXI[1],
@@ -263,7 +269,7 @@ function CHD_OnVariablesLoaded()
 	if not CHD_trycall(CHD_SetOptions) then
 		CHD_SetOptionsDef();
 		CHD_trycall(CHD_SetOptions);
-		OnCHD_frmMainbtnHideClLick(); -- first loading, TODO: delete?
+		OnCHD_frmMainbtnHideClick(); -- first loading, TODO: delete?
 	end
 
 	return true;
@@ -288,6 +294,65 @@ function OnCHD_frmMainbtnCheckInvClLick()
 	end
 end
 
+-- http://wowprogramming.com/docs/api_categories#tradeskill
+function CHD_OnTradeSkillShow(flags, arg2)
+	print("TRADE_SKILL_SHOW", flags, arg2);
+
+	if (string.find(flags, "trade")) then
+		print("Unknown skill!");
+		return nil;
+	end
+	-- Returns information about the current trade skill
+	local tradeskillName, rank, maxLevel = GetTradeSkillLine();
+
+	if ("UNKNOWN" == tradeskillName) then
+		return nil;
+	end
+
+	local i = 1;
+	while true do
+		local _, skillType = GetTradeSkillInfo(i);
+		if not skillType then
+			break;
+		end
+		if skillType == "header" then
+			ExpandTradeSkillSubClass(i);
+		end
+		i = i + 1;
+	end
+
+	CHD_Message(string.format(L.GetSkillSpell, tradeskillName));
+
+	if (not CHD_SERVER_LOCAL.skillspell) then
+		CHD_SERVER_LOCAL.skillspell = {};
+	end
+	CHD_SERVER_LOCAL.skillspell[tradeskillName] = {};
+	local t = CHD_SERVER_LOCAL.skillspell[tradeskillName];
+
+	for i = 1, GetNumTradeSkills() do
+		local skillName, skillType, numAvailable, isExpanded = GetTradeSkillInfo(i);
+		if (skillType and "header" ~= skillType) then
+			local link = GetTradeSkillRecipeLink(i);
+			--local itemID = tonumber(strmatch(link, "h[(%x+)]"));
+			local spellID = tonumber(strmatch(link, "\124Henchant:(%d+)"));
+			-- link = string.gsub(link, "\124", "_");
+			table.insert(t, spellID);
+		end
+	end
+
+	local count = #t;
+	CHD_Message(string.format(L.TradeSkillFound, count));
+
+	if count > 0 then
+		local s = "";
+		-- Update text on the Tooltip
+		for k,v in pairs(CHD_SERVER_LOCAL.skillspell) do
+			s = s .. k .. " (" .. #v .. ")\n";
+		end
+		AddTooltip(CHD_frmMainchbSkillSpell, L.chbSkillSpell, s);
+	end
+end
+
 function CHD_OnEvent(self, event, ...)
 	if "BANKFRAME_OPENED" == event then
 		if CHD_frmMainchbBank:GetChecked() then
@@ -308,6 +373,10 @@ function CHD_OnEvent(self, event, ...)
 		end
 	elseif "VARIABLES_LOADED" == event then
 		CHD_OnVariablesLoaded();
+	elseif "TRADE_SKILL_SHOW" == event then
+		CHD_OnTradeSkillShow(arg1, arg2, arg3);
+	else
+		print(event, arg1, arg2, arg3);
 	end
 end
 
@@ -430,6 +499,7 @@ function CHD_OnLoad(self)
 	CHD_frmMainchbAchievementsText:SetText(L.chbAchievements);
 	CHD_frmMainchbActionsText:SetText(L.chbActions);
 	CHD_frmMainchbSkillsText:SetText(L.chbSkills);
+	CHD_frmMainchbSkillSpellText:SetText(L.chbSkillSpell);
 	CHD_frmMainchbInventoryText:SetText(L.chbInventory);
 	CHD_frmMainchbBagsText:SetText(L.chbBags);
 	CHD_frmMainchbEquipmentText:SetText(L.chbEquipment);
@@ -450,12 +520,18 @@ function CHD_OnLoad(self)
 --	CHD_frmMainchbActiveText:SetText("");
 
 	CHD_frmMainbtnDumpText:SetText(L.btnDump);
+	CHD_frmMainbtnDump:ClearAllPoints();
+	CHD_frmMainbtnDump:SetPoint("BOTTOM", 0, 10);
 
 	self:SetScript("OnEvent", CHD_OnEvent);
 	self:RegisterEvent("TAXIMAP_OPENED");
 	self:RegisterEvent("VARIABLES_LOADED");
 	self:RegisterEvent("BANKFRAME_OPENED");
 	self:RegisterEvent("PLAYER_LEAVING_WORLD");
+	self:RegisterEvent("TRADE_SKILL_SHOW");
+	--self:RegisterEvent("SKILL_LINES_CHANGED");
+	--self:RegisterEvent("TRADE_SKILL_UPDATE");
+	--self:RegisterEvent("TRADE_SKILL_FILTER_UPDATE");
 	self:SetBackdrop(CHD_GetBackdrop());
 	self:SetFrameStrata("DIALOG");
 
@@ -474,10 +550,10 @@ function CHD_OnLoad(self)
 	CHD_frmMainpanSystem:SetPoint("TOPRIGHT", 0, 0);
 	CHD_frmMainpanSystem:SetWidth(5 + 5 + btnW*2 + 3*3 + 5);
 
-	btnW = CHD_frmMainchbCrypt:GetWidth();
-	CHD_frmMainchbCrypt:ClearAllPoints();
-	CHD_frmMainchbCrypt:SetPoint("TOPLEFT", self);
-	CHD_frmMainchbCrypt:SetPoint("TOPLEFT", 5, -5);
+--	btnW = CHD_frmMainchbCrypt:GetWidth();
+--	CHD_frmMainchbCrypt:ClearAllPoints();
+--	CHD_frmMainchbCrypt:SetPoint("TOPLEFT", self);
+--	CHD_frmMainchbCrypt:SetPoint("TOPLEFT", 5, -5);
 --	CHD_frmMainchbActive:ClearAllPoints();
 --	CHD_frmMainchbActive:SetPoint("TOPLEFT", self);
 --	CHD_frmMainchbActive:SetPoint("TOPLEFT", 8, -8);*/
@@ -491,6 +567,7 @@ function CHD_OnLoad(self)
 	AddTooltip(CHD_frmMainchbAchievements, L.chbAchievements, L.ttchbAchievements);
 	AddTooltip(CHD_frmMainchbActions, L. chbActions, L.ttchbActions);
 	AddTooltip(CHD_frmMainchbSkills, L.chbSkills, L.ttchbSkills);
+	AddTooltip(CHD_frmMainchbSkillSpell, L.chbSkillSpell, L.ttchbSkillSpell);
 	AddTooltip(CHD_frmMainchbInventory, L.chbInventory, L.ttchbInventory);
 	AddTooltip(CHD_frmMainchbBags, L.chbBags, L.ttchbBags);
 	AddTooltip(CHD_frmMainchbEquipment, L.chbEquipment, L.ttchbEquipment);
@@ -514,7 +591,8 @@ function CHD_OnLoad(self)
 	AddTooltip(CHD_frmMainbtnQuestQuery, L.btnServerQuery, L.ttbtnServerQuery);
 	AddTooltip(CHD_frmMainbtnBankDel, L.chbBank, L.ttbtnBankDel);
 	AddTooltip(CHD_frmMainbtnQuestDel, L.chbQuests, L.ttbtnQuestDel);
-	AddTooltip(CHD_frmMainbtnTaxiDel, L.chbTaxi, L.ttbtnTaxiDel);
+	AddTooltip(CHD_frmMainbtnTaxiDel, L.chbTaxi, L.ttbtnSkillSpellDel);
+	AddTooltip(CHD_frmMainbtnSkillSpellDel, L.chbSkillSpell, L.ttbtnSkillSpellDel);
 
 	AddTooltip(CHD_frmMainbtnCheckAll, L.Comboboxes, L.ttbtnCheckAll);
 	AddTooltip(CHD_frmMainbtnCheckNone, L.Comboboxes, L.ttbtnCheckNone);
@@ -537,6 +615,7 @@ function CHD_OnLoad(self)
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbInventory);
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbBags);
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbSkills);
+	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbSkillSpell);
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbQuestlog);
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbFriend);
 	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbQuests);
@@ -563,7 +642,7 @@ function OnCHD_frmMainbtnMinimizeClick()
 	end
 end
 
-function OnCHD_frmMainbtnHideClLick()
+function OnCHD_frmMainbtnHideClick()
 	if CHD_frmMainpanSystem:IsVisible() then
 		CHD_frmMainpanSystem:Hide();
 	end
@@ -605,6 +684,18 @@ end;
 function OnCHD_frmMainbtnTaxiDelCLick()
 	CHD.MessageBox.Title:SetText(L.DeleteTaxi);
 	CHD.MessageBox.OnOK = CHD_TaxiDel;
+	CHD.MessageBox:Show();
+end
+
+function CHD_SkillSpellDel()
+	CHD_SERVER_LOCAL.skillspell = {};
+	CHD_frmMainchbSkillSpellText:SetText(L.chbSkillSpell);
+	CHD_Message(L.DeleteSkillSpell);
+end
+
+function OnCHD_frmMainbtnSkillSpellDelCLick()
+	CHD.MessageBox.Title:SetText(L.DeleteSkillSpell);
+	CHD.MessageBox.OnOK = CHD_SkillSpellDel;
 	CHD.MessageBox:Show();
 end
 
@@ -669,7 +760,7 @@ The major glyph at the bottom left of the user interface (level 80)
 --]]
 	CHD_Message(L.GetPlyph);
 	for talentGroup = 1,2 do
-		for socket = 1, GetNumGlyphSockets() do -- GetNumGlyphSockets always returns 6?
+		for socket = 1, GetNumGlyphSockets() do -- GetNumGlyphSockets always returns 6 in 3.3.5a?
 			local enabled, glyphType, glyphSpell = GetGlyphSocketInfo(socket, talentGroup);
 			if enabled and glyphType then
 				table.insert(res[talentGroup], glyphSpell);
@@ -1391,10 +1482,26 @@ function CHD_OnDumpClick()
 	end
 	CHD_frmMainchbArenaText:SetText(L.chbArena .. string.format(" (%d)", #dump.arena));
 
-	dump.taxi = CHD_SERVER_LOCAL.taxi;
-	dump.quest = CHD_SERVER_LOCAL.quest;
+	if (CHD_frmMainchbTaxi:GetChecked()) then
+		dump.taxi = CHD_SERVER_LOCAL.taxi;
+	else
+		dump.taxi = {};
+	end;
+
+	if (CHD_frmMainchbQuests:GetChecked()) then
+		dump.quest = CHD_SERVER_LOCAL.quest;
+	else
+		dump.quest = {};
+	end
+
+	if (CHD_frmMainchbSkillSpell:GetChecked()) then
+		dump.skillspell = CHD_SERVER_LOCAL.skillspell;
+	else
+		dump.skillspell = {};
+	end
 
 	CHD_FillFieldCountClient(dump);
+
 	if CHD_frmMainchbCrypt:GetChecked() then
 		CHD_CLIENT = b64_enc(crypt_lib.encode(dump));
 	else

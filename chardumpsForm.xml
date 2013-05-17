@@ -3,7 +3,7 @@
   <Frame name="CHD_frmMain" movable="true" enableMouse="true">
     <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508883-59c2-4f83-ae10-27aaad48391b" />-->
     <Size>
-      <AbsDimension x="357" y="432" />
+      <AbsDimension x="508" y="310" />
     </Size>
     <Anchors>
       <Anchor point="CENTER" relativeTo="UIParent">
@@ -64,11 +64,48 @@
       </Layer>
     </Layers>
     <Frames>
+      <Button name="$parentbtnSkillSpellDel" text="-">
+        <!--<FrameSkin skinid="f15d4970-d66d-444e-bb2d-1ad102c87fed" frameid="f15d4973-d66d-444e-bb2d-1ad102c87fed" />-->
+        <Size>
+          <AbsDimension x="18" y="17" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="14" y="-270" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>OnCHD_frmMainbtnSkillSpellDelCLick()</OnClick>
+        </Scripts>
+        <NormalTexture file="Interface\Buttons\UI-Panel-Button-Up">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </NormalTexture>
+        <PushedTexture file="Interface\Buttons\UI-Panel-Button-Down">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </PushedTexture>
+        <DisabledTexture file="Interface\Buttons\UI-Panel-Button-Disabled">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </DisabledTexture>
+        <HighlightTexture file="Interface\Buttons\UI-Panel-Button-Highlight" alphaMode="ADD">
+          <TexCoords left="0" right="0.625" top="0" bottom="0.6875" />
+        </HighlightTexture>
+        <ButtonText name="$parentText">
+          <FontHeight>
+            <AbsValue val="10" />
+          </FontHeight>
+        </ButtonText>
+        <NormalFont style="GameFontNormal" />
+        <HighlightFont style="GameFontHighlight" />
+        <DisabledFont style="GameFontDisable" />
+        <PushedTextOffset x="0" y="0" />
+      </Button>
       <CheckButton name="$parentchbCrypt">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;102&lt;/Width&gt;
-  &lt;Height&gt;32&lt;/Height&gt;
+  &lt;Width&gt;193&lt;/Width&gt;
+  &lt;Height&gt;24&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -76,13 +113,58 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="3" y="-3" />
+              <AbsDimension x="102" y="-24" />
             </Offset>
           </Anchor>
         </Anchors>
         <Layers>
           <Layer>
             <FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="Crypt">
+              <Anchors>
+                <Anchor point="LEFT" relativePoint="RIGHT">
+                  <Offset>
+                    <AbsDimension x="-2" y="0" />
+                  </Offset>
+                </Anchor>
+              </Anchors>
+              <FontHeight>
+                <AbsValue val="10" />
+              </FontHeight>
+              <Color r="1" g="0.8196079" b="0" />
+              <Shadow>
+                <Color r="0" g="0" b="0" />
+                <Offset>
+                  <AbsDimension x="1" y="-1" />
+                </Offset>
+              </Shadow>
+            </FontString>
+          </Layer>
+        </Layers>
+        <NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+        <PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+        <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+        <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+        <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+      </CheckButton>
+      <CheckButton name="$parentchbSkillSpell">
+        <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
+&lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;Width&gt;127&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
+&lt;/Size&gt;</Property></FrameSkin>-->
+        <Size>
+          <AbsDimension x="32" y="32" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="37" y="-267" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer>
+            <FontString name="$parentText" font="Fonts\FRIZQT__.TTF" text="SkillSpell">
               <Anchors>
                 <Anchor point="LEFT" relativePoint="RIGHT">
                   <Offset>
@@ -117,7 +199,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="295" y="-332" />
+              <AbsDimension x="402" y="-3" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -137,7 +219,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="16" y="-332" />
+              <AbsDimension x="14" y="-228" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -174,7 +256,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="204" y="-323" />
+              <AbsDimension x="403" y="-162" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -187,7 +269,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="169" y="-298" />
+              <AbsDimension x="170" y="-206" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -225,7 +307,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="186" y="-362" />
+              <AbsDimension x="378" y="-206" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -262,7 +344,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="333" y="-3" />
+              <AbsDimension x="459" y="-3" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -295,8 +377,8 @@
       <CheckButton name="$parentchbAchievements" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;158&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -304,7 +386,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-147" />
+              <AbsDimension x="14" y="-136" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -340,8 +422,8 @@
       <CheckButton name="$parentchbGlyphs" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;133&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -349,7 +431,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="178" y="-27" />
+              <AbsDimension x="178" y="-52" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -385,8 +467,8 @@
       <CheckButton name="$parentchbSpells" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;158&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -394,7 +476,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-27" />
+              <AbsDimension x="14" y="-52" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -430,8 +512,8 @@
       <CheckButton name="$parentchbCurrency" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;133&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -439,7 +521,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="178" y="-57" />
+              <AbsDimension x="178" y="-73" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -475,8 +557,8 @@
       <CheckButton name="$parentchbMounts" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;158&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -484,7 +566,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-57" />
+              <AbsDimension x="14" y="-73" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -520,8 +602,8 @@
       <CheckButton name="$parentchbCritters" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;158&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -529,7 +611,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-87" />
+              <AbsDimension x="14" y="-94" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -565,8 +647,8 @@
       <CheckButton name="$parentchbReputation" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;158&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -574,7 +656,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-117" />
+              <AbsDimension x="14" y="-115" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -610,8 +692,8 @@
       <CheckButton name="$parentchbSkills" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;133&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -619,7 +701,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="178" y="-147" />
+              <AbsDimension x="338" y="-52" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -656,7 +738,7 @@
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;Width&gt;127&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -664,7 +746,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="36" y="-325" />
+              <AbsDimension x="37" y="-225" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -700,8 +782,8 @@
       <CheckButton name="$parentchbBags" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;133&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -709,7 +791,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="178" y="-117" />
+              <AbsDimension x="178" y="-115" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -745,8 +827,8 @@
       <CheckButton name="$parentchbInventory" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;133&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -754,7 +836,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="178" y="-87" />
+              <AbsDimension x="178" y="-94" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -791,7 +873,7 @@
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;Width&gt;127&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -799,7 +881,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="36" y="-295" />
+              <AbsDimension x="37" y="-204" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -836,7 +918,7 @@
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;Width&gt;127&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -844,7 +926,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="36" y="-355" />
+              <AbsDimension x="37" y="-246" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -885,7 +967,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="114" y="-385" />
+              <AbsDimension x="359" y="-285" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -923,7 +1005,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="306" y="-3" />
+              <AbsDimension x="432" y="-3" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -956,8 +1038,8 @@
       <CheckButton name="$parentchbMacro" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;158&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -965,7 +1047,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-207" />
+              <AbsDimension x="14" y="-178" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1001,8 +1083,8 @@
       <CheckButton name="$parentchbFriend" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;133&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -1010,7 +1092,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="178" y="-207" />
+              <AbsDimension x="178" y="-157" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1046,8 +1128,8 @@
       <CheckButton name="$parentchbEquipment" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;158&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -1055,7 +1137,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-177" />
+              <AbsDimension x="14" y="-157" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1091,8 +1173,8 @@
       <CheckButton name="$parentchbQuestlog" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;133&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -1100,7 +1182,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="178" y="-177" />
+              <AbsDimension x="178" y="-136" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1136,8 +1218,8 @@
       <CheckButton name="$parentchbArena" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;158&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -1145,7 +1227,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-237" />
+              <AbsDimension x="338" y="-94" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1186,7 +1268,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="16" y="-302" />
+              <AbsDimension x="14" y="-207" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1223,7 +1305,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="16" y="-362" />
+              <AbsDimension x="14" y="-249" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1260,7 +1342,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="317" y="-45" />
+              <AbsDimension x="19" y="-27" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1298,7 +1380,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="317" y="-72" />
+              <AbsDimension x="46" y="-27" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1336,7 +1418,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="317" y="-99" />
+              <AbsDimension x="75" y="-27" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1369,8 +1451,8 @@
       <CheckButton name="$parentchbPet">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;133&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -1378,7 +1460,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="178" y="-237" />
+              <AbsDimension x="338" y="-115" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1414,8 +1496,8 @@
       <CheckButton name="$parentchbActions" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;158&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -1423,7 +1505,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="14" y="-265" />
+              <AbsDimension x="338" y="-73" />
             </Offset>
           </Anchor>
         </Anchors>
@@ -1459,8 +1541,8 @@
       <CheckButton name="$parentchbBind" checked="true">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508886-59c2-4f83-ae10-27aaad48391b"><Property name="Size">&lt;?xml version="1.0"?&gt;
 &lt;Size xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;Width&gt;133&lt;/Width&gt;
-  &lt;Height&gt;24&lt;/Height&gt;
+  &lt;Width&gt;150&lt;/Width&gt;
+  &lt;Height&gt;20&lt;/Height&gt;
 &lt;/Size&gt;</Property></FrameSkin>-->
         <Size>
           <AbsDimension x="32" y="32" />
@@ -1468,7 +1550,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="178" y="-268" />
+              <AbsDimension x="178" y="-178" />
             </Offset>
           </Anchor>
         </Anchors>
