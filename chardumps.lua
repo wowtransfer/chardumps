@@ -197,6 +197,24 @@ function CHD_SaveOptions()
 	return true;
 end
 
+function CHD_GetSkillSpellText()
+	local s = "";
+	local count = 0;
+
+	for k, v in pairs(CHD_SERVER_LOCAL.skillspell) do
+		s = s .. #v .. ', ';
+		count = count + 1;
+	end
+	if count > 0 then
+		s = string.sub(s, 1, #s - 2);
+		s = string.format("%s (%s)", L.chbSkillSpell, s);
+	else
+		s = L.chbSkillSpell;
+	end
+
+	return s;
+end
+
 function CHD_FillFieldCountClient(dump)
 	if not dump then
 		return false;
@@ -227,9 +245,19 @@ function CHD_FillFieldCountClient(dump)
 
 	res.bank = CHD_GetTableCount(dump.bank);
 	res.bind = #dump.bind;
-	res.taxi = #dump.taxi;
 	res.quest = #dump.quest;
-	res.skillspell = #dump.skillspell;
+	local count = 0;
+	for k, v in pairs(dump.taxi) do
+		count =  count + #v;
+		print('taxi', k, #v);
+	end
+	res.taxi = count;
+	count = 0;
+	for k, v in pairs(dump.skillspell) do
+		count =  count + #v;
+		print('skillspell', k, #v);
+	end
+	res.skillspell = count;
 
 	dump.CHD_FIELD_COUNT = res;
 
@@ -295,18 +323,25 @@ function OnCHD_frmMainbtnCheckInvClLick()
 end
 
 -- http://wowprogramming.com/docs/api_categories#tradeskill
-function CHD_OnTradeSkillShow(flags, arg2)
+function CHD_OnTradeSkillShow(flags, arg2) -- TODO: delte second param
 	print("TRADE_SKILL_SHOW", flags, arg2);
+
+	local isLinked, name = IsTradeSkillLinked();
+	print(IsTradeSkillLinked());
+
+	if not CHD_frmMainchbSkillSpell:GetChecked() then
+		return;
+	end
 
 	if (string.find(flags, "trade")) then
 		print("Unknown skill!");
-		return nil;
+		return;
 	end
 	-- Returns information about the current trade skill
 	local tradeskillName, rank, maxLevel = GetTradeSkillLine();
 
 	if ("UNKNOWN" == tradeskillName) then
-		return nil;
+		return;
 	end
 
 	local i = 1;
@@ -344,13 +379,24 @@ function CHD_OnTradeSkillShow(flags, arg2)
 	CHD_Message(string.format(L.TradeSkillFound, count));
 
 	if count > 0 then
-		local s = "";
+		local s = L.ttchbSkillSpell .. "\n";
 		-- Update text on the Tooltip
 		for k,v in pairs(CHD_SERVER_LOCAL.skillspell) do
-			s = s .. k .. " (" .. #v .. ")\n";
+			s = s .. "- " .. k .. " (" .. #v .. ")\n";
 		end
 		AddTooltip(CHD_frmMainchbSkillSpell, L.chbSkillSpell, s);
+		CHD_frmMainchbSkillSpellText:SetText(CHD_GetSkillSpellText());
 	end
+end
+
+function CHD_GetBankItemCount()
+	local count = 0;
+
+	for k, v in pairs(CHD_SERVER_LOCAL.bank) do
+		count = count + #v;
+	end
+
+	return count;
 end
 
 function CHD_OnEvent(self, event, ...)
@@ -360,11 +406,7 @@ function CHD_OnEvent(self, event, ...)
 		else
 			CHD_SERVER_LOCAL.bank = {};
 		end
-		local count = CHD_GetTableCount(CHD_SERVER_LOCAL.bank);
-		if CHD_SERVER_LOCAL.mainbank then
-			count = count - 1;
-		end;
-		CHD_frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)", count));
+		CHD_frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)", CHD_GetBankItemCount()));
 	elseif "PLAYER_LEAVING_WORLD" == event then
 		CHD_SaveOptions();
 	elseif "TAXIMAP_OPENED" == event then
@@ -374,7 +416,7 @@ function CHD_OnEvent(self, event, ...)
 	elseif "VARIABLES_LOADED" == event then
 		CHD_OnVariablesLoaded();
 	elseif "TRADE_SKILL_SHOW" == event then
-		CHD_OnTradeSkillShow(arg1, arg2, arg3);
+		CHD_OnTradeSkillShow(arg1, arg2);
 	else
 		print(event, arg1, arg2, arg3);
 	end
@@ -522,6 +564,7 @@ function CHD_OnLoad(self)
 	CHD_frmMainbtnDumpText:SetText(L.btnDump);
 	CHD_frmMainbtnDump:ClearAllPoints();
 	CHD_frmMainbtnDump:SetPoint("BOTTOM", 0, 10);
+	CHD_frmMainbtnDump:SetPoint("RIGHT", -10, 0);
 
 	self:SetScript("OnEvent", CHD_OnEvent);
 	self:RegisterEvent("TAXIMAP_OPENED");
@@ -690,6 +733,7 @@ end
 function CHD_SkillSpellDel()
 	CHD_SERVER_LOCAL.skillspell = {};
 	CHD_frmMainchbSkillSpellText:SetText(L.chbSkillSpell);
+	AddTooltip(CHD_frmMainchbSkillSpell, L.chbSkillSpell, L.ttchbSkillSpell);
 	CHD_Message(L.DeleteSkillSpell);
 end
 
@@ -1499,6 +1543,7 @@ function CHD_OnDumpClick()
 	else
 		dump.skillspell = {};
 	end
+	CHD_frmMainchbSkillSpellText:SetText(CHD_GetSkillSpellText());
 
 	CHD_FillFieldCountClient(dump);
 
