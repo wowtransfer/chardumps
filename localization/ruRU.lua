@@ -40,7 +40,7 @@ L.chbTaxi         = "Полеты"
 L.chbActive       = "Активность"
 L.chbCrypt        = "Шифрование"
 
-L.loadmessage = "Аддон загружен, создатель SlaFF"
+L.loadmessage = "Аддон загружен, создатель SlaFF, GracerPro@gmail.com"
 
 -- Get...
 L.GetGlobal       = "  Чтение глобальной информации"
