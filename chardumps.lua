@@ -384,7 +384,7 @@ function CHD_OnTradeSkillShow(flags, arg2) -- TODO: delte second param
 		for k,v in pairs(CHD_SERVER_LOCAL.skillspell) do
 			s = s .. "- " .. k .. " (" .. #v .. ")\n";
 		end
-		AddTooltip(CHD_frmMainchbSkillSpell, L.chbSkillSpell, s);
+		SetTooltip(CHD_frmMainchbSkillSpell, L.chbSkillSpell, s);
 		CHD_frmMainchbSkillSpellText:SetText(CHD_GetSkillSpellText());
 	end
 end
@@ -495,7 +495,7 @@ function CHD_CreateMessageBox()
 	CHD.MessageBox = theFrame;
 end
 
-function AddTooltip(theFrame, Title, TooltipText)
+function SetTooltip(theFrame, Title, TooltipText)
 	theFrame.title = Title;
 	theFrame.tooltiptext = TooltipText;
 	theFrame:SetScript("OnEnter", function()
@@ -601,45 +601,45 @@ function CHD_OnLoad(self)
 --	CHD_frmMainchbActive:SetPoint("TOPLEFT", self);
 --	CHD_frmMainchbActive:SetPoint("TOPLEFT", 8, -8);*/
 
-	AddTooltip(CHD_frmMainchbGlyphs, L.chbGlyphs, L.ttchbGlyphs);
-	AddTooltip(CHD_frmMainchbCurrency, L.chbCurrency, L.ttchbCurrency);
-	AddTooltip(CHD_frmMainchbSpells, L.chbSpells, L.ttchbSpells);
-	AddTooltip(CHD_frmMainchbMounts, L.chbMounts, L.ttchbMounts);
-	AddTooltip(CHD_frmMainchbCritters, L.chbCritters, L.ttchbCritters);
-	AddTooltip(CHD_frmMainchbReputation, L.chbReputation, L.ttchbReputation);
-	AddTooltip(CHD_frmMainchbAchievements, L.chbAchievements, L.ttchbAchievements);
-	AddTooltip(CHD_frmMainchbActions, L. chbActions, L.ttchbActions);
-	AddTooltip(CHD_frmMainchbSkills, L.chbSkills, L.ttchbSkills);
-	AddTooltip(CHD_frmMainchbSkillSpell, L.chbSkillSpell, L.ttchbSkillSpell);
-	AddTooltip(CHD_frmMainchbInventory, L.chbInventory, L.ttchbInventory);
-	AddTooltip(CHD_frmMainchbBags, L.chbBags, L.ttchbBags);
-	AddTooltip(CHD_frmMainchbEquipment, L.chbEquipment, L.ttchbEquipment);
-	AddTooltip(CHD_frmMainchbQuestlog, L.chbQuestlog, L.ttchbQuestlog);
-	AddTooltip(CHD_frmMainchbMacro, L.chbMacro, L.ttchbMacro);
-	AddTooltip(CHD_frmMainchbFriend, L.chbFriend, L.ttchbFriend);
-	AddTooltip(CHD_frmMainchbArena, L.chbArena, L.ttchbArena);
-	AddTooltip(CHD_frmMainchbQuests, L.chbQuests, L.ttchbQuests);
-	AddTooltip(CHD_frmMainchbPet, L.chbPet, L.ttchbPet);
+	SetTooltip(CHD_frmMainchbGlyphs, L.chbGlyphs, L.ttchbGlyphs);
+	SetTooltip(CHD_frmMainchbCurrency, L.chbCurrency, L.ttchbCurrency);
+	SetTooltip(CHD_frmMainchbSpells, L.chbSpells, L.ttchbSpells);
+	SetTooltip(CHD_frmMainchbMounts, L.chbMounts, L.ttchbMounts);
+	SetTooltip(CHD_frmMainchbCritters, L.chbCritters, L.ttchbCritters);
+	SetTooltip(CHD_frmMainchbReputation, L.chbReputation, L.ttchbReputation);
+	SetTooltip(CHD_frmMainchbAchievements, L.chbAchievements, L.ttchbAchievements);
+	SetTooltip(CHD_frmMainchbActions, L. chbActions, L.ttchbActions);
+	SetTooltip(CHD_frmMainchbSkills, L.chbSkills, L.ttchbSkills);
+	SetTooltip(CHD_frmMainchbSkillSpell, L.chbSkillSpell, L.ttchbSkillSpell);
+	SetTooltip(CHD_frmMainchbInventory, L.chbInventory, L.ttchbInventory);
+	SetTooltip(CHD_frmMainchbBags, L.chbBags, L.ttchbBags);
+	SetTooltip(CHD_frmMainchbEquipment, L.chbEquipment, L.ttchbEquipment);
+	SetTooltip(CHD_frmMainchbQuestlog, L.chbQuestlog, L.ttchbQuestlog);
+	SetTooltip(CHD_frmMainchbMacro, L.chbMacro, L.ttchbMacro);
+	SetTooltip(CHD_frmMainchbFriend, L.chbFriend, L.ttchbFriend);
+	SetTooltip(CHD_frmMainchbArena, L.chbArena, L.ttchbArena);
+	SetTooltip(CHD_frmMainchbQuests, L.chbQuests, L.ttchbQuests);
+	SetTooltip(CHD_frmMainchbPet, L.chbPet, L.ttchbPet);
 
-	AddTooltip(CHD_frmMainchbBank, L.chbBank, L.ttchbBank);
-	AddTooltip(CHD_frmMainchbBind, L.chbBind, L.ttchbBind);
-	AddTooltip(CHD_frmMainchbTaxi, L.chbTaxi, L.ttchbTaxi);
+	SetTooltip(CHD_frmMainchbBank, L.chbBank, L.ttchbBank);
+	SetTooltip(CHD_frmMainchbBind, L.chbBind, L.ttchbBind);
+	SetTooltip(CHD_frmMainchbTaxi, L.chbTaxi, L.ttchbTaxi);
 
-	AddTooltip(CHD_frmMainchbActive, L.chbActive, L.ttchbActive);
-	AddTooltip(CHD_frmMainchbCrypt, L.chbCrypt, L.ttchbCrypt);
+	SetTooltip(CHD_frmMainchbActive, L.chbActive, L.ttchbActive);
+	SetTooltip(CHD_frmMainchbCrypt, L.chbCrypt, L.ttchbCrypt);
 
-	AddTooltip(CHD_frmMainbtnHide, L.ttbtnHide, "");
-	AddTooltip(CHD_frmMainbtnMinimize, L.ttbtnMinimize, "");
-	AddTooltip(CHD_frmMainbtnDump, L.btnDump, L.ttbtnDump);
-	AddTooltip(CHD_frmMainbtnQuestQuery, L.btnServerQuery, L.ttbtnServerQuery);
-	AddTooltip(CHD_frmMainbtnBankDel, L.chbBank, L.ttbtnBankDel);
-	AddTooltip(CHD_frmMainbtnQuestDel, L.chbQuests, L.ttbtnQuestDel);
-	AddTooltip(CHD_frmMainbtnTaxiDel, L.chbTaxi, L.ttbtnSkillSpellDel);
-	AddTooltip(CHD_frmMainbtnSkillSpellDel, L.chbSkillSpell, L.ttbtnSkillSpellDel);
+	SetTooltip(CHD_frmMainbtnHide, L.ttbtnHide, "");
+	SetTooltip(CHD_frmMainbtnMinimize, L.ttbtnMinimize, "");
+	SetTooltip(CHD_frmMainbtnDump, L.btnDump, L.ttbtnDump);
+	SetTooltip(CHD_frmMainbtnQuestQuery, L.btnServerQuery, L.ttbtnServerQuery);
+	SetTooltip(CHD_frmMainbtnBankDel, L.chbBank, L.ttbtnBankDel);
+	SetTooltip(CHD_frmMainbtnQuestDel, L.chbQuests, L.ttbtnQuestDel);
+	SetTooltip(CHD_frmMainbtnTaxiDel, L.chbTaxi, L.ttbtnSkillSpellDel);
+	SetTooltip(CHD_frmMainbtnSkillSpellDel, L.chbSkillSpell, L.ttbtnSkillSpellDel);
 
-	AddTooltip(CHD_frmMainbtnCheckAll, L.Comboboxes, L.ttbtnCheckAll);
-	AddTooltip(CHD_frmMainbtnCheckNone, L.Comboboxes, L.ttbtnCheckNone);
-	AddTooltip(CHD_frmMainbtnCheckInv, L.Comboboxes, L.ttbtnCheckInv);
+	SetTooltip(CHD_frmMainbtnCheckAll, L.Comboboxes, L.ttbtnCheckAll);
+	SetTooltip(CHD_frmMainbtnCheckNone, L.Comboboxes, L.ttbtnCheckNone);
+	SetTooltip(CHD_frmMainbtnCheckInv, L.Comboboxes, L.ttbtnCheckInv);
 
 	CHD_CreateMessageBox();
 
@@ -733,7 +733,7 @@ end
 function CHD_SkillSpellDel()
 	CHD_SERVER_LOCAL.skillspell = {};
 	CHD_frmMainchbSkillSpellText:SetText(L.chbSkillSpell);
-	AddTooltip(CHD_frmMainchbSkillSpell, L.chbSkillSpell, L.ttchbSkillSpell);
+	SetTooltip(CHD_frmMainchbSkillSpell, L.chbSkillSpell, L.ttchbSkillSpell);
 	CHD_Message(L.DeleteSkillSpell);
 end
 
