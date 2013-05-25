@@ -3,7 +3,7 @@
 		Main module
 	Chardumps
 		Dump of character.
-	version 1.5
+	version 1.8
 	Created by SlaFF
 		Gracer (Alliance)
 	thanks Sun, myth.project.info@gmail.com
@@ -249,13 +249,11 @@ function CHD_FillFieldCountClient(dump)
 	local count = 0;
 	for k, v in pairs(dump.taxi) do
 		count =  count + #v;
-		print('taxi', k, #v);
 	end
 	res.taxi = count;
 	count = 0;
 	for k, v in pairs(dump.skillspell) do
 		count =  count + #v;
-		print('skillspell', k, #v);
 	end
 	res.skillspell = count;
 
@@ -1548,7 +1546,7 @@ function CHD_OnDumpClick()
 	CHD_FillFieldCountClient(dump);
 
 	if CHD_frmMainchbCrypt:GetChecked() then
-		CHD_CLIENT = b64_enc(crypt_lib.encode(dump));
+		CHD_CLIENT = b64_enc(CHD_encode(dump));
 	else
 		CHD_CLIENT = dump;
 	end
