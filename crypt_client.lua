@@ -1,42 +1,39 @@
-crypt_lib = {};
-local crypt_lib = crypt_lib;
-
-local function encode_String(s)
-  s = string.gsub(s,'\\','\\\\');
-  s = string.gsub(s,'"','\\"');
-  s = string.gsub(s,"'","\\'");
-  s = string.gsub(s,'\n','\\n');
-  s = string.gsub(s,'\t','\\t');
-  return s;
+local function CHD_encode_string(s)
+	s = string.gsub(s,"\\","\\\\");
+	s = string.gsub(s,"\"","\\\"");
+	s = string.gsub(s,"\"","\\\"");
+	s = string.gsub(s,"\n","\\n");
+	s = string.gsub(s,"\t","\\t");
+	return s;
 end
 
-function crypt_lib.encode(obj)
-  if obj == nil then
-    return "null";
-  end
+function CHD_encode(obj)
+	if obj == nil then
+		return "null";
+	end
 
-  local t = type(obj);
+	local t = type(obj);
 
-  if t == "string" then
-    return '"' .. encode_String(obj) .. '"';
-  end
+	if t == "string" then
+		return "\"" .. CHD_encode_string(obj) .. "\"";
+	end
 
-  if t == "number" or t == "boolean" then
-    return tostring(obj);
-  end
+	if t == "number" or t == "boolean" then
+		return tostring(obj);
+	end
 
-  if t == "table" then
-    local ret = {};
+	if t == "table" then
+		local ret = {};
 
-    for key,value in pairs(obj) do
-      if type(key) == "string" then
-	table.insert(ret, '"' .. encode_String(key) .. '":' .. crypt_lib.encode(value));
-      else
-        table.insert(ret, encode_String(tostring(key)) .. ':' .. crypt_lib.encode(value));
-      end
-    end
-    return '[' .. table.concat(ret, ';') .. ']';
-  end
+		for key,value in pairs(obj) do
+			if type(key) == "string" then
+		table.insert(ret, "\"" .. CHD_encode_string(key) .. "\":" .. CHD_encode(value));
+			else
+				table.insert(ret, CHD_encode_string(tostring(key)) .. ":" .. CHD_encode(value));
+			end
+		end
+		return "[" .. table.concat(ret, ";") .. "]";
+	end
 
-  assert(false, 'encode attempt to encode unsupported type ' .. t .. ':' .. tostring(obj));
+	assert(false, "unsupported type " .. t .. ":" .. tostring(obj));
 end
