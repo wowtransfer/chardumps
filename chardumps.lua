@@ -8,101 +8,31 @@
 		Gracer (Alliance)
 	thanks Sun, myth.project.info@gmail.com
 --]]
-
-local crypt_lib = crypt_lib;
 chardumps = LibStub('AceAddon-3.0'):NewAddon('chardumps');
 local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
-local CHD_bindings = CHD_bindings;
+local CHD_bindings = CHD_bindings or {};
 
-local CHD = {};
-local CHD_SERVER_LOCAL = {};
-local CHD_gArrCheckboxes = {};
-CHD_CLIENT  = {};
+--local CHD = CHD or {};
+CHD_SERVER_LOCAL = CHD_SERVER_LOCAL or {};
+CHD_CLIENT = CHD_CLIENT or {};
 CHD_OPTIONS = CHD_OPTIONS or {};
+CHD_TAXI = CHD_TAXI or {};
+local CHD_gArrCheckboxes = CHD_gArrCheckboxes or {};
 
-local MAX_NUM_CONTINENT = 4 -- 1..4
+for i = 1, MAX_NUM_CONTINENT do
+	if not CHD_TAXI[i] then
+		CHD_TAXI[i] = {};
+	end
+end
 
 --[[
 	Functions
 --]]
 
-function CHD_Message(...)
-	local x = {...};
-	for k,v in pairs(x) do
-		print("\124cFF9F3FFFchardumps:\124r ", tostring(v));
-	end
-end
-
-function CHD_PrintTable(table)
-	if type(table) == "table" then
-		for k,v in pairs(t) do
-			print(string.format("%-20s%s", tostring(k), tostring(v)));
-		end
-	end
-end
-
-function CHD_LogErr(str)
-	print("\124c00FF0000"..(str or "nil").."\124r");
-end
-
-function CHD_LogWarn(str)
-	print("\124c00FFFF00"..(str or "nil").."\124r");
-end
-
-function CHD_trycall(fun)
-	local status, result = xpcall(fun, CHD_LogErr);
-
-	if status then
-		return result;
-	end
-
-	return nil;
-end
-
-function CHD_GetTableCount(t)
-	local size = 0;
-
-	if type(t) ~= "table" then
-		return 0;
-	end
-
-	for k, v in pairs(t) do
-		size = size + 1
-	end
-
-	return size;
-end
-
-function table.copy(t)
-	local u = {};
-
-	for k, v in pairs(t) do
-		u[k] = v;
-	end
-
-	return setmetatable(u, getmetatable(t));
-end
-
-function CHD_SlashCmdHandler(cmd)
-	local cmdlist = {strsplit(" ", cmd)};
-
-	if cmdlist[1] == "show" then
-		CHD_frmMainpanSystem:SetBackdrop(nil);
-		CHD_frmMainpanSystem:SetParent(CHD_frmMain);
-		CHD_frmMainpanSystem:Show();
-		CHD_frmMain:Show();
-	else
-		CHD_Message(L.help1);
-		CHD_Message(L.help2);
-		CHD_Message(L.help3);
-	end
-end
-
 function CHD_SetOptionsDef()
 	CHD_OPTIONS = {};
 
 	CHD_OPTIONS.chbCrypt = true;
-	CHD_OPTIONS.chbActive = true;
 	CHD_OPTIONS.chdMinimize = false;
 
 	CHD_OPTIONS.chbSpells = true;
@@ -157,17 +87,17 @@ function CHD_SetOptions()
 	CHD_frmMainchbBank:SetChecked(CHD_OPTIONS.chbBank);
 	CHD_frmMainchbBind:SetChecked(CHD_OPTIONS.chbBind);
 
-	CHD_frmMainchbActive:SetChecked(CHD_OPTIONS.chbActive);
 	CHD_frmMainchbCrypt:SetChecked(CHD_OPTIONS.chbCrypt);
 
 	if (CHD_OPTIONS.chdMinimize) then
 		OnCHD_frmMainbtnMinimizeClick();
-	end;
+	end
 
 	return true;
 end
 
 function CHD_SaveOptions()
+	print("CHD_SaveOptions!!!");
 	CHD_OPTIONS.chbGlyph        = CHD_frmMainchbGlyphs:GetChecked();
 	CHD_OPTIONS.chbCurrency     = CHD_frmMainchbCurrency:GetChecked();
 	CHD_OPTIONS.chbSpells       = CHD_frmMainchbSpells:GetChecked();
@@ -191,7 +121,6 @@ function CHD_SaveOptions()
 	CHD_OPTIONS.chbBank         = CHD_frmMainchbBank:GetChecked();
 	CHD_OPTIONS.chbBind         = CHD_frmMainchbBind:GetChecked();
 
-	CHD_OPTIONS.chbActive       = CHD_frmMainchbActive:GetChecked();
 	CHD_OPTIONS.chbCrypt        = CHD_frmMainchbCrypt:GetChecked();
 
 	return true;
@@ -200,6 +129,11 @@ end
 function CHD_GetSkillSpellText()
 	local s = "";
 	local count = 0;
+
+	if not CHD_SERVER_LOCAL.skillspell then
+		CHD_SERVER_LOCAL.skillspell = {};
+		return L.chbSkillSpell;
+	end
 
 	for k, v in pairs(CHD_SERVER_LOCAL.skillspell) do
 		s = s .. #v .. ', ';
@@ -262,495 +196,20 @@ function CHD_FillFieldCountClient(dump)
 	return true;
 end
 
-function CHD_OnVariablesLoaded()
-	-- client
-	CHD_CLIENT = {};
-
-	-- server
-	CHD_SERVER_LOCAL = {};
-
-	if not CHD_TAXI then
-		CHD_TAXI = {};
-	end
-	for i = 1, MAX_NUM_CONTINENT do
-		if not CHD_TAXI[i] then
-			CHD_TAXI[i] = {};
-		end
-	end
-	CHD_SERVER_LOCAL.taxi = CHD_TAXI;
-	CHD_SERVER_LOCAL.quest = {};
-	CHD_SERVER_LOCAL.bank = {};
-	CHD_SERVER_LOCAL.bank.mainbank = {};
-	CHD_SERVER_LOCAL.skillspell = {};
-
-	CHD_frmMainchbTaxiText:SetText(L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
-		#CHD_TAXI[1],
-		#CHD_TAXI[2],
-		#CHD_TAXI[3],
-		#CHD_TAXI[4])
-	);
-	CHD_frmMainchbQuestsText:SetText(L.chbQuests);
-	CHD_frmMainchbBankText:SetText(L.chbBank);
-
-	if not CHD_trycall(CHD_SetOptions) then
-		CHD_SetOptionsDef();
-		CHD_trycall(CHD_SetOptions);
-		OnCHD_frmMainbtnHideClick(); -- first loading, TODO: delete?
-	end
-
-	return true;
-end
-
-function OnCHD_frmMainbtnCheckAllClLick()
-	for k,v in pairs(CHD_gArrCheckboxes) do
-		v:SetChecked();
-	end
-end
-
-function OnCHD_frmMainbtnCheckNoneClLick()
-	for k,v in pairs(CHD_gArrCheckboxes) do
-		v:SetChecked(nil);
-	end
-end
-
-function OnCHD_frmMainbtnCheckInvClLick()
-	for k,v in pairs(CHD_gArrCheckboxes) do
-		local b = v:GetChecked();
-		v:SetChecked(not b);
-	end
-end
-
--- http://wowprogramming.com/docs/api_categories#tradeskill
-function CHD_OnTradeSkillShow(flags, arg2) -- TODO: delte second param
-	print("TRADE_SKILL_SHOW", flags, arg2);
-
-	local isLinked, name = IsTradeSkillLinked();
-	print(IsTradeSkillLinked());
-
-	if not CHD_frmMainchbSkillSpell:GetChecked() then
-		return;
-	end
-
-	if (string.find(flags, "trade")) then
-		print("Unknown skill!");
-		return;
-	end
-	-- Returns information about the current trade skill
-	local tradeskillName, rank, maxLevel = GetTradeSkillLine();
-
-	if ("UNKNOWN" == tradeskillName) then
-		return;
-	end
-
-	local i = 1;
-	while true do
-		local _, skillType = GetTradeSkillInfo(i);
-		if not skillType then
-			break;
-		end
-		if skillType == "header" then
-			ExpandTradeSkillSubClass(i);
-		end
-		i = i + 1;
-	end
-
-	CHD_Message(string.format(L.GetSkillSpell, tradeskillName));
-
-	if (not CHD_SERVER_LOCAL.skillspell) then
-		CHD_SERVER_LOCAL.skillspell = {};
-	end
-	CHD_SERVER_LOCAL.skillspell[tradeskillName] = {};
-	local t = CHD_SERVER_LOCAL.skillspell[tradeskillName];
-
-	for i = 1, GetNumTradeSkills() do
-		local skillName, skillType, numAvailable, isExpanded = GetTradeSkillInfo(i);
-		if (skillType and "header" ~= skillType) then
-			local link = GetTradeSkillRecipeLink(i);
-			--local itemID = tonumber(strmatch(link, "h[(%x+)]"));
-			local spellID = tonumber(strmatch(link, "\124Henchant:(%d+)"));
-			-- link = string.gsub(link, "\124", "_");
-			table.insert(t, spellID);
-		end
-	end
-
-	local count = #t;
-	CHD_Message(string.format(L.TradeSkillFound, count));
-
-	if count > 0 then
-		local s = L.ttchbSkillSpell .. "\n";
-		-- Update text on the Tooltip
-		for k,v in pairs(CHD_SERVER_LOCAL.skillspell) do
-			s = s .. "- " .. k .. " (" .. #v .. ")\n";
-		end
-		SetTooltip(CHD_frmMainchbSkillSpell, L.chbSkillSpell, s);
-		CHD_frmMainchbSkillSpellText:SetText(CHD_GetSkillSpellText());
-	end
-end
-
 function CHD_GetBankItemCount()
 	local count = 0;
+	local mainbankCount = CHD_GetTableCount(CHD_SERVER_LOCAL.bank.mainbank);
 
-	for k, v in pairs(CHD_SERVER_LOCAL.bank) do
-		count = count + #v;
+	--for k, v in pairs(CHD_SERVER_LOCAL.bank) do
+	--	count = count + #v;
+	--end
+	count = CHD_GetTableCount(CHD_SERVER_LOCAL.bank) - 1;
+	if count < 0 then
+		count = 0;
 	end
 
-	return count;
+	return mainbankCount, count;
 end
-
-function CHD_OnEvent(self, event, ...)
-	if "BANKFRAME_OPENED" == event then
-		if CHD_frmMainchbBank:GetChecked() then
-			CHD_SERVER_LOCAL.bank = CHD_trycall(CHD_GetBankInfo) or {};
-		else
-			CHD_SERVER_LOCAL.bank = {};
-		end
-		CHD_frmMainchbBankText:SetText(L.chbBank .. string.format(" (%d)", CHD_GetBankItemCount()));
-	elseif "PLAYER_LEAVING_WORLD" == event then
-		CHD_SaveOptions();
-	elseif "TAXIMAP_OPENED" == event then
-		if CHD_frmMainchbTaxi:GetChecked() then
-			CHD_SetTaxiInfo();
-		end
-	elseif "VARIABLES_LOADED" == event then
-		CHD_OnVariablesLoaded();
-	elseif "TRADE_SKILL_SHOW" == event then
-		CHD_OnTradeSkillShow(arg1, arg2);
-	else
-		print(event, arg1, arg2, arg3);
-	end
-end
-
-function CHD_CreateMessageBox()
-	local theFrame = CreateFrame("Frame", nil, UIParent);
-
-	theFrame:ClearAllPoints();
-	theFrame:SetPoint("CENTER", UIParent);
-	theFrame:SetHeight(78);
-	theFrame:SetWidth(200);
-
-	theFrame:SetBackdrop({
-		bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-		tile = true,
-		tileSize = 16,
-		edgeSize = 16,
-		insets = {left = 1, right = 1, top = 1, bottom = 1},
-	});
-	theFrame:SetFrameStrata("TOOLTIP");
-	theFrame:EnableMouse(true);
-	theFrame:SetMovable(true);
-
-	theFrame:SetScript("OnMouseDown", function(this)
-		if ( ( ( not this.isLocked ) or ( this.isLocked == 0 ) ) and ( arg1 == "LeftButton" ) ) then
-			this:StartMoving();
-			this.isMoving = true;
-		end
-	end);
-	theFrame:SetScript("OnMouseUp", function(this)
-		if ( this.isMoving ) then
-			this:StopMovingOrSizing();
-			this.isMoving = false;
-		end
-	end);
-	theFrame:SetScript("OnHide", function(this)
-		if ( this.isMoving ) then
-			this:StopMovingOrSizing();
-			this.isMoving = false;
-		end
-	end);
-
-	theFrame.Title = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
-	theFrame.Title:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 6, -10);
-	theFrame.Title:SetTextColor(1.0,1.0,0.0,1.0);
-	theFrame.Title:SetText("null");
-
-	theFrame.Text = theFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
-	theFrame.Text:SetPoint("CENTER",theFrame,"CENTER",0,0);
-	theFrame.Text:SetTextColor(1.0,1.0,1.0);
-	theFrame.Text:SetText(L.areyousure);
-
-	theFrame.YesButton = CreateFrame("Button", nil, theFrame, "OptionsButtonTemplate");
-	theFrame.YesButton:SetWidth(90);
-	theFrame.YesButton:SetHeight(24);
-	theFrame.YesButton:SetPoint("BOTTOMRIGHT", theFrame, "BOTTOM", -4, 4);
-	theFrame.YesButton:SetScript("OnClick", function()
-		if theFrame.OnOK then
-			theFrame:OnOK();
-		end
-		theFrame:Hide();
-	end);
-	theFrame.YesButton:SetText(L.Yes);
-
-	theFrame.NoButton = CreateFrame("Button", nil, theFrame, "OptionsButtonTemplate");
-	theFrame.NoButton:SetWidth(90);
-	theFrame.NoButton:SetHeight(24);
-	theFrame.NoButton:SetPoint("BOTTOMLEFT", theFrame, "BOTTOM", 4, 4);
-	theFrame.NoButton:SetScript("OnClick", function() theFrame:Hide() end);
-	theFrame.NoButton:SetText(L.No);
-
-	theFrame:Hide();
-
-	CHD.MessageBox = theFrame;
-end
-
-function SetTooltip(theFrame, Title, TooltipText)
-	theFrame.title = Title;
-	theFrame.tooltiptext = TooltipText;
-	theFrame:SetScript("OnEnter", function()
-				GameTooltip:SetOwner(theFrame, "ANCHOR_TOPLEFT");
-				GameTooltip:ClearLines();
-				GameTooltip:SetText(theFrame.title);
-				GameTooltip:AddLine(theFrame.tooltiptext, 1, 1, 1, true);
-				GameTooltip:Show();
-			end);
-	theFrame:SetScript("OnLeave", function() GameTooltip:Hide() end);
-end
-
-function CHD_GetBackdrop()
-	local backdrop = {
-		bgFile="Interface\\DialogFrame\\UI-DialogBox-Background",
-		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-		tile = true,
-		tileSize = 16,
-		edgeSize = 16,
-		insets = {
-			left = 5,
-			right = 5,
-			top = 5,
-			bottom = 5
-		}
-	}
-
-	return backdrop;
-end
-
-function CHD_OnLoad(self)
-	SlashCmdList["CHD"] = CHD_SlashCmdHandler;
-	SLASH_CHD1 = "/chardumps";
-	SLASH_CHD2 = "/chd";
-
-	-- localization
-	CHD_frmMainchbGlyphsText:SetText(L.chbGlyphs);
-	CHD_frmMainchbCurrencyText:SetText(L.chbCurrency);
-	CHD_frmMainchbSpellsText:SetText(L.chbSpells);
-	CHD_frmMainchbMountsText:SetText(L.chbMounts);
-	CHD_frmMainchbCrittersText:SetText(L.chbCritters);
-	CHD_frmMainchbReputationText:SetText(L.chbReputation);
-	CHD_frmMainchbAchievementsText:SetText(L.chbAchievements);
-	CHD_frmMainchbActionsText:SetText(L.chbActions);
-	CHD_frmMainchbSkillsText:SetText(L.chbSkills);
-	CHD_frmMainchbSkillSpellText:SetText(L.chbSkillSpell);
-	CHD_frmMainchbInventoryText:SetText(L.chbInventory);
-	CHD_frmMainchbBagsText:SetText(L.chbBags);
-	CHD_frmMainchbEquipmentText:SetText(L.chbEquipment);
-	CHD_frmMainchbQuestlogText:SetText(L.chbQuestlog);
-	CHD_frmMainchbMacroText:SetText(L.chbMacro);
-	CHD_frmMainchbFriendText:SetText(L.chbFriend);
-	CHD_frmMainchbArenaText:SetText(L.chbArena);
-	CHD_frmMainchbQuestsText:SetText(L.chbQuests);
-	CHD_frmMainbtnQuestQueryText:SetText(L.btnServerQuery);
-	CHD_frmMainchbPetText:SetText(L.chbPet);
-	CHD_frmMainchbPet:Disable();
-
-	CHD_frmMainchbBankText:SetText(L.chbBank);
-	CHD_frmMainchbBindText:SetText(L.chbBind);
-	CHD_frmMainchbTaxiText:SetText(L.chbTaxi);
-
-	CHD_frmMainchbCryptText:SetText(L.chbCrypt);
---	CHD_frmMainchbActiveText:SetText("");
-
-	CHD_frmMainbtnDumpText:SetText(L.btnDump);
-	CHD_frmMainbtnDump:ClearAllPoints();
-	CHD_frmMainbtnDump:SetPoint("BOTTOM", 0, 10);
-	CHD_frmMainbtnDump:SetPoint("RIGHT", -10, 0);
-
-	self:SetScript("OnEvent", CHD_OnEvent);
-	self:RegisterEvent("TAXIMAP_OPENED");
-	self:RegisterEvent("VARIABLES_LOADED");
-	self:RegisterEvent("BANKFRAME_OPENED");
-	self:RegisterEvent("PLAYER_LEAVING_WORLD");
-	self:RegisterEvent("TRADE_SKILL_SHOW");
-	--self:RegisterEvent("SKILL_LINES_CHANGED");
-	--self:RegisterEvent("TRADE_SKILL_UPDATE");
-	--self:RegisterEvent("TRADE_SKILL_FILTER_UPDATE");
-	self:SetBackdrop(CHD_GetBackdrop());
-	self:SetFrameStrata("DIALOG");
-
-	local btnW = CHD_frmMainbtnHide:GetWidth();
-	CHD_frmMainbtnHide:SetParent(CHD_frmMainpanSystem);
-	CHD_frmMainbtnHide:ClearAllPoints();
-	CHD_frmMainbtnHide:SetPoint("CENTER", CHD_frmMainpanSystem, 0, 0);
-	CHD_frmMainbtnHide:SetPoint("RIGHT", CHD_frmMainpanSystem, -11, 0);
-	CHD_frmMainbtnMinimize:SetParent(CHD_frmMainpanSystem);
-	CHD_frmMainbtnMinimize:ClearAllPoints();
-	CHD_frmMainbtnMinimize:SetPoint("CENTER", CHD_frmMainpanSystem, 0, 0);
-	CHD_frmMainbtnMinimize:SetPoint("RIGHT", CHD_frmMainpanSystem, -14 - btnW, 0);
-
-	CHD_frmMainpanSystem:ClearAllPoints();
-	CHD_frmMainpanSystem:SetPoint("TOPRIGHT", CHD_CHD_frmMain);
-	CHD_frmMainpanSystem:SetPoint("TOPRIGHT", 0, 0);
-	CHD_frmMainpanSystem:SetWidth(5 + 5 + btnW*2 + 3*3 + 5);
-
---	btnW = CHD_frmMainchbCrypt:GetWidth();
---	CHD_frmMainchbCrypt:ClearAllPoints();
---	CHD_frmMainchbCrypt:SetPoint("TOPLEFT", self);
---	CHD_frmMainchbCrypt:SetPoint("TOPLEFT", 5, -5);
---	CHD_frmMainchbActive:ClearAllPoints();
---	CHD_frmMainchbActive:SetPoint("TOPLEFT", self);
---	CHD_frmMainchbActive:SetPoint("TOPLEFT", 8, -8);*/
-
-	SetTooltip(CHD_frmMainchbGlyphs, L.chbGlyphs, L.ttchbGlyphs);
-	SetTooltip(CHD_frmMainchbCurrency, L.chbCurrency, L.ttchbCurrency);
-	SetTooltip(CHD_frmMainchbSpells, L.chbSpells, L.ttchbSpells);
-	SetTooltip(CHD_frmMainchbMounts, L.chbMounts, L.ttchbMounts);
-	SetTooltip(CHD_frmMainchbCritters, L.chbCritters, L.ttchbCritters);
-	SetTooltip(CHD_frmMainchbReputation, L.chbReputation, L.ttchbReputation);
-	SetTooltip(CHD_frmMainchbAchievements, L.chbAchievements, L.ttchbAchievements);
-	SetTooltip(CHD_frmMainchbActions, L. chbActions, L.ttchbActions);
-	SetTooltip(CHD_frmMainchbSkills, L.chbSkills, L.ttchbSkills);
-	SetTooltip(CHD_frmMainchbSkillSpell, L.chbSkillSpell, L.ttchbSkillSpell);
-	SetTooltip(CHD_frmMainchbInventory, L.chbInventory, L.ttchbInventory);
-	SetTooltip(CHD_frmMainchbBags, L.chbBags, L.ttchbBags);
-	SetTooltip(CHD_frmMainchbEquipment, L.chbEquipment, L.ttchbEquipment);
-	SetTooltip(CHD_frmMainchbQuestlog, L.chbQuestlog, L.ttchbQuestlog);
-	SetTooltip(CHD_frmMainchbMacro, L.chbMacro, L.ttchbMacro);
-	SetTooltip(CHD_frmMainchbFriend, L.chbFriend, L.ttchbFriend);
-	SetTooltip(CHD_frmMainchbArena, L.chbArena, L.ttchbArena);
-	SetTooltip(CHD_frmMainchbQuests, L.chbQuests, L.ttchbQuests);
-	SetTooltip(CHD_frmMainchbPet, L.chbPet, L.ttchbPet);
-
-	SetTooltip(CHD_frmMainchbBank, L.chbBank, L.ttchbBank);
-	SetTooltip(CHD_frmMainchbBind, L.chbBind, L.ttchbBind);
-	SetTooltip(CHD_frmMainchbTaxi, L.chbTaxi, L.ttchbTaxi);
-
-	SetTooltip(CHD_frmMainchbActive, L.chbActive, L.ttchbActive);
-	SetTooltip(CHD_frmMainchbCrypt, L.chbCrypt, L.ttchbCrypt);
-
-	SetTooltip(CHD_frmMainbtnHide, L.ttbtnHide, "");
-	SetTooltip(CHD_frmMainbtnMinimize, L.ttbtnMinimize, "");
-	SetTooltip(CHD_frmMainbtnDump, L.btnDump, L.ttbtnDump);
-	SetTooltip(CHD_frmMainbtnQuestQuery, L.btnServerQuery, L.ttbtnServerQuery);
-	SetTooltip(CHD_frmMainbtnBankDel, L.chbBank, L.ttbtnBankDel);
-	SetTooltip(CHD_frmMainbtnQuestDel, L.chbQuests, L.ttbtnQuestDel);
-	SetTooltip(CHD_frmMainbtnTaxiDel, L.chbTaxi, L.ttbtnSkillSpellDel);
-	SetTooltip(CHD_frmMainbtnSkillSpellDel, L.chbSkillSpell, L.ttbtnSkillSpellDel);
-
-	SetTooltip(CHD_frmMainbtnCheckAll, L.Comboboxes, L.ttbtnCheckAll);
-	SetTooltip(CHD_frmMainbtnCheckNone, L.Comboboxes, L.ttbtnCheckNone);
-	SetTooltip(CHD_frmMainbtnCheckInv, L.Comboboxes, L.ttbtnCheckInv);
-
-	CHD_CreateMessageBox();
-
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbSpells);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbMounts);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbCritters);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbReputation);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbAchievements);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbActions);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbEquipment);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbMacro);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbArena);
-
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbGlyphs);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbCurrency);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbInventory);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbBags);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbSkills);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbSkillSpell);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbQuestlog);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbFriend);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbQuests);
---	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbPet);
-
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbBank);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbBind);
-	table.insert(CHD_gArrCheckboxes, CHD_frmMainchbTaxi);
-
-	CHD_Message(L.loadmessage);
-end
-
-function OnCHD_frmMainbtnMinimizeClick()
-	if CHD_frmMain:IsVisible() then
-		CHD_frmMainpanSystem:SetBackdrop(CHD_GetBackdrop());
-		CHD_frmMainpanSystem:SetParent("UIParent");
-		CHD_frmMain:Hide();
-		CHD_OPTIONS.chdMinimize = true;
-	else
-		CHD_frmMainpanSystem:SetBackdrop(nil);
-		CHD_frmMainpanSystem:SetParent(CHD_frmMain);
-		CHD_frmMain:Show();
-		CHD_OPTIONS.chdMinimize = false;
-	end
-end
-
-function OnCHD_frmMainbtnHideClick()
-	if CHD_frmMainpanSystem:IsVisible() then
-		CHD_frmMainpanSystem:Hide();
-	end
-	CHD_frmMain:Hide();
-end
-
-function CHD_BankDel()
-	CHD_SERVER_LOCAL.bank = {};
-	CHD_SERVER_LOCAL.bank.mainbank = {};
-	CHD_frmMainchbBankText:SetText(L.chbBank);
-	CHD_Message(L.DeleteBank);
-end;
-
-function OnCHD_frmMainbtnBankDelCLick()
-	CHD.MessageBox.Title:SetText(L.DeleteBank);
-	CHD.MessageBox.OnOK = CHD_BankDel;
-	CHD.MessageBox:Show();
-end
-
-function CHD_QuestDel()
-	CHD_SERVER_LOCAL.quest = {};
-	CHD_frmMainchbQuestsText:SetText(L.chbQuests);
-	CHD_Message(L.DeleteQuests);
-end;
-
-function OnCHD_frmMainbtnQuestDelCLick()
-	CHD.MessageBox.Title:SetText(L.DeleteQuests);
-	CHD.MessageBox.OnOK = CHD_QuestDel;
-	CHD.MessageBox:Show();
-end
-
-function CHD_TaxiDel()
-	CHD_TAXI = {};
-	CHD_SERVER_LOCAL.taxi = {};
-	CHD_frmMainchbTaxiText:SetText(L.chbTaxi);
-	CHD_Message(L.DeleteTaxi);
-end;
-
-function OnCHD_frmMainbtnTaxiDelCLick()
-	CHD.MessageBox.Title:SetText(L.DeleteTaxi);
-	CHD.MessageBox.OnOK = CHD_TaxiDel;
-	CHD.MessageBox:Show();
-end
-
-function CHD_SkillSpellDel()
-	CHD_SERVER_LOCAL.skillspell = {};
-	CHD_frmMainchbSkillSpellText:SetText(L.chbSkillSpell);
-	SetTooltip(CHD_frmMainchbSkillSpell, L.chbSkillSpell, L.ttchbSkillSpell);
-	CHD_Message(L.DeleteSkillSpell);
-end
-
-function OnCHD_frmMainbtnSkillSpellDelCLick()
-	CHD.MessageBox.Title:SetText(L.DeleteSkillSpell);
-	CHD.MessageBox.OnOK = CHD_SkillSpellDel;
-	CHD.MessageBox:Show();
-end
-
-function CHD_OnRecieveQuestsClick()
-	QueryQuestsCompleted();
-	if CHD_frmMainchbQuests:GetChecked() then
-		CHD_SERVER_LOCAL.quest = CHD_trycall(CHD_GetQuestInfo) or {};
-		CHD_frmMainchbQuestsText:SetText(L.chbQuests .. string.format(" (%d)", #CHD_SERVER_LOCAL.quest));
-	else
-		CHD_SERVER_LOCAL.quest = {};
-		CHD_frmMainchbQuestsText:SetText(L.chbQuests .. " (0)");
-	end
-end;
 
 --[[
 	Get data
@@ -961,7 +420,6 @@ companion, equipmentset, flyout, item, macro, spell
 				item.I = id;
 			end
 			res[i] = item;
-		--	print(i, t, GetActionInfo(i));
 		end
 	end
 
@@ -1269,72 +727,30 @@ function CHD_GetQuestInfo()
 	return res;
 end
 
-function CHD_SetTaxiInfo()
-	local res = {};
---[[
--1 - if showing the cosmic map or a Battleground map. Also when showing The Scarlet Enclave, the Death Knights' starting area. 
-0 - if showing the entire world of Azeroth
-1 - if showing Kalimdor, or a zone map within it.
-2 - if showing Eastern Kingdoms, or a zone map within it.
-3 - if showing Outland, or a zone map within it.
-4 - if showing Northrend, or a zone map within it.
-5 - if showing the Maelstrom, or a zone map within it.
-6 - if showing Pandaria, or a zone map within it.
---]]
-	local continent = GetCurrentMapContinent();
-	if (continent < 1) or (continent > MAX_NUM_CONTINENT) then
-		return false;
-	end
-
-	local arrContinent = {L.Kalimdor, L.EasternKingdoms, L.Outland, L.Northrend};
-	CHD_Message(L.GetTaxi .. arrContinent[continent]);
-	for i = 1, NumTaxiNodes() do
-		local name = TaxiNodeName(i);
-		res[i] = name;
-	end
-	if not CHD_TAXI then
-		CHD_TAXI = {};
-	end
-	for i = 1, MAX_NUM_CONTINENT do
-		if not CHD_TAXI[i] then
-			CHD_TAXI[i] = {};
-		end
-	end
-	CHD_TAXI[continent] = res;
-
-	CHD_frmMainchbTaxiText:SetText(L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
-		(#CHD_TAXI[1] or 0),
-		(#CHD_TAXI[2] or 0),
-		(#CHD_TAXI[3] or 0),
-		(#CHD_TAXI[4] or 0))
-	);
-
-	CHD_Message(L.CountOfTaxi .. tostring(#CHD_TAXI[continent]));
-
-	return true;
-end
-
 function CHD_GetBankInfo()
 	local res = {};
 	-- BANK_CONTAINER is the bank window
 	-- NUM_BAG_SLOTS+1 to NUM_BAG_SLOTS+NUM_BANKBAGSLOTS are your bank bags
 	res.mainbank = {};
+	local nCount = 0;
 
-	for i = 40, 74 do -- main bank and 7 bank bags
+	CHD_Message(L.GetBank);
+	for i = 40, 74 do -- main bank
 		local itemLink = GetInventoryItemLink("player", i)
 		if itemLink then
 			count = GetInventoryItemCount("player",i)
 			for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink,".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do
 				res.mainbank[i] = {["I"] = tonumber(id), ["N"] = count, ["H"] = tonumber(enchant), ["G1"] = tonumber(gem1), ["G2"] = tonumber(gem2), ["G3"] = tonumber(gem3)};
 			end
+			nCount = nCount + 1;
 		end
 	end
+	CHD_Message(string.format(L.ReadMainBankBag, nCount));
 
-	CHD_Message(L.GetBank);
 	i = 0;
-	for bag = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do
-		local nCount = 0;
+	for bag = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do -- and 7 bank bags
 		for slot = 1, GetContainerNumSlots(bag) do
+			nCount = 0;
 			local itemLink = GetContainerItemLink(bag, slot)
 			if itemLink then
 				_, count = GetContainerItemInfo(bag, slot);
@@ -1454,6 +870,9 @@ function CHD_OnDumpClick()
 		dump.inventory = {};
 	end
 
+	if not CHD_SERVER_LOCAL.bank then
+		CHD_SERVER_LOCAL.bank = {}
+	end
 	local bankTable = table.copy(CHD_SERVER_LOCAL.bank);
 	if not bankTable.mainbank then
 		bankTable.mainbank = {};
@@ -1525,19 +944,19 @@ function CHD_OnDumpClick()
 	CHD_frmMainchbArenaText:SetText(L.chbArena .. string.format(" (%d)", #dump.arena));
 
 	if (CHD_frmMainchbTaxi:GetChecked()) then
-		dump.taxi = CHD_SERVER_LOCAL.taxi;
+		dump.taxi = CHD_TAXI or {};
 	else
 		dump.taxi = {};
 	end;
 
 	if (CHD_frmMainchbQuests:GetChecked()) then
-		dump.quest = CHD_SERVER_LOCAL.quest;
+		dump.quest = CHD_SERVER_LOCAL.quest or {}; -- TODO: delete "or {}"
 	else
 		dump.quest = {};
 	end
 
 	if (CHD_frmMainchbSkillSpell:GetChecked()) then
-		dump.skillspell = CHD_SERVER_LOCAL.skillspell;
+		dump.skillspell = CHD_SERVER_LOCAL.skillspell or {};
 	else
 		dump.skillspell = {};
 	end
@@ -1553,6 +972,7 @@ function CHD_OnDumpClick()
 
 	CHD_Message(L.CreatedDump);
 	CHD_Message(L.DumpDone);
-
-	CHD_KEY = nil;
 end
+
+local CHD_frmMain = CreateFrame("Frame", "CHD_frmMain", UIParent); -- global main form
+CHD_Init(CHD_frmMain);

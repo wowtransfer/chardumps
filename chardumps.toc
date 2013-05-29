@@ -13,6 +13,10 @@ localization.xml
 b64.lua
 crypt_client.lua
 valid_bindings.lua
+
+global.lua
+main_frame_handle.lua
+main_frame.lua
 chardumps.lua
-chardumpsForm.xml
+
 options.xml
