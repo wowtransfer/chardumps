@@ -12,7 +12,6 @@ chardumps = LibStub('AceAddon-3.0'):NewAddon('chardumps');
 local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
 local CHD_bindings = CHD_bindings or {};
 
---local CHD = CHD or {};
 CHD_SERVER_LOCAL = CHD_SERVER_LOCAL or {};
 CHD_CLIENT = CHD_CLIENT or {};
 CHD_OPTIONS = CHD_OPTIONS or {};
@@ -747,21 +746,24 @@ function CHD_GetBankInfo()
 	end
 	CHD_Message(string.format(L.ReadMainBankBag, nCount));
 
-	i = 0;
-	for bag = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do -- and 7 bank bags
-		for slot = 1, GetContainerNumSlots(bag) do
-			nCount = 0;
-			local itemLink = GetContainerItemLink(bag, slot)
+	j = 1;
+	for i = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do -- and 7 bank bags
+		res[j] = {};
+		local bag = res[j];
+		nCount = 0;
+		for slot = 1, GetContainerNumSlots(i) do
+			local itemLink = GetContainerItemLink(i, slot)
 			if itemLink then
-				_, count = GetContainerItemInfo(bag, slot);
-				for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink,".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do
-					res[i*100 + slot] = {["I"] = tonumber(id), ["N"] = count, ["H"] = tonumber(enchant), ["G1"] = tonumber(gem1), ["G2"] = tonumber(gem2), ["G3"] = tonumber(gem3)};
+				_, count = GetContainerItemInfo(i, slot);
+				for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink, ".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do
+					bag[slot] = {["I"] = tonumber(id), ["N"] = count, ["H"] = tonumber(enchant), ["G1"] = tonumber(gem1), ["G2"] = tonumber(gem2), ["G3"] = tonumber(gem3)};
 				end
 				nCount = nCount + 1;
 			end
 		end
+		CHD_Message(string.format(L.ScaningBankTotal, j, nCount));
 		i = i + 1;
-		CHD_Message(string.format(L.ScaningBankTotal, i, nCount));
+		j = j + 1;
 	end
 
 	return res;

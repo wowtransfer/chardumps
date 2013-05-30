@@ -1,5 +1,10 @@
 --[[
-
+print("main_frame_hundle.lua");
+print("CHD: ", CHD);
+print("CHD_CLIENT: ", CHD_CLIENT);
+print("CHD_TAXI: ", CHD_TAXI);
+print("CHD_OPTIONS: ", CHD_OPTIONS);
+print("MAX_NUM_CONTINENT: ", MAX_NUM_CONTINENT);
 --]]
 local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
 CHD = CHD or {};
