@@ -242,7 +242,7 @@ function CHD_GetPlayerInfo()
 	res.kills            = honorableKills;
 	res.honor            = GetHonorCurrency();
 	res.ap               = GetArenaCurrency();
-	res.money            = GetMoney() / 10000; -- convert to gold
+	res.money            = math.floor(GetMoney() / 10000); -- convert to gold
 	res.specs            = GetNumTalentGroups();
 
 	return res;
