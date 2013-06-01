@@ -176,7 +176,7 @@ function CHD_FillFieldCountClient(dump)
 	res.friend = #dump.friend;
 	res.pet = 0;
 
-	res.bank = CHD_GetTableCount(dump.bank);
+	res.bank = CHD_GetBankItemCount(); --  CHD_GetTableCount(dump.bank)
 	res.bind = #dump.bind;
 	res.quest = #dump.quest;
 	local count = 0;
@@ -199,13 +199,11 @@ function CHD_GetBankItemCount()
 	local count = 0;
 	local mainbankCount = CHD_GetTableCount(CHD_SERVER_LOCAL.bank.mainbank);
 
-	--for k, v in pairs(CHD_SERVER_LOCAL.bank) do
-	--	count = count + #v;
-	--end
-	count = CHD_GetTableCount(CHD_SERVER_LOCAL.bank) - 1;
-	if count < 0 then
-		count = 0;
+	count = 0;
+	for k, v in pairs(CHD_SERVER_LOCAL.bank) do
+		count = count + CHD_GetTableCount(v);
 	end
+	count = count - mainbankCount;
 
 	return mainbankCount, count;
 end
@@ -746,6 +744,7 @@ function CHD_GetBankInfo()
 	end
 	CHD_Message(string.format(L.ReadMainBankBag, nCount));
 
+	nCount = 0;
 	j = 1;
 	for i = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do -- and 7 bank bags
 		res[j] = {};
