@@ -4,6 +4,7 @@
 local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
 local CHD_gArrCheckboxes = CHD_gArrCheckboxes or {};
 CHD_OPTIONS = CHD_OPTIONS;
+CHD_TAXI = CHD_TAXI or {};
 
 local chbWidth = 24;
 local chbHeight = 22;
@@ -161,6 +162,8 @@ function CHD_SlashCmdHandler(cmd)
 		CHD_frmMainpanSystem:SetParent(CHD_frmMain);
 		CHD_frmMainpanSystem:Show();
 		CHD_frmMain:Show();
+	elseif cmdlist[1] == "debug" then
+		CHD_Debug();
 	else
 		CHD_Message(L.help1);
 		CHD_Message(L.help2);

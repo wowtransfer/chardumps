@@ -2,6 +2,7 @@
 
 --]]
 local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
+CHD_TAXI = CHD_TAXI or {};
 
 function CHD_GetTaxiText()
 	return L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
@@ -12,7 +13,7 @@ function CHD_GetTaxiText()
 end
 
 function CHD_OnTaximapOpened(arg1, arg2, arg3)
-	print(arg1, arg2, arg3);
+--	print(arg1, arg2, arg3); no parameters
 
 	if not CHD_frmMainchbTaxi:GetChecked() then
 		return false;
@@ -37,8 +38,7 @@ function CHD_OnTaximapOpened(arg1, arg2, arg3)
 	local arrContinent = {L.Kalimdor, L.EasternKingdoms, L.Outland, L.Northrend};
 	CHD_Message(L.GetTaxi .. arrContinent[continent]);
 	for i = 1, NumTaxiNodes() do
-		local name = TaxiNodeName(i);
-		res[i] = name;
+		res[i] = TaxiNodeName(i);
 	end
 
 	CHD_TAXI[continent] = res;

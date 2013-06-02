@@ -787,7 +787,13 @@ end
 --]]
 
 function CHD_Debug()
-
+	local i = 0;
+	for k,v in pairs(CHD_TAXI) do
+		i = i + 1;
+		for k2, v2 in pairs(v) do
+			print(i, k2, v2);
+		end
+	end
 end
 
 function CHD_OnDumpClick()
