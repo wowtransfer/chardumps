@@ -8,8 +8,8 @@
 		Gracer (Alliance)
 	thanks Sun, myth.project.info@gmail.com
 --]]
-chardumps = LibStub('AceAddon-3.0'):NewAddon('chardumps');
-local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
+chardumps = LibStub("AceAddon-3.0"):NewAddon("chardumps");
+local L = LibStub("AceLocale-3.0"):GetLocale("chardumps");
 local CHD_bindings = CHD_bindings or {};
 
 CHD_SERVER_LOCAL = CHD_SERVER_LOCAL or {};
@@ -135,7 +135,7 @@ function CHD_GetSkillSpellText()
 --	end
 
 	for k, v in pairs(CHD_SERVER_LOCAL.skillspell) do
-		s = s .. #v .. ', ';
+		s = s .. #v .. ", ";
 		count = count + 1;
 	end
 	if count > 0 then

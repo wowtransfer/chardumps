@@ -6,7 +6,7 @@ print("CHD_TAXI: ", CHD_TAXI);
 print("CHD_OPTIONS: ", CHD_OPTIONS);
 print("MAX_NUM_CONTINENT: ", MAX_NUM_CONTINENT);
 --]]
-local L = LibStub('AceLocale-3.0'):GetLocale('chardumps');
+local L = LibStub("AceLocale-3.0"):GetLocale("chardumps");
 CHD = CHD or {};
 CHD_gArrCheckboxes = {};
 CHD_SERVER_LOCAL = {};
