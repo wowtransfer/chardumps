@@ -129,17 +129,17 @@ function CHD_GetSkillSpellText()
 	local s = "";
 	local count = 0;
 
-	if not CHD_SERVER_LOCAL.skillspell then
-		CHD_SERVER_LOCAL.skillspell = {};
-		return L.chbSkillSpell;
-	end
+--	if not CHD_SERVER_LOCAL.skillspell then
+--		CHD_SERVER_LOCAL.skillspell = {};
+--		return L.chbSkillSpell;
+--	end
 
 	for k, v in pairs(CHD_SERVER_LOCAL.skillspell) do
 		s = s .. #v .. ', ';
 		count = count + 1;
 	end
 	if count > 0 then
-		s = string.sub(s, 1, #s - 2);
+		s = string.sub(s, 1, -3);
 		s = string.format("%s (%s)", L.chbSkillSpell, s);
 	else
 		s = L.chbSkillSpell;
