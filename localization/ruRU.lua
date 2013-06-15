@@ -7,6 +7,9 @@ if not L then
 	return
 end
 
+L.AddonName       = "Chardumps"
+L.Version         = "1.9"
+
 -- help
 L.help1 = "/chardumps or /chd -- консольная команда"
 L.help2 = "/chardumps show -- показать главное окно"

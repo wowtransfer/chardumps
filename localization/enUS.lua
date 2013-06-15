@@ -7,6 +7,9 @@ if not L then
 	return
 end
 
+L.AddonName       = "Chardumps"
+L.Version         = "1.9"
+
 -- help
 L.help1 = "/chardumps or /chd -- console command"
 L.help2 = "/chardumps show -- show the main frame"
@@ -14,7 +17,7 @@ L.help3 = "/chardumps -- show help"
 
 -- interface
 L.chbGlyphs       = "Glyphs"
-L.chbCurrencyText = "Currency"
+L.chbCurrency     = "Currency"
 L.chbSpells       = "Spells"
 L.chbMounts       = "Mounts"
 L.chbCritters     = "Critters"

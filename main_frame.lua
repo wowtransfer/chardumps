@@ -196,19 +196,18 @@ function CHD_Init(self)
 	str:SetPoint("CENTER", self, 0, 0);
 	str:SetPoint("TOP", self, 0, -5);
 	str:SetTextColor(1.0, 1.0, 0.0, 1.0);
-	str:SetText("Chardumps v 1.8");
+	str:SetText(L.AddonName .. " v " .. L.Version);
 
 	-- frames
 	local chb = CHD_CreateCheckBox("chbCrypt", 10, 10, self);
 
-	-- OnCHD_frmMainbtnCheckAllClick
-	local arrCheckBoxButtons = {"btnCheckAll", "btnCheckNone", "btnCheckInv"};
-	for i = 1, #arrCheckBoxButtons do
-		local name = arrCheckBoxButtons[i];
-		local btn = CHD_CreateButton(name, i * (btnWidth + 3) + 5, chbHeight + 5, btnWidth, btnHeight, self);
-		local fun = getglobal("On" .. self:GetName() .. name .. "Click");
-		btn:SetScript("OnClick", fun);
-	end
+	CHD_CreateButton("btnCheckAll", 1 * (btnWidth + 3) + 5, chbHeight + 5, btnWidth, btnHeight, self);
+	CHD_CreateButton("btnCheckNone", 2 * (btnWidth + 3) + 5, chbHeight + 5, btnWidth, btnHeight, self);
+	CHD_CreateButton("btnCheckInv", 3 * (btnWidth + 3) + 5, chbHeight + 5, btnWidth, btnHeight, self);
+
+	CHD_frmMainbtnCheckAll:SetScript("OnClick", OnCHD_frmMainbtnCheckAllClick);
+	CHD_frmMainbtnCheckNone:SetScript("OnClick", OnCHD_frmMainbtnCheckNoneClick);
+	CHD_frmMainbtnCheckInv:SetScript("OnClick", OnCHD_frmMainbtnCheckInvClick);
 
 	local arrCheckboxName = {
 		"chbCurrency", "chbInventory", "chbBags", "chbEquipment",
@@ -257,11 +256,11 @@ function CHD_Init(self)
 	btn:SetPoint("BOTTOM", 0, 10);
 	btn:SetPoint("RIGHT", -10, 0);
 	btn = CHD_CreateButton("btnHide", 10, chbHeight * 12, btnWidth, btnHeight, self);
-	local fun = getglobal("On" .. self:GetName() .. "btnHide" .. "Click");
-	btn:SetScript("OnClick", fun);
+	--local fun = getglobal("On" .. self:GetName() .. "btnHide" .. "Click");
+	btn:SetScript("OnClick", OnCHD_frmMainbtnHideClick);
 	btn = CHD_CreateButton("btnMinimize", 10, chbHeight * 12, btnWidth, btnHeight, self);
 	fun = getglobal("On" .. self:GetName() .. "btnMinimize" .. "Click");
-	btn:SetScript("OnClick", fun);
+	btn:SetScript("OnClick", OnCHD_frmMainbtnMinimizeClick);
 
 	local btnW = btn:GetWidth(); -- CHD_frmMainbtnHide
 	local panSystem = CreateFrame("Frame", self:GetName() .. "panSystem", self);

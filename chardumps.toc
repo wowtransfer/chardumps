@@ -11,12 +11,10 @@
 embeds.xml
 localization.xml
 b64.lua
-crypt_client.lua
 valid_bindings.lua
 
+crypt_client.lua
 global.lua
 main_frame_handle.lua
 main_frame.lua
 chardumps.lua
-
-options.xml
