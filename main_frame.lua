@@ -10,6 +10,8 @@ local chbWidth = 24;
 local chbHeight = 22;
 local btnWidth = 20;
 local btnHeight = 20;
+local FrameWidth = 540;
+local FrameHeight = 310;
 
 local function CHD_CreateCheckBox(name, x, y, parent)
 	local chbName = parent:GetName() .. name;
@@ -42,6 +44,29 @@ local function CHD_CreateButton(name, x, y, cx, cy, parent, title)
 	btn:SetText(L[name]);
 
 	return btn;
+end
+
+local function CHD_CreateEditLabel(name, parent, anchorPoint, x, y, cx, cy, title, maxLen)
+	local edt = CreateFrame("EditBox", parent:GetName() .. name, parent, "InputBoxTemplate");
+	edt:ClearAllPoints();
+	edt:SetPoint(anchorPoint, x, y);
+	edt:SetTextInsets(0, 0, 3, 3);
+	edt:SetWidth(cx);
+	edt:SetHeight(cy);
+	edt:SetAutoFocus(false);
+	if maxLen then
+		edt:SetMaxLetters(maxLen);
+	end
+
+	local label = parent:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
+	label:SetPoint("TOPRIGHT", edt, "TOPLEFT", -10, 0);
+	label:SetJustifyH("LEFT");
+	label:SetHeight(cy - 2);
+	label:SetText(title);
+
+	edt.label = label;
+
+	return edt;
 end
 
 function OnCHD_frmMainbtnCheckAllClick()
@@ -181,8 +206,8 @@ function CHD_Init(self)
 	self:SetMovable(true);
 	self:ClearAllPoints();
 	self:SetPoint("CENTER", UIParent);
-	self:SetWidth(540);
-	self:SetHeight(310);
+	self:SetWidth(FrameWidth);
+	self:SetHeight(FrameHeight);
 	self:SetFrameStrata("DIALOG");
 	self:SetScript("OnLoad", CHD_OnLoad);
 	self:SetScript("OnEvent", CHD_OnEvent);
@@ -250,13 +275,12 @@ function CHD_Init(self)
 
 	local btn = CHD_CreateButton("btnQuestQuery", 180, chbHeight * 9 + 8, 150, btnHeight, self);
 	btn:SetScript("OnClick", CHD_OnQueryQuestClick);
-	btn = CHD_CreateButton("btnDump", 0, 0, 150, btnHeight, self);
+	btn = CHD_CreateButton("btnDump", 0, 0, 100, btnHeight, self);
 	btn:SetScript("OnClick", CHD_OnDumpClick);
 	btn:ClearAllPoints();
 	btn:SetPoint("BOTTOM", 0, 10);
 	btn:SetPoint("RIGHT", -10, 0);
 	btn = CHD_CreateButton("btnHide", 10, chbHeight * 12, btnWidth, btnHeight, self);
-	--local fun = getglobal("On" .. self:GetName() .. "btnHide" .. "Click");
 	btn:SetScript("OnClick", OnCHD_frmMainbtnHideClick);
 	btn = CHD_CreateButton("btnMinimize", 10, chbHeight * 12, btnWidth, btnHeight, self);
 	fun = getglobal("On" .. self:GetName() .. "btnMinimize" .. "Click");
@@ -280,6 +304,9 @@ function CHD_Init(self)
 	btn:ClearAllPoints();
 	btn:SetPoint("CENTER", panSystem, 0, 0);
 	btn:SetPoint("RIGHT", panSystem, -14 - btnW, 0);
+
+	CHD_CreateEditLabel("edtTotalTime", self, "BOTTOMRIGHT", -10, 62, 45, 20, L.TotalTime, 5);
+	CHD_CreateEditLabel("edtLevelTime", self, "BOTTOMRIGHT", -10, 40, 45, 20, L.LevelTime, 5);
 
 	CHD_OnLoad(self);
 end

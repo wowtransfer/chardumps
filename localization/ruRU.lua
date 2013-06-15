@@ -112,6 +112,7 @@ L.ttchbTaxi       = "Включить/Отключить сохранение п
 
 L.ttchbCrypt      = "Включить/Отключить шифрование данных"
 
+L.TotalLessLevel  = "Общее время меньше чем время на текущем уровне"
 L.ttbtnDump       = "Создать дамп персонажа"
 L.ttbtnQuestQuery = "Получить выполненные задания с сервера"
 L.ttbtnBankDel    = "Удалить информацию о предметах в банке"
@@ -122,6 +123,8 @@ L.ttbtnCheckAll   = "Установить все"
 L.ttbtnCheckNone  = "Выключить все"
 L.ttbtnCheckInv   = "Инвертировать"
 
+L.TotalTime       = "Общее время (д)"
+L.LevelTime       = "Время на текущем уровне (д)"
 L.DeleteBank      = "Удаление банка"
 L.DeleteQuests    = "Удаление заданий"
 L.DeleteTaxi      = "Удаление полетов"

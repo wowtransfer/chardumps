@@ -242,6 +242,12 @@ function CHD_GetPlayerInfo()
 	res.ap               = GetArenaCurrency();
 	res.money            = math.floor(GetMoney() / 10000); -- convert to gold
 	res.specs            = GetNumTalentGroups();
+	res.totaltime        = tonumber(CHD_frmMainedtTotalTime:GetText()) or 0;
+	res.leveltime        = tonumber(CHD_frmMainedtLevelTime:GetText()) or 0;
+
+	if res.totaltime < res.leveltime then
+		CHD_LogWarn(L.TotalLessLevel);
+	end
 
 	return res;
 end

@@ -17,16 +17,16 @@ MAX_NUM_CONTINENT = 4 -- 1..4
 function CHD_Message(...)
 	local x = {...};
 	for k,v in pairs(x) do
-		print("\124cFF9F3FFFchardumps:\124r ", tostring(v));
+		print("\124cFF9F3FFFchardumps:\124r ", v);
 	end
 end
 
 function CHD_LogErr(str)
-	print("\124c00FF0000"..(str or "nil").."\124r");
+	print(string.format("\124cFF9F3FFFchardumps:\124c00FF0000 %s\124r", str));
 end
 
 function CHD_LogWarn(str)
-	print("\124c00FFFF00"..(str or "nil").."\124r");
+	print(string.format("\124cFF9F3FFFchardumps:\124c00FFFF00 %s\124r", str));
 end
 
 function CHD_trycall(fun)
