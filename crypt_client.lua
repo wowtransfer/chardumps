@@ -1,7 +1,7 @@
 local function CHD_encode_string(s)
 	s = string.gsub(s,"\\","\\\\");
 	s = string.gsub(s,"\"","\\\"");
-	s = string.gsub(s,"\"","\\\"");
+	s = string.gsub(s,"'","\\'");
 	s = string.gsub(s,"\n","\\n");
 	s = string.gsub(s,"\t","\\t");
 	return s;
@@ -27,7 +27,7 @@ function CHD_encode(obj)
 
 		for key,value in pairs(obj) do
 			if type(key) == "string" then
-		table.insert(ret, "\"" .. CHD_encode_string(key) .. "\":" .. CHD_encode(value));
+				table.insert(ret, "\"" .. CHD_encode_string(key) .. "\":" .. CHD_encode(value));
 			else
 				table.insert(ret, CHD_encode_string(tostring(key)) .. ":" .. CHD_encode(value));
 			end

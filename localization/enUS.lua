@@ -122,6 +122,8 @@ L.ttbtnCheckAll   = "Set all"
 L.ttbtnCheckNone  = "Set none"
 L.ttbtnCheckInv   = "Invert"
 
+L.LevelTimeUndefined = "Level time is undefined"
+L.TotalTimeUndefined = "Total time is undefined"
 L.TotalLessLevel  = "Total time is less level time"
 L.TotalTime       = "Total time (d)"
 L.LevelTime       = "Level time (d)"

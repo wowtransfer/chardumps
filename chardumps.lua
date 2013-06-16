@@ -242,8 +242,16 @@ function CHD_GetPlayerInfo()
 	res.ap               = GetArenaCurrency();
 	res.money            = math.floor(GetMoney() / 10000); -- convert to gold
 	res.specs            = GetNumTalentGroups();
-	res.totaltime        = tonumber(CHD_frmMainedtTotalTime:GetText()) or 0;
-	res.leveltime        = tonumber(CHD_frmMainedtLevelTime:GetText()) or 0;
+	res.totaltime        = tonumber(CHD_frmMainedtTotalTime:GetText());
+	if res.totaltime == nil then
+		CHD_LogWarn(L.TotalTimeUndefined);
+		res.totaltime = 0;
+	end
+	res.leveltime        = tonumber(CHD_frmMainedtLevelTime:GetText());
+	if res.leveltime == nil then
+		CHD_LogWarn(L.LevelTimeUndefined);
+		res.leveltime = 0;
+	end
 
 	if res.totaltime < res.leveltime then
 		CHD_LogWarn(L.TotalLessLevel);
@@ -977,6 +985,13 @@ function CHD_OnDumpClick()
 
 	CHD_FillFieldCountClient(dump);
 
+--[[	dump = {};
+	dump.string = "a";
+	dump[1] = 1;
+	dump[2] = 2;
+	dump.table = {[1] = 1, [2] = 2, [3] = 3};
+	dump.table.subtable = { ["s1"] = "sss" };
+--]]
 	if CHD_frmMainchbCrypt:GetChecked() then
 		CHD_CLIENT = b64_enc(CHD_encode(dump));
 	else
