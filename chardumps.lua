@@ -176,7 +176,7 @@ function CHD_FillFieldCountClient(dump)
 	res.friend = #dump.friend;
 	res.pet = 0;
 
-	res.bank = CHD_GetBankItemCount(); --  CHD_GetTableCount(dump.bank)
+	_, res.bank = CHD_GetBankItemCount(); --  CHD_GetTableCount(dump.bank)
 	res.bind = #dump.bind;
 	res.quest = #dump.quest;
 	local count = 0;
