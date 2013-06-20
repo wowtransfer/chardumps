@@ -466,6 +466,7 @@ end
 function CHD_GetCriteriaProgress()
 	local res = {};
 
+	-- simular achievements: 95 and 98, criterias 3631, 4984
 	for i = 1, 5000 do
 		local id, _, _, Completed = GetAchievementInfo(i);
 		if id and not Completed then
