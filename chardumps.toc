@@ -13,8 +13,8 @@ localization.xml
 b64.lua
 valid_bindings.lua
 
-crypt_client.lua
 global.lua
 main_frame_handle.lua
 main_frame.lua
+crypt_client.lua
 chardumps.lua

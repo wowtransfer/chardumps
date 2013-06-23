@@ -236,7 +236,7 @@ function CHD_OnLoad(self)
 	SetTooltip(CHD_frmMainbtnQuestQuery, L.btnQuestQuery, L.ttbtnQuestQuery);
 	SetTooltip(CHD_frmMainbtnBankDel, L.chbBank, L.ttbtnBankDel);
 	SetTooltip(CHD_frmMainbtnQuestDel, L.chbQuests, L.ttbtnQuestDel);
-	SetTooltip(CHD_frmMainbtnTaxiDel, L.chbTaxi, L.ttbtnSkillSpellDel);
+	SetTooltip(CHD_frmMainbtnTaxiDel, L.chbTaxi, L.ttbtnTaxiDel);
 	SetTooltip(CHD_frmMainbtnSkillSpellDel, L.chbSkillSpell, L.ttbtnSkillSpellDel);
 
 	SetTooltip(CHD_frmMainbtnCheckAll, L.Comboboxes, L.ttbtnCheckAll);

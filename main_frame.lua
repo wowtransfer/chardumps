@@ -267,11 +267,14 @@ function CHD_Init(self)
 	local arrButtonTitle = {"DeleteQuests", "DeleteBank", "DeleteTaxi", "DeleteSkillSpell"};
 	for i = 1,#arrButtonName do
 		local title = L[arrButtonTitle[i]];
+		print(title);
 		local btn = CHD_CreateButton(arrButtonName[i], 10, cy * (i + 8) + 8, btnWidth, btnHeight, self, title);
-		local name = "On" .. self:GetName() .. arrButtonName[i] .. "Click";
-		local fun = getglobal(name);
-		btn:SetScript("OnClick", fun);
 	end
+
+	CHD_frmMainbtnQuestDel:SetScript("OnClick", OnCHD_frmMainbtnQuestDelClick);
+	CHD_frmMainbtnBankDel:SetScript("OnClick", OnCHD_frmMainbtnBankDelClick);
+	CHD_frmMainbtnTaxiDel:SetScript("OnClick", OnCHD_frmMainbtnTaxiDelClick);
+	CHD_frmMainbtnSkillSpellDel:SetScript("OnClick", OnCHD_frmMainbtnSkillSpellDelClick);
 
 	local btn = CHD_CreateButton("btnQuestQuery", 180, chbHeight * 9 + 8, 150, btnHeight, self);
 	btn:SetScript("OnClick", CHD_OnQueryQuestClick);
@@ -280,10 +283,10 @@ function CHD_Init(self)
 	btn:ClearAllPoints();
 	btn:SetPoint("BOTTOM", 0, 10);
 	btn:SetPoint("RIGHT", -10, 0);
+
 	btn = CHD_CreateButton("btnHide", 10, chbHeight * 12, btnWidth, btnHeight, self);
 	btn:SetScript("OnClick", OnCHD_frmMainbtnHideClick);
 	btn = CHD_CreateButton("btnMinimize", 10, chbHeight * 12, btnWidth, btnHeight, self);
-	fun = getglobal("On" .. self:GetName() .. "btnMinimize" .. "Click");
 	btn:SetScript("OnClick", OnCHD_frmMainbtnMinimizeClick);
 
 	local btnW = btn:GetWidth(); -- CHD_frmMainbtnHide
