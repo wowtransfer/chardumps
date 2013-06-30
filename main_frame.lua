@@ -197,7 +197,6 @@ function CHD_SlashCmdHandler(cmd)
 end
 
 function CHD_Init(self)
-	print("CHD_Init()");
 	SlashCmdList["CHD"] = CHD_SlashCmdHandler;
 	SLASH_CHD1 = "/chardumps";
 	SLASH_CHD2 = "/chd";
@@ -267,7 +266,6 @@ function CHD_Init(self)
 	local arrButtonTitle = {"DeleteQuests", "DeleteBank", "DeleteTaxi", "DeleteSkillSpell"};
 	for i = 1,#arrButtonName do
 		local title = L[arrButtonTitle[i]];
-		print(title);
 		local btn = CHD_CreateButton(arrButtonName[i], 10, cy * (i + 8) + 8, btnWidth, btnHeight, self, title);
 	end
 

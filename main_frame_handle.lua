@@ -165,8 +165,6 @@ function CHD_OnEvent(self, event, ...)
 end
 
 function CHD_OnLoad(self)
-	print("OnLoad");
-
 	-- localization
 	CHD_frmMainchbGlyphsText:SetText(L.chbGlyphs);
 	CHD_frmMainchbCurrencyText:SetText(L.chbCurrency);

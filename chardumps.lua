@@ -96,7 +96,6 @@ function CHD_SetOptions()
 end
 
 function CHD_SaveOptions()
-	print("CHD_SaveOptions!!!");
 	CHD_OPTIONS.chbGlyph        = CHD_frmMainchbGlyphs:GetChecked();
 	CHD_OPTIONS.chbCurrency     = CHD_frmMainchbCurrency:GetChecked();
 	CHD_OPTIONS.chbSpells       = CHD_frmMainchbSpells:GetChecked();
