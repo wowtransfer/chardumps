@@ -162,7 +162,7 @@ function CHD_FillFieldCountClient(dump)
 	res.critter = #dump.critter;
 	res.mount = #dump.mount;
 
-	res.bag = CHD_GetTableCount(dump.bag);
+	res.bag = CHD_GetBagItemCount(dump.bag);
 	res.currency = #dump.currency;
 	res.equipment = #dump.equipment;
 	res.reputation = #dump.reputation;
@@ -175,7 +175,7 @@ function CHD_FillFieldCountClient(dump)
 	res.friend = #dump.friend;
 	res.pet = 0;
 
-	_, res.bank = CHD_GetBankItemCount(); --  CHD_GetTableCount(dump.bank)
+	_, res.bank = CHD_GetBankItemCount();
 	res.bind = #dump.bind;
 	res.quest = #dump.quest;
 	local count = 0;
@@ -198,13 +198,22 @@ function CHD_GetBankItemCount()
 	local count = 0;
 	local mainbankCount = CHD_GetTableCount(CHD_SERVER_LOCAL.bank.mainbank);
 
-	count = 0;
 	for k, v in pairs(CHD_SERVER_LOCAL.bank) do
 		count = count + CHD_GetTableCount(v);
 	end
 	count = count - mainbankCount;
 
 	return mainbankCount, count;
+end
+
+function CHD_GetBagItemCount(bankDump)
+	local count = 0;
+
+	for _, v in pairs(bankDump) do
+		count = count + CHD_GetTableCount(v);
+	end
+
+	return count;
 end
 
 --[[
@@ -569,16 +578,21 @@ function CHD_GetBagInfo()
 
 	for bag = 1,NUM_BAG_SLOTS do
 		local nCount = 0;
+		local tmpBag = {};
 		for slot = 1, GetContainerNumSlots(bag) do
 			local itemLink = GetContainerItemLink(bag, slot);
 			local _, count = GetContainerItemInfo(bag, slot);
+
 			if itemLink and count then
+				local tmpItem = {};
 				for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink,".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do
-					table.insert(res, (bag-1)*100 + slot, {["I"] = tonumber(id), ["N"] = count, ["H"] = tonumber(enchant), ["G1"] = tonumber(gem1), ["G2"] = tonumber(gem2), ["G3"] = tonumber(gem3)});
+					tmpItem = {["I"] = tonumber(id), ["N"] = count, ["H"] = tonumber(enchant), ["G1"] = tonumber(gem1), ["G2"] = tonumber(gem2), ["G3"] = tonumber(gem3)};
 				end
 				nCount = nCount + 1;
+				table.insert(tmpBag, tmpItem);
 			end
 		end
+		table.insert(res, tmpBag);
 		CHD_Message(string.format(L.ScaningBagTotal, bag, nCount));
 	end
 
@@ -921,7 +935,7 @@ function CHD_OnDumpClick()
 		dump.bag = {};
 	end
 	CHD_frmMainchbBagsText:SetText(L.chbBags .. string.format(" (%d)",
-		CHD_GetTableCount(dump.bag)));
+		CHD_GetBagItemCount(dump.bag)));
 	if CHD_frmMainchbEquipment:GetChecked() then
 		dump.equipment = CHD_trycall(CHD_GetEquipmentInfo) or {};
 	else
