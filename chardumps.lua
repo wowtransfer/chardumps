@@ -250,6 +250,8 @@ function CHD_GetPlayerInfo()
 	res.ap               = GetArenaCurrency();
 	res.money            = math.floor(GetMoney() / 10000); -- convert to gold
 	res.specs            = GetNumTalentGroups();
+	res.health           = UnitHealth("player");
+	res.mana             = UnitMana("player");
 	res.totaltime        = tonumber(CHD_frmMainedtTotalTime:GetText());
 	if res.totaltime == nil then
 		CHD_LogWarn(L.TotalTimeUndefined);
@@ -317,6 +319,10 @@ function CHD_GetCurrencyInfo()
 	return res;
 end
 
+function compSpell(a, b)
+	return a[1] < b[1];
+end
+
 function CHD_GetSpellInfo()
 	local res = {};
 
@@ -334,6 +340,7 @@ function CHD_GetSpellInfo()
 			end
 		end
 	end
+	table.sort(res, compSpell);
 
 	return res;
 end
@@ -446,10 +453,7 @@ companion, equipmentset, flyout, item, macro, spell
 end
 
 function compCriteria(e1, e2)
-	if e1[1] < e2[1] then
-		return true;
-	end
-	return false;
+	return e1[1] < e2[1];
 end;
 
 function CHD_GetCriteriaCompleted()
@@ -616,10 +620,7 @@ function CHD_GetEquipmentInfo()
 end
 
 function compQuestlog(e1, e2)
-	if e1.Q < e2.Q then
-		return true;
-	end
-	return false;
+	return e1.Q < e2.Q;
 end
 
 function CHD_GetQuestlogInfo()

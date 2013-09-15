@@ -94,7 +94,7 @@ function CHD_OnTradeSkillShow(flags, arg2) -- TODO: delte second param
 	-- Returns information about the current trade skill
 	local tradeskillName, rank, maxLevel = GetTradeSkillLine();
 
-	if ("UNKNOWN" == tradeskillName) then
+	if ("UNKNOWN" == tradeskillName or nil == tradeskillName) then
 		return;
 	end
 
@@ -128,6 +128,7 @@ function CHD_OnTradeSkillShow(flags, arg2) -- TODO: delte second param
 			table.insert(t, spellID);
 		end
 	end
+	table.sort(t);
 
 	local count = #t;
 	CHD_Message(string.format(L.TradeSkillFound, count));
