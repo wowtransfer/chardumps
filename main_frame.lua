@@ -239,6 +239,7 @@ function CHD_Init(self)
 		"chbFriend", "chbActions", "chbMacro", "chbBind",
 		"chbReputation", "chbAchievements",
 		"chbArena",
+		"chbTitles",
 		"chbSkills",
 		"chbQuestlog",
 		"chbPet"

@@ -184,6 +184,7 @@ function CHD_OnLoad(self)
 	CHD_frmMainchbMacroText:SetText(L.chbMacro);
 	CHD_frmMainchbFriendText:SetText(L.chbFriend);
 	CHD_frmMainchbArenaText:SetText(L.chbArena);
+	CHD_frmMainchbTitlesText:SetText(L.chbTitles);
 	CHD_frmMainchbQuestsText:SetText(L.chbQuests);
 	CHD_frmMainchbPetText:SetText(L.chbPet);
 	CHD_frmMainchbPet:Disable();
@@ -220,6 +221,7 @@ function CHD_OnLoad(self)
 	SetTooltip(CHD_frmMainchbMacro, L.chbMacro, L.ttchbMacro);
 	SetTooltip(CHD_frmMainchbFriend, L.chbFriend, L.ttchbFriend);
 	SetTooltip(CHD_frmMainchbArena, L.chbArena, L.ttchbArena);
+	SetTooltip(CHD_frmMainchbArena, L.chbTitles, L.ttchbTitles);
 	SetTooltip(CHD_frmMainchbQuests, L.chbQuests, L.ttchbQuests);
 	SetTooltip(CHD_frmMainchbPet, L.chbPet, L.ttchbPet);
 

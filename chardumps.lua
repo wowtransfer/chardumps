@@ -43,6 +43,7 @@ function CHD_SetOptionsDef()
 	CHD_OPTIONS.chbEquipment = true;
 	CHD_OPTIONS.chbMacro = true;
 	CHD_OPTIONS.chbArena = true;
+	CHD_OPTIONS.chbTitles = true;
 
 	CHD_OPTIONS.chbGlyph = true;
 	CHD_OPTIONS.chbCurrency = true;
@@ -79,6 +80,7 @@ function CHD_SetOptions()
 	CHD_frmMainchbMacro:SetChecked(CHD_OPTIONS.chbMacro);
 	CHD_frmMainchbFriend:SetChecked(CHD_OPTIONS.chbFriend);
 	CHD_frmMainchbArena:SetChecked(CHD_OPTIONS.chbArena);
+	CHD_frmMainchbTitles:SetChecked(CHD_OPTIONS.chbTitles);
 
 
 	CHD_frmMainchbTaxi:SetChecked(CHD_OPTIONS.chbTaxi);
@@ -113,6 +115,7 @@ function CHD_SaveOptions()
 	CHD_OPTIONS.chbMacro        = CHD_frmMainchbMacro:GetChecked();
 	CHD_OPTIONS.chbFriend       = CHD_frmMainchbFriend:GetChecked();
 	CHD_OPTIONS.chbArena        = CHD_frmMainchbArena:GetChecked();
+	CHD_OPTIONS.chbTitles       = CHD_frmMainchbTitles:GetChecked();
 
 	CHD_OPTIONS.chbTaxi         = CHD_frmMainchbTaxi:GetChecked();
 	CHD_OPTIONS.chbQuests       = CHD_frmMainchbQuests:GetChecked();
@@ -127,11 +130,6 @@ end
 function CHD_GetSkillSpellText()
 	local s = "";
 	local count = 0;
-
---	if not CHD_SERVER_LOCAL.skillspell then
---		CHD_SERVER_LOCAL.skillspell = {};
---		return L.chbSkillSpell;
---	end
 
 	for k, v in pairs(CHD_SERVER_LOCAL.skillspell) do
 		s = s .. #v .. ", ";
@@ -811,6 +809,19 @@ function CHD_GetBindInfo()
 	return res;
 end
 
+function CHD_GetTitlesInfo()
+	local res = {};
+
+	CHD_Message(L.GetTitles);
+	for i = 1, GetNumTitles() do
+		if IsTitleKnown(i) == 1 then
+			table.insert(res, i);
+		end
+	end
+
+	return res;
+end
+
 --[[
 	Saving data
 --]]
@@ -997,6 +1008,13 @@ function CHD_OnDumpClick()
 		dump.skillspell = {};
 	end
 	CHD_frmMainchbSkillSpellText:SetText(CHD_GetSkillSpellText());
+
+	if (CHD_frmMainchbTitles:GetChecked()) then
+		dump.titles = CHD_trycall(CHD_GetTitlesInfo) or {};
+	else
+		dump.titles = {};
+	end
+	CHD_frmMainchbTitlesText:SetText(L.chbTitles .. "(" .. #dump.titles .. ")");
 
 	CHD_FillFieldCountClient(dump);
 
