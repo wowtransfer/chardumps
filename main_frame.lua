@@ -151,12 +151,12 @@ function OnCHD_frmMainbtnMinimizeClick()
 		CHD_frmMainpanSystem:SetBackdrop(CHD_GetBackdrop());
 		CHD_frmMainpanSystem:SetParent("UIParent");
 		CHD_frmMain:Hide();
-		CHD_OPTIONS.chdMinimize = true;
+		CHD_OPTIONS.chbMinimize = true;
 	else
 		CHD_frmMainpanSystem:SetBackdrop(nil);
 		CHD_frmMainpanSystem:SetParent(CHD_frmMain);
 		CHD_frmMain:Show();
-		CHD_OPTIONS.chdMinimize = false;
+		CHD_OPTIONS.chbMinimize = false;
 	end
 end
 
@@ -237,7 +237,7 @@ function CHD_Init(self)
 		"chbCurrency", "chbInventory", "chbBags", "chbEquipment",
 		"chbSpells", "chbMounts", "chbCritters", "chbGlyphs",
 		"chbFriend", "chbActions", "chbMacro", "chbBind",
-		"chbReputation", "chbAchievements",
+		"chbReputation", "chbAchievements", "chbStatistic", "chbCriterias",
 		"chbArena",
 		"chbTitles",
 		"chbSkills",

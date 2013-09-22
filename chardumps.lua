@@ -32,13 +32,15 @@ function CHD_SetOptionsDef()
 	CHD_OPTIONS = {};
 
 	CHD_OPTIONS.chbCrypt = true;
-	CHD_OPTIONS.chdMinimize = false;
+	CHD_OPTIONS.chbMinimize = false;
 
 	CHD_OPTIONS.chbSpells = true;
 	CHD_OPTIONS.chbMounts = true;
 	CHD_OPTIONS.chbCritters = true;
 	CHD_OPTIONS.chbReputation = true;
 	CHD_OPTIONS.chbAchievements = true;
+	CHD_OPTIONS.chbCriterias = true;
+	CHD_OPTIONS.chbStatistic = true;
 	CHD_OPTIONS.chbActions = true;
 	CHD_OPTIONS.chbEquipment = true;
 	CHD_OPTIONS.chbMacro = true;
@@ -70,6 +72,8 @@ function CHD_SetOptions()
 	CHD_frmMainchbCritters:SetChecked(CHD_OPTIONS.chbCritters);
 	CHD_frmMainchbReputation:SetChecked(CHD_OPTIONS.chbReputation);
 	CHD_frmMainchbAchievements:SetChecked(CHD_OPTIONS.chbAchievements);
+	CHD_frmMainchbCriterias:SetChecked(CHD_OPTIONS.chbCriterias);
+	CHD_frmMainchbStatistic:SetChecked(CHD_OPTIONS.chbStatistic);
 	CHD_frmMainchbActions:SetChecked(CHD_OPTIONS.chbActions);
 	CHD_frmMainchbSkills:SetChecked(CHD_OPTIONS.chbSkills);
 	CHD_frmMainchbSkillSpell:SetChecked(CHD_OPTIONS.chbSkillSpell);
@@ -90,7 +94,7 @@ function CHD_SetOptions()
 
 	CHD_frmMainchbCrypt:SetChecked(CHD_OPTIONS.chbCrypt);
 
-	if (CHD_OPTIONS.chdMinimize) then
+	if (CHD_OPTIONS.chbMinimize) then
 		OnCHD_frmMainbtnMinimizeClick();
 	end
 
@@ -105,6 +109,8 @@ function CHD_SaveOptions()
 	CHD_OPTIONS.chbCritters     = CHD_frmMainchbCritters:GetChecked();
 	CHD_OPTIONS.chbReputation   = CHD_frmMainchbReputation:GetChecked();
 	CHD_OPTIONS.chbAchievements = CHD_frmMainchbAchievements:GetChecked();
+	CHD_OPTIONS.chbCriterias    = CHD_frmMainchbCriterias:GetChecked();
+	CHD_OPTIONS.chbStatistic    = CHD_frmMainchbStatistic:GetChecked();
 	CHD_OPTIONS.chbActions      = CHD_frmMainchbActions:GetChecked();
 	CHD_OPTIONS.chbSkills       = CHD_frmMainchbSkills:GetChecked();
 	CHD_OPTIONS.chbSkillSpell   = CHD_frmMainchbSkillSpell:GetChecked();
@@ -154,8 +160,8 @@ function CHD_FillFieldCountClient(dump)
 
 	res.achievement = #dump.achievement;
 	res.action = CHD_GetTableCount(dump.action);
-	res.criteria1 = #dump.criteria1;
-	res.criteria0 = #dump.criteria0;
+	res.criterias = CHD_GetTableCount(dump.criterias);
+	res.statistic = CHD_GetTableCount(dump.statistic);
 	res.arena = #dump.arena;
 	res.critter = #dump.critter;
 	res.mount = #dump.mount;
@@ -219,20 +225,20 @@ end
 --]]
 
 function CHD_GetGlobalInfo()
-	local res            = {};
+	local res = {};
 
 	CHD_Message(L.GetGlobal);
-	res.locale           = GetLocale();
-	res.realm            = GetRealmName();
-	res.realmlist        = GetCVar("realmList");
-	local _, build       = GetBuildInfo();
-	res.clientbuild      = build;
+	res.locale       = GetLocale();
+	res.realm        = GetRealmName();
+	res.realmlist    = GetCVar("realmList");
+	local _, build   = GetBuildInfo();
+	res.clientbuild  = build;
 
 	return res;
 end
 
 function CHD_GetPlayerInfo()
-	local res            = {};
+	local res  = {};
 
 	CHD_Message(L.GetPlayer);
 	res.name             = UnitName("player");
@@ -450,45 +456,82 @@ companion, equipmentset, flyout, item, macro, spell
 	return res;
 end
 
-function compCriteria(e1, e2)
-	return e1[1] < e2[1];
-end;
+--[[
+CanShowAchievementUI - Returns whether the Achievements UI should be enabled
+GetAchievementCriteriaInfo - Gets information about criteria for an achievement or data for a statistic
+GetAchievementInfo - Gets information about an achievement or statistic
+GetAchievementLink - Returns a hyperlink representing the player's progress on an achievement
+GetAchievementNumRewards - Returns the number of point rewards for an achievement (currently always 1)
+GetAchievementReward - Returns the number of achievement points awarded for earning an achievement
+GetCategoryInfo - Returns information about an achievement/statistic category
+GetCategoryNumAchievements - Returns the number of achievements/statistics to display in a category
+GetNumComparisonCompletedAchievements - Returns the number of achievements earned by the comparison unit
+GetNumCompletedAchievements - Returns the number of achievements earned by the player
+GetStatistic - Returns data for a statistic that can be shown on the statistics tab of the achievements window
+GetStatisticsCategoryList - Returns a list of all statistic categories
+GetTotalAchievementPoints - Returns the player's total achievement points earned
+HasCompletedAnyAchievement - Checks if the player has completed at least 1 achievement
+SetAchievementComparisonUnit - Enables comparing achievements/statistics with another player
+--]]
 
-function CHD_GetCriteriaCompleted()
+function CHD_GetCriteriasInfo()
 	local res = {};
 
-	for i = 1, 5000 do
-		local _, _, _, Completed = GetAchievementInfo(i);
-		if Completed then
-			for j = 1, GetAchievementNumCriteria(i) do
-				local description, type, completed, quantity, requiredQuantity, characterName, flags, assetID, quantityString, criteriaID = GetAchievementCriteriaInfo(i, j);
-				if completed and quantity and quantity > 0 then
-					table.insert(res, {criteriaID, quantity});
+	local categories = GetCategoryList(); --  A list of achievement category IDs (table)
+
+	CHD_Message(L.GetCriterias);
+	for k, categoryId in ipairs(categories) do
+		--local name, parentID, flags = GetCategoryInfo(categoryId);
+		--if categoryId == 178 then -- 
+		local numItems, numCompleted = GetCategoryNumAchievements(categoryId); -- Returns the number of achievements/statistics to display in a category.
+		--local categoryItem = {};
+		--categoryItem.N = name;
+--[[
+criteriaId == 4654, Достижения. Общее. Счастливое непонимание, Попробуйте 25 различных видов напитков
+criteriaId == 4654, Статистика. Расходные предменты персонажа.Количество различных выпитых напитков
+Совпадает
+--]]
+		for i = 1, numItems do
+			local achievementID, name, points, completed, Month, Day, Year, description, flags, _, rewardText, isGuildAch = GetAchievementInfo(categoryId, i);
+			for j = 1, GetAchievementNumCriteria(achievementID) do
+				local description, type, completedCriteria, quantity, requiredQuantity, characterName, flags, assetID, quantityString, criteriaID = GetAchievementCriteriaInfo(achievementID, j);
+				if criteriaID and quantity > 0 then
+					--table.insert(categoryItem, criteriaID, {["Q"] = quantity, ["D"] = description, ["C"] = completedCriteria});
+					table.insert(res, criteriaID, { ["Q"] = quantity } );
 				end
 			end
 		end
+		--table.insert(res, categoryId, categoryItem);
 	end
-	table.sort(res, compCriteria);
 
 	return res;
 end
 
-function CHD_GetCriteriaProgress()
+function CHD_GetStatisticInfo()
 	local res = {};
 
-	-- simular achievements: 95 and 98, criterias 3631, 4984
-	for i = 1, 5000 do
-		local id, _, _, Completed = GetAchievementInfo(i);
-		if id and not Completed then
-			for j = 1, GetAchievementNumCriteria(i) do
-				local _, _, completed, quantity, _, _, _, _, _, criteriaID = GetAchievementCriteriaInfo(i, j);
-				if quantity and quantity > 0 then
-					table.insert(res, {criteriaID, quantity});
-				end
+	--local categories = GetCategoryList(); -- A list of achievement category IDs (table)
+	local categories = GetStatisticsCategoryList(); --  A list of statistic category IDs (table)
+
+	CHD_Message(L.GetStatistic);
+	for k, categoryId in ipairs(categories) do
+		--local name, parentID, flags = GetCategoryInfo(categoryId);
+		--print(string.format("categoryId: %d, name: %s, parentID: %d, flags: %d", categoryId, name, parentID, flags));
+
+		local numItems, numCompleted = GetCategoryNumAchievements(categoryId); -- Returns the number of achievements/statistics to display in a category.
+		--local categoryItem = {};
+		--categoryItem.N = name;
+
+		for i = 1, numItems do
+			local statisticID, name, points, completed, Month, Day, Year, description, flags, _, rewardText, isGuildAch = GetAchievementInfo(categoryId, i);
+			local description, type, completedCriteria, quantity, requiredQuantity, characterName, flags, assetID, quantityString, criteriaID = GetAchievementCriteriaInfo(statisticID, 1);
+			if criteriaID and completedCriteria and quantity > 0 then
+				--table.insert(categoryItem, criteriaID, {["Q"] = quantity, ["N"] = name});
+				table.insert(res, criteriaID, { ["Q"] = quantity } );
 			end
 		end
+		--table.insert(res, categoryId, categoryItem);
 	end
-	table.sort(res, compCriteria);
 
 	return res;
 end
@@ -827,13 +870,7 @@ end
 --]]
 
 function CHD_Debug()
-	local i = 0;
-	for k,v in pairs(CHD_TAXI) do
-		i = i + 1;
-		for k2, v2 in pairs(v) do
-			print(i, k2, v2);
-		end
-	end
+	CHD_GetStatistic();
 end
 
 function CHD_OnDumpClick()
@@ -885,12 +922,8 @@ function CHD_OnDumpClick()
 
 	if CHD_frmMainchbAchievements:GetChecked() then
 		dump.achievement = CHD_trycall(CHD_GetAchievementInfo) or {};
-		dump.criteria1 = CHD_trycall(CHD_GetCriteriaCompleted) or {};
-		dump.criteria0 = CHD_trycall(CHD_GetCriteriaProgress) or {};
 	else
 		dump.achievement = {};
-		dump.criteria1 = {};
-		dump.criteria0 = {};
 	end
 	CHD_frmMainchbAchievementsText:SetText(L.chbAchievements .. string.format(" (%d)",
 		#dump.achievement));
@@ -1015,6 +1048,21 @@ function CHD_OnDumpClick()
 		dump.titles = {};
 	end
 	CHD_frmMainchbTitlesText:SetText(L.chbTitles .. "(" .. #dump.titles .. ")");
+
+	if (CHD_frmMainchbCriterias:GetChecked()) then
+		dump.criterias = CHD_trycall(CHD_GetCriteriasInfo) or {};
+	else
+		dump.criterias = {};
+	end
+	CHD_frmMainchbCriteriasText:SetText(L.chbCriterias .. string.format(" (%d)",
+		CHD_GetTableCount(dump.criterias)));
+	if (CHD_frmMainchbStatistic:GetChecked()) then
+		dump.statistic = CHD_trycall(CHD_GetStatisticInfo) or {};
+	else
+		dump.statistic = {};
+	end
+	CHD_frmMainchbStatisticText:SetText(L.chbStatistic .. string.format(" (%d)",
+		CHD_GetTableCount(dump.statistic)));
 
 	CHD_FillFieldCountClient(dump);
 
