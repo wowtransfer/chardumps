@@ -1,6 +1,7 @@
 ﻿--[[
 	Chardumps Localization: Russian
 --]]
+print("DEBUG: ruRU locale");
 
 local L = LibStub('AceLocale-3.0'):NewLocale('chardumps', 'ruRU')
 if not L then
