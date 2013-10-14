@@ -9,8 +9,12 @@
 ## LoadOnDemand: 0
 ## SavedVariablesPerCharacter: CHD_CLIENT,CHD_TAXI,CHD_OPTIONS
 embeds.xml
-localization.xml
+
+locales\enUS.lua
+locales\ruRU.lua
+
 b64.lua
+
 valid_bindings.lua
 
 global.lua

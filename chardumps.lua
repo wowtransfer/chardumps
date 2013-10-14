@@ -482,7 +482,7 @@ function CHD_GetCriteriasInfo()
 	CHD_Message(L.GetCriterias);
 	for k, categoryId in ipairs(categories) do
 		--local name, parentID, flags = GetCategoryInfo(categoryId);
-		--if categoryId == 178 then -- 
+		--if categoryId == 178 then --
 		local numItems, numCompleted = GetCategoryNumAchievements(categoryId); -- Returns the number of achievements/statistics to display in a category.
 		--local categoryItem = {};
 		--categoryItem.N = name;
