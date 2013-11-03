@@ -1,8 +1,6 @@
 --[[
 	Chardumps Localization: English
 --]]
-print("DEBUG: enUS locale");
-
 local L = LibStub("AceLocale-3.0"):NewLocale("chardumps", "enUS", true)
 if not L then
 	return
