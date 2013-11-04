@@ -250,8 +250,6 @@ function CHD_GetPlayerInfo()
 	res.gender           = UnitSex("player");
 	local honorableKills = GetPVPLifetimeStats()
 	res.kills            = honorableKills;
-	res.honor            = GetHonorCurrency();
-	res.ap               = GetArenaCurrency();
 	res.money            = math.floor(GetMoney() / 10000); -- convert to gold
 	res.specs            = GetNumTalentGroups();
 	res.health           = UnitHealth("player");
@@ -321,6 +319,21 @@ function CHD_GetCurrencyInfo()
 	end
 
 	return res;
+end
+
+function CHD_GetHonorAndAp(currency)
+	local honor = 0;
+	local ap    = 0;
+
+	for k, v in pairs(currency) do
+		if v[0] == 43308 then
+			honor = v[1];
+		elseif v[0] == 43307 then
+			ap = v[1];
+		end
+	end
+
+	return honor, ap;
 end
 
 function compSpell(a, b)
@@ -893,7 +906,9 @@ function CHD_OnDumpClick()
 
 	CHD_Message(L.CreatingDump);
 	dump.global = CHD_trycall(CHD_GetGlobalInfo) or {};
+
 	dump.player = CHD_trycall(CHD_GetPlayerInfo) or {};
+
 	if CHD_frmMainchbGlyphs:GetChecked() then
 		dump.glyph = CHD_trycall(CHD_GetGlyphInfo) or {};
 	else
@@ -901,6 +916,7 @@ function CHD_OnDumpClick()
 	end
 	CHD_frmMainchbGlyphsText:SetText(L.chbGlyphs .. string.format(" (%d)",
 		CHD_GetTableCount(dump.glyph)));
+
 	if CHD_frmMainchbCurrency:GetChecked() then
 		dump.currency = CHD_trycall(CHD_GetCurrencyInfo) or {};
 	else
@@ -908,6 +924,11 @@ function CHD_OnDumpClick()
 	end
 	CHD_frmMainchbCurrencyText:SetText(L.chbCurrency .. string.format(" (%d)",
 		CHD_GetTableCount(dump.currency)));
+	local honor, ap = CHD_GetHonorAndAp(dump.currency);
+	dump.player.honor = honor;
+	dump.player.ap    = ap;
+	print(string.format("debug: honor %d, ap %d", honor, ap));
+
 	if CHD_frmMainchbSpells:GetChecked() then
 		dump.spell = CHD_trycall(CHD_GetSpellInfo) or {};
 	else
