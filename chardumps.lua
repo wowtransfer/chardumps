@@ -405,15 +405,30 @@ function CHD_GetAchievementInfo()
 
 	CHD_Message(L.GetAchievement);
 
-	for i = 1, 5000 do
-		local IDNumber, _, _, Completed, Month, Day, Year = GetAchievementInfo(i);
-		if IDNumber and Completed then
-			local posixtime = time{year = 2000 + Year, month = Month, day = Day};
-			if posixtime then
-				table.insert(res, {["I"] = IDNumber, ["T"] = posixtime});
+	local count = 0;
+	local guildCount = 0;
+	local personalCount = 0;
+
+	local id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuildAch;
+	local posixtime;
+
+	for i = 1, 10000 do
+		status, id, _ --[[name]], _, completed, month, day, year, _ --[[description]], _, _, _, isGuildAch = pcall(GetAchievementInfo, i);
+
+		if status then
+			count = count + 1;
+			if id and completed then
+				if isGuildAch then
+					guildCount = guildCount + 1;
+				else
+					posixtime = time({["year"] = 2000 + year, ["month"] = month, ["day"] = day});
+					personalCount = personalCount + 1;
+					table.insert(res, {["I"] = i, ["T"] = posixtime});
+				end
 			end
 		end
 	end
+--	print(string.format("debug: total %d, personal %d, guild %d", count, personalCount, guildCount));
 
 	return res;
 end
