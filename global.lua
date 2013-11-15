@@ -8,10 +8,31 @@ print("MAX_NUM_CONTINENT: ", MAX_NUM_CONTINENT);
 --]]
 local L = LibStub("AceLocale-3.0"):GetLocale("chardumps");
 CHD = CHD or {};
-CHD_gArrCheckboxes = {};
+CHD_arrCheckboxes = {};
 CHD_SERVER_LOCAL = {};
+CHD_CLIENT = CHD_CLIENT or {};
+CHD_OPTIONS = CHD_OPTIONS or {};
+CHD_TAXI = CHD_TAXI or {};
 
-MAX_NUM_CONTINENT = 4 -- 1..4
+_, CHD_CLIENT_BUILD = GetBuildInfo();
+CHD_CLIENT_BUILD = tonumber(CHD_CLIENT_BUILD);
+if CHD_CLIENT_BUILD == 12340 then
+	WOW3 = true;
+elseif CHD_CLIENT_BUILD == 15595 then
+	WOW4 = true;
+end
+
+if WOW3 then
+	MAX_NUM_CONTINENT = 4;
+elseif WOW4 then
+	MAX_NUM_CONTINENT = 4;
+end
+
+for i = 1, MAX_NUM_CONTINENT do
+	if not CHD_TAXI[i] then
+		CHD_TAXI[i] = {};
+	end
+end
 
 
 function CHD_Message(...)

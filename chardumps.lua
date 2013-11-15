@@ -12,18 +12,6 @@ chardumps = LibStub("AceAddon-3.0"):NewAddon("chardumps");
 local L = LibStub("AceLocale-3.0"):GetLocale("chardumps");
 local CHD_bindings = CHD_bindings or {};
 
-CHD_SERVER_LOCAL = CHD_SERVER_LOCAL or {};
-CHD_CLIENT = CHD_CLIENT or {};
-CHD_OPTIONS = CHD_OPTIONS or {};
-CHD_TAXI = CHD_TAXI or {};
-local CHD_gArrCheckboxes = CHD_gArrCheckboxes or {};
-
-for i = 1, MAX_NUM_CONTINENT do
-	if not CHD_TAXI[i] then
-		CHD_TAXI[i] = {};
-	end
-end
-
 --[[
 	Functions
 --]]
@@ -76,6 +64,7 @@ function CHD_SetOptions()
 	CHD_frmMainchbStatistic:SetChecked(CHD_OPTIONS.chbStatistic);
 	CHD_frmMainchbActions:SetChecked(CHD_OPTIONS.chbActions);
 	CHD_frmMainchbSkills:SetChecked(CHD_OPTIONS.chbSkills);
+	CHD_frmMainchbProfessions:SetChecked(CHD_OPTIONS.chbProfessions);
 	CHD_frmMainchbSkillSpell:SetChecked(CHD_OPTIONS.chbSkillSpell);
 	CHD_frmMainchbInventory:SetChecked(CHD_OPTIONS.chbInventory);
 	CHD_frmMainchbBags:SetChecked(CHD_OPTIONS.chbBags);
@@ -85,7 +74,6 @@ function CHD_SetOptions()
 	CHD_frmMainchbFriend:SetChecked(CHD_OPTIONS.chbFriend);
 	CHD_frmMainchbArena:SetChecked(CHD_OPTIONS.chbArena);
 	CHD_frmMainchbTitles:SetChecked(CHD_OPTIONS.chbTitles);
-
 
 	CHD_frmMainchbTaxi:SetChecked(CHD_OPTIONS.chbTaxi);
 	CHD_frmMainchbQuests:SetChecked(CHD_OPTIONS.chbQuests);
@@ -113,6 +101,7 @@ function CHD_SaveOptions()
 	CHD_OPTIONS.chbStatistic    = CHD_frmMainchbStatistic:GetChecked();
 	CHD_OPTIONS.chbActions      = CHD_frmMainchbActions:GetChecked();
 	CHD_OPTIONS.chbSkills       = CHD_frmMainchbSkills:GetChecked();
+	CHD_OPTIONS.chbProfessions  = CHD_frmMainchbProfessions:GetChecked();
 	CHD_OPTIONS.chbSkillSpell   = CHD_frmMainchbSkillSpell:GetChecked();
 	CHD_OPTIONS.chbInventory    = CHD_frmMainchbInventory:GetChecked();
 	CHD_OPTIONS.chbBags         = CHD_frmMainchbBags:GetChecked();
@@ -310,26 +299,77 @@ function CHD_GetCurrencyInfo()
 		i = i + 1;
 	end
 
+	local tCurrency = {};
+	if WOW3 then
+		tCurrency = {
+			121, 122, 103, 42, 241, 390, 81, 61, 384, 386, 221, 341, 101,
+			301, 102, 123, 392, 321, 395, 161, 124, 385, 201, 125, 126
+		};
+	elseif WOW4
+		tCurrency = {
+			789, 241, 390, 61, 515, 398, 384, 697, 81, 615, 393, 392, 361,
+			402, 395, 738, 754, 416, 677, 752, 614, 400, 394, 397, 676, 777,
+			401, 391, 385, 396, 399, 776
+		};
+	end
+
 	CHD_Message(L.GetCurrency);
-	for i = 1, GetCurrencyListSize() do
-		local _, isHeader, _, _, _, count, extraCurrencyType, _, itemID = GetCurrencyListInfo(i);
-		if (not isHeader) and (extraCurrencyType == 0) then
-			table.insert(res, {itemID, count});
+
+	if WOW3 then
+		for i = 1, GetCurrencyListSize() do
+			-- name, isHeader, isExpanded, isUnused, isWatched, count, extraCurrencyType, icon, itemID = GetCurrencyListInfo(index)
+			local _, isHeader, _, _, _, count, _, _, itemID = GetCurrencyListInfo(i);
+			--print(name, count, itemID);
+			if (not isHeader) and itemID and (count > 0) then
+				table.insert(res, {itemID, count});
+			end
+		end
+	else
+		for _, currencyId in ipairs(tCurrency) do
+			-- name, amount, texturePath, earnedThisWeek, weeklyMax, totalMax, isDiscovered = GetCurrencyInfo(id)
+			local name, amount, _, _, _, _, isDiscovered = GetCurrencyInfo(currencyId);
+			--print(k, currencyId, amount, name);
+			if name and isDiscovered and amount > 0 then
+				table.insert(res, {currencyId, amount});
+			end
 		end
 	end
 
 	return res;
 end
 
-function CHD_GetHonorAndAp(currency)
+local function IsHonorId(id)
+	if WOW3 then
+		return id == 43308;
+	elseif WOW4 then
+		return id == 392;
+	end
+
+	return false;
+end
+
+local function IsApId(id)
+	if WOW3 then
+		return id == 43307;
+	elseif WOW4 then
+		return id == 103;
+	end
+
+	return false;
+end
+
+function CHD_GetHonorAndAp(tCurrency)
 	local honor = 0;
 	local ap    = 0;
 
-	for k, v in pairs(currency) do
-		if v[0] == 43308 then
-			honor = v[1];
-		elseif v[0] == 43307 then
-			ap = v[1];
+	for k, v in pairs(tCurrency) do
+		local id = v[1];
+		local count = v[2];
+
+		if IsHonorId(id) then
+			honor = count;
+		elseif IsApId(id) then
+			ap = count;
 		end
 	end
 
@@ -571,6 +611,10 @@ end
 function CHD_GetSkillInfo()
 	local res = {};
 
+	if not WOW3 then
+		return res;
+	end
+
 	local i = 1;
 	while true do
 		local name, isHeader = GetSkillLineInfo(i);
@@ -590,7 +634,31 @@ function CHD_GetSkillInfo()
 			table.insert(res, {["N"] = skillName, ["R"] = skillRank, ["M"] = skillMaxRank});
 		end
 	end
-	table.sort(res, compSkill)
+	table.sort(res, compSkill);
+
+	return res;
+end
+
+function CHD_GetProfessionsInfo()
+	local res = {};
+
+	if not WOW4 then
+		return res;
+	end
+
+	CHD_Message(L.GetProfessions);
+	local prof1, prof2, archaeology, fishing, cooking, firstAid = GetProfessions();
+	local indexes = {prof1, prof2, archaeology, fishing, cooking, firstAid};
+	for i = 1,6 do
+		-- name, texture, rank, maxRank, numSpells, spelloffset, skillLine, rankModifier, specializationIndex, specializationOffset = GetProfessionInfo(index)
+		if indexes[i] then
+			local name, _, rank, maxRank, numSpells, spelloffset, skillLine = GetProfessionInfo(indexes[i]);
+			if rank then
+				-- TODO: name delete
+				table.insert(res, {["N"] = name, ["R"] = rank, ["M"] = maxRank, ["K"] = skillLine});
+			end
+		end
+	end
 
 	return res;
 end
@@ -622,7 +690,7 @@ function CHD_GetInventoryInfo()
 		local itemLink = GetContainerItemLink(container, slot);
 		if itemLink then
 			local _, count, _, _, _, _, _ = GetContainerItemInfo(container, slot);
-			for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink,".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do 
+			for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink, ".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do 
 				res[index] = {["I"] = tonumber(id), ["N"] = count, ["H"] = tonumber(enchant), ["G1"] = tonumber(gem1), ["G2"] = tonumber(gem2), ["G3"] = tonumber(gem3)};
 			end
 		end
@@ -920,6 +988,7 @@ function CHD_OnDumpClick()
 	if CHD_frmMainchbCurrency:GetChecked() then
 		dump.currency = CHD_trycall(CHD_GetCurrencyInfo) or {};
 	else
+		CHD_LogWarn(L.WarnApAnHonorByCurrency);
 		dump.currency = {};
 	end
 	CHD_frmMainchbCurrencyText:SetText(L.chbCurrency .. string.format(" (%d)",
@@ -927,7 +996,6 @@ function CHD_OnDumpClick()
 	local honor, ap = CHD_GetHonorAndAp(dump.currency);
 	dump.player.honor = honor;
 	dump.player.ap    = ap;
-	print(string.format("debug: honor %d, ap %d", honor, ap));
 
 	if CHD_frmMainchbSpells:GetChecked() then
 		dump.spell = CHD_trycall(CHD_GetSpellInfo) or {};
@@ -972,13 +1040,23 @@ function CHD_OnDumpClick()
 	CHD_frmMainchbActionsText:SetText(L.chbActions .. string.format(" (%d)",
 		CHD_GetTableCount(dump.action)));
 
+	dump.skill = {};
 	if CHD_frmMainchbSkills:GetChecked() then
 		dump.skill = CHD_trycall(CHD_GetSkillInfo) or {};
-	else
-		dump.skill = {};
 	end
-	CHD_frmMainchbSkillsText:SetText(L.chbSkills .. string.format(" (%d)",
-		CHD_GetTableCount(dump.skill)));
+	if WOW3 then
+		CHD_frmMainchbSkillsText:SetText(L.chbSkills .. string.format(" (%d)",
+			CHD_GetTableCount(dump.skill)));
+	end
+
+	if CHD_frmMainchbProfessions:GetChecked() then
+		dump.profession = CHD_trycall(CHD_GetProfessionsInfo) or {};
+	else
+		dump.profession = {};
+	end
+	if not WOW3 then
+		CHD_frmMainchbProfessionsText:SetText(L.chbProfessions .. string.format(" (%d)", #dump.profession));
+	end
 
 	if CHD_frmMainchbInventory:GetChecked() then
 		dump.inventory = CHD_trycall(CHD_GetInventoryInfo) or {};

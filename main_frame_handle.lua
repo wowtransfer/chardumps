@@ -2,7 +2,7 @@
 
 --]]
 local L = LibStub("AceLocale-3.0"):GetLocale("chardumps");
-CHD_TAXI = CHD_TAXI or {};
+--CHD_TAXI = CHD_TAXI or {};
 
 function CHD_GetTaxiText()
 	return L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
@@ -13,23 +13,22 @@ function CHD_GetTaxiText()
 end
 
 function CHD_OnTaximapOpened(arg1, arg2, arg3)
---	print(arg1, arg2, arg3); no parameters
-
 	if not CHD_frmMainchbTaxi:GetChecked() then
 		return false;
 	end
 
 	local res = {};
 --[[
--1 - if showing the cosmic map or a Battleground map. Also when showing The Scarlet Enclave, the Death Knights' starting area.
-0 - if showing the entire world of Azeroth
-1 - if showing Kalimdor, or a zone map within it.
-2 - if showing Eastern Kingdoms, or a zone map within it.
-3 - if showing Outland, or a zone map within it.
-4 - if showing Northrend, or a zone map within it.
-5 - if showing the Maelstrom, or a zone map within it.
-6 - if showing Pandaria, or a zone map within it.
+-1 - Cosmic map
+0 - Azeroth
+1 - Kalimdor
+2 - Eastern Kingdoms
+3 - Outland
+4 - Northrend
+5 - The Maelstrom
+6 - Pandaria
 --]]
+--	print("debug: GetMapInfo():", GetMapInfo());
 	local continent = GetCurrentMapContinent();
 	if (continent < 1) or (continent > MAX_NUM_CONTINENT) then
 		return false;
@@ -57,6 +56,7 @@ function CHD_OnVariablesLoaded()
 	-- server
 	CHD_SERVER_LOCAL = {};
 
+--[[
 	if not CHD_TAXI then
 		CHD_TAXI = {};
 	end
@@ -65,6 +65,7 @@ function CHD_OnVariablesLoaded()
 			CHD_TAXI[i] = {};
 		end
 	end
+--]]
 	CHD_SERVER_LOCAL.quest = {};
 	CHD_SERVER_LOCAL.bank = {};
 	CHD_SERVER_LOCAL.bank.mainbank = {};
@@ -84,18 +85,21 @@ end
 
 -- http://wowprogramming.com/docs/api_categories#tradeskill
 function CHD_OnTradeSkillShow(flags, arg2) -- TODO: delte second param
-	if not flags or not CHD_frmMainchbSkillSpell:GetChecked() then
-		return;
+	if not CHD_frmMainchbSkillSpell:GetChecked() then
+		return
 	end
-	if (string.find(flags, "trade")) then
-		return;
+
+	local tradeLink = GetTradeSkillListLink();
+	-- isLinked, name = IsTradeSkillLinked()
+	local isLinked = IsTradeSkillLinked();
+	if isLinked then
+		return
 	end
 
 	-- Returns information about the current trade skill
 	local tradeskillName, rank, maxLevel = GetTradeSkillLine();
-
-	if ("UNKNOWN" == tradeskillName or nil == tradeskillName) then
-		return;
+	if (nil == tradeskillName or "UNKNOWN" == tradeskillName) then
+		return
 	end
 
 	local i = 1;
@@ -122,10 +126,12 @@ function CHD_OnTradeSkillShow(flags, arg2) -- TODO: delte second param
 		local skillName, skillType, numAvailable, isExpanded = GetTradeSkillInfo(i);
 		if (skillType and "header" ~= skillType) then
 			local link = GetTradeSkillRecipeLink(i);
-			--local itemID = tonumber(strmatch(link, "h[(%x+)]"));
+			--link = string.gsub(link, "\124", "_");
+			--print(link);
 			local spellID = tonumber(strmatch(link, "\124Henchant:(%d+)"));
-			-- link = string.gsub(link, "\124", "_");
-			table.insert(t, spellID);
+			if spellID then
+				table.insert(t, spellID);
+			end
 		end
 	end
 	table.sort(t);
@@ -161,7 +167,7 @@ function CHD_OnEvent(self, event, ...)
 	elseif "TRADE_SKILL_SHOW" == event then
 		CHD_OnTradeSkillShow(arg1, arg2);
 	else
-		print(event, arg1, arg2, arg3);
+		print("debug:", event, arg1, arg2, arg3);
 	end
 end
 
@@ -245,6 +251,12 @@ function CHD_OnLoad(self)
 	SetTooltip(CHD_frmMainbtnCheckInv, L.Comboboxes, L.ttbtnCheckInv);
 
 	CHD_CreateMessageBox();
+
+	if WOW3 then
+		CHD_frmMainchbProfessions:Disable();
+	elseif WOW4 then
+		CHD_frmMainchbSkills:Disable();
+	end
 
 	CHD_Message(L.loadmessage);
 end

@@ -2,9 +2,9 @@
 
 --]]
 local L = LibStub("AceLocale-3.0"):GetLocale("chardumps");
-local CHD_gArrCheckboxes = CHD_gArrCheckboxes or {};
-CHD_OPTIONS = CHD_OPTIONS;
-CHD_TAXI = CHD_TAXI or {};
+local CHD_arrCheckboxes = CHD_arrCheckboxes or {};
+--CHD_OPTIONS = CHD_OPTIONS;
+--CHD_TAXI = CHD_TAXI or {};
 
 local chbWidth = 24;
 local chbHeight = 22;
@@ -70,7 +70,7 @@ local function CHD_CreateEditLabel(name, parent, anchorPoint, x, y, cx, cy, titl
 end
 
 function OnCHD_frmMainbtnCheckAllClick()
-	for k,v in pairs(CHD_gArrCheckboxes) do
+	for k,v in pairs(CHD_arrCheckboxes) do
 		if v:IsEnabled() then
 			v:SetChecked();
 		end
@@ -78,7 +78,7 @@ function OnCHD_frmMainbtnCheckAllClick()
 end
 
 function OnCHD_frmMainbtnCheckNoneClick()
-	for k,v in pairs(CHD_gArrCheckboxes) do
+	for k,v in pairs(CHD_arrCheckboxes) do
 		if v:IsEnabled() then
 			v:SetChecked(nil);
 		end
@@ -86,7 +86,7 @@ function OnCHD_frmMainbtnCheckNoneClick()
 end
 
 function OnCHD_frmMainbtnCheckInvClick()
-	for k,v in pairs(CHD_gArrCheckboxes) do
+	for k,v in pairs(CHD_arrCheckboxes) do
 		if v:IsEnabled() then
 			local b = v:GetChecked();
 			v:SetChecked(not b);
@@ -240,7 +240,7 @@ function CHD_Init(self)
 		"chbReputation", "chbAchievements", "chbStatistic", "chbCriterias",
 		"chbArena",
 		"chbTitles",
-		"chbSkills",
+		"chbSkills", "chbProfessions",
 		"chbQuestlog",
 		"chbPet"
 	};
@@ -249,7 +249,7 @@ function CHD_Init(self)
 	local x, y = 5, cy * 2 + 5;
 	for i = 1, #arrCheckboxName do
 		chb = CHD_CreateCheckBox(arrCheckboxName[i], x, y, self);
-		table.insert(CHD_gArrCheckboxes, chb);
+		table.insert(CHD_arrCheckboxes, chb);
 		y = y + cy;
 		if y > (chbHeight * 8 + 20) then
 			x = x + cx;
@@ -260,7 +260,7 @@ function CHD_Init(self)
 	local arrCheckboxDinName = {"chbQuests", "chbBank", "chbTaxi", "chbSkillSpell"};
 	for i = 1,#arrCheckboxDinName do
 		chb = CHD_CreateCheckBox(arrCheckboxDinName[i], 40, chbHeight * (i + 8) + 8, self);
-		table.insert(CHD_gArrCheckboxes, chb);
+		table.insert(CHD_arrCheckboxes, chb);
 	end
 
 	local arrButtonName = {"btnQuestDel", "btnBankDel", "btnTaxiDel", "btnSkillSpellDel"};
