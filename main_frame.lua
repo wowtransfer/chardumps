@@ -71,7 +71,7 @@ end
 
 function OnCHD_frmMainbtnCheckAllClick()
 	for k,v in pairs(CHD_arrCheckboxes) do
-		if v:IsEnabled() then
+		if v:IsEnabled() == 1 then
 			v:SetChecked();
 		end
 	end
@@ -79,7 +79,7 @@ end
 
 function OnCHD_frmMainbtnCheckNoneClick()
 	for k,v in pairs(CHD_arrCheckboxes) do
-		if v:IsEnabled() then
+		if v:IsEnabled() == 1 then
 			v:SetChecked(nil);
 		end
 	end
@@ -87,7 +87,7 @@ end
 
 function OnCHD_frmMainbtnCheckInvClick()
 	for k,v in pairs(CHD_arrCheckboxes) do
-		if v:IsEnabled() then
+		if v:IsEnabled() == 1 then
 			local b = v:GetChecked();
 			v:SetChecked(not b);
 		end
@@ -258,7 +258,7 @@ function CHD_Init(self)
 	end
 
 	local arrCheckboxDinName = {"chbQuests", "chbBank", "chbTaxi", "chbSkillSpell"};
-	for i = 1,#arrCheckboxDinName do
+	for i = 1, #arrCheckboxDinName do
 		chb = CHD_CreateCheckBox(arrCheckboxDinName[i], 40, chbHeight * (i + 8) + 8, self);
 		table.insert(CHD_arrCheckboxes, chb);
 	end

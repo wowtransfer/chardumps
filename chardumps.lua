@@ -305,7 +305,7 @@ function CHD_GetCurrencyInfo()
 			121, 122, 103, 42, 241, 390, 81, 61, 384, 386, 221, 341, 101,
 			301, 102, 123, 392, 321, 395, 161, 124, 385, 201, 125, 126
 		};
-	elseif WOW4
+	elseif WOW4 then
 		tCurrency = {
 			789, 241, 390, 61, 515, 398, 384, 697, 81, 615, 393, 392, 361,
 			402, 395, 738, 754, 416, 677, 752, 614, 400, 394, 397, 676, 777,
@@ -321,7 +321,7 @@ function CHD_GetCurrencyInfo()
 			local _, isHeader, _, _, _, count, _, _, itemID = GetCurrencyListInfo(i);
 			--print(name, count, itemID);
 			if (not isHeader) and itemID and (count > 0) then
-				table.insert(res, {itemID, count});
+				table.insert(res, {["I"] = itemID, ["N"] = count});
 			end
 		end
 	else
@@ -330,7 +330,7 @@ function CHD_GetCurrencyInfo()
 			local name, amount, _, _, _, _, isDiscovered = GetCurrencyInfo(currencyId);
 			--print(k, currencyId, amount, name);
 			if name and isDiscovered and amount > 0 then
-				table.insert(res, {currencyId, amount});
+				table.insert(res, {["I"] = currencyId, ["N"] = amount});
 			end
 		end
 	end
@@ -363,8 +363,8 @@ function CHD_GetHonorAndAp(tCurrency)
 	local ap    = 0;
 
 	for k, v in pairs(tCurrency) do
-		local id = v[1];
-		local count = v[2];
+		local id = v.I;
+		local count = v.N;
 
 		if IsHonorId(id) then
 			honor = count;
