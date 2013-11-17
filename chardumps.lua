@@ -321,7 +321,7 @@ function CHD_GetCurrencyInfo()
 			local _, isHeader, _, _, _, count, _, _, itemID = GetCurrencyListInfo(i);
 			--print(name, count, itemID);
 			if (not isHeader) and itemID and (count > 0) then
-				table.insert(res, {["I"] = itemID, ["N"] = count});
+				table.insert(res, itemID, count);
 			end
 		end
 	else
@@ -330,7 +330,7 @@ function CHD_GetCurrencyInfo()
 			local name, amount, _, _, _, _, isDiscovered = GetCurrencyInfo(currencyId);
 			--print(k, currencyId, amount, name);
 			if name and isDiscovered and amount > 0 then
-				table.insert(res, {["I"] = currencyId, ["N"] = amount});
+				table.insert(res, currencyId, amount);
 			end
 		end
 	end
@@ -362,9 +362,9 @@ function CHD_GetHonorAndAp(tCurrency)
 	local honor = 0;
 	local ap    = 0;
 
-	for k, v in pairs(tCurrency) do
-		local id = v.I;
-		local count = v.N;
+	for k, v in ipairs(tCurrency) do
+		local id = k;
+		local count = v;
 
 		if IsHonorId(id) then
 			honor = count;
@@ -393,11 +393,11 @@ function CHD_GetSpellInfo()
 			local spellLink = GetSpellLink(j, BOOKTYPE_SPELL);
 			if spellLink then
 				local spellid = tonumber(strmatch(spellLink, "Hspell:(%d+)"));
-				table.insert(res, {spellid, i});
+				table.insert(res, spellid, i);
 			end
 		end
 	end
-	table.sort(res, compSpell);
+--	table.sort(res, compSpell);
 
 	return res;
 end
@@ -476,7 +476,9 @@ function CHD_GetAchievementInfo()
 				else
 					posixtime = time({["year"] = 2000 + year, ["month"] = month, ["day"] = day});
 					personalCount = personalCount + 1;
-					table.insert(res, {["I"] = i, ["T"] = posixtime});
+					if posixtime then
+						table.insert(res, i, posixtime);
+					end
 				end
 			end
 		end
@@ -565,7 +567,7 @@ criteriaId == 4654, Статистика. Расходные предменты персонажа.Количество различн
 				local description, type, completedCriteria, quantity, requiredQuantity, characterName, flags, assetID, quantityString, criteriaID = GetAchievementCriteriaInfo(achievementID, j);
 				if criteriaID and quantity > 0 then
 					--table.insert(categoryItem, criteriaID, {["Q"] = quantity, ["D"] = description, ["C"] = completedCriteria});
-					table.insert(res, criteriaID, { ["Q"] = quantity } );
+					table.insert(res, criteriaID, quantity);
 				end
 			end
 		end
@@ -595,7 +597,7 @@ function CHD_GetStatisticInfo()
 			local description, type, completedCriteria, quantity, requiredQuantity, characterName, flags, assetID, quantityString, criteriaID = GetAchievementCriteriaInfo(statisticID, 1);
 			if criteriaID and completedCriteria and quantity > 0 then
 				--table.insert(categoryItem, criteriaID, {["Q"] = quantity, ["N"] = name});
-				table.insert(res, criteriaID, { ["Q"] = quantity } );
+				table.insert(res, criteriaID, quantity);
 			end
 		end
 		--table.insert(res, categoryId, categoryItem);
@@ -1002,7 +1004,7 @@ function CHD_OnDumpClick()
 	else
 		dump.spell = {};
 	end
-	CHD_frmMainchbSpellsText:SetText(L.chbSpells .. string.format(" (%d)", #dump.spell));
+	CHD_frmMainchbSpellsText:SetText(L.chbSpells .. string.format(" (%d)", CHD_GetTableCount(dump.spell)));
 	if CHD_frmMainchbMounts:GetChecked() then
 		dump.mount = CHD_trycall(CHD_GetMountInfo) or {};
 	else
@@ -1030,7 +1032,7 @@ function CHD_OnDumpClick()
 		dump.achievement = {};
 	end
 	CHD_frmMainchbAchievementsText:SetText(L.chbAchievements .. string.format(" (%d)",
-		#dump.achievement));
+		CHD_GetTableCount(dump.achievement)));
 
 	if CHD_frmMainchbActions:GetChecked() then
 		dump.action = CHD_trycall(CHD_GetActionsInfo) or {};
