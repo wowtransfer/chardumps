@@ -147,7 +147,7 @@ function CHD_FillFieldCountClient(dump)
 
 	local res = {};
 
-	res.achievement = #dump.achievement;
+	res.achievement = CHD_GetTableCount(dump.achievement);
 	res.action = CHD_GetTableCount(dump.action);
 	res.criterias = CHD_GetTableCount(dump.criterias);
 	res.statistic = CHD_GetTableCount(dump.statistic);
@@ -156,13 +156,13 @@ function CHD_FillFieldCountClient(dump)
 	res.mount = #dump.mount;
 
 	res.bag = CHD_GetBagItemCount(dump.bag);
-	res.currency = #dump.currency;
+	res.currency = CHD_GetTableCount(dump.currency);
 	res.equipment = #dump.equipment;
 	res.reputation = #dump.reputation;
 	res.glyph = #dump.glyph;
 	res.inventory = CHD_GetTableCount(dump.inventory);
 	res.questlog = #dump.questlog;
-	res.spell = #dump.spell;
+	res.spell = CHD_GetTableCount(dump.spell);
 	res.skill = #dump.skill;
 	res.pmacro = #dump.pmacro;
 	res.friend = #dump.friend;
