@@ -93,7 +93,7 @@ L.Pandaria        = "Pandaria"
 -- tooltip
 L.ttbtnMinimize   = "Minimize"
 L.ttbtnHide       = "Hide"
-L.ttchbGlyphs     = "On/Off save of glyphs"
+L.ttchbGlyphs     = "On/Off save of glyphs\nGlyphs M (N1, N2)\nM - learned glyphs count\nN1 -- glyphs coutn in first talent set\nN2 -- glyphs count in second talent set"
 L.ttchbCurrency   = "On/Off save of currency"
 L.ttchbSpells     = "On/Off save of spells"
 L.ttchbMounts     = "On/Off save of mounts"

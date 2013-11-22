@@ -140,6 +140,35 @@ function CHD_GetSkillSpellText()
 	return s;
 end
 
+local function CHD_GetGlyphText(glyph)
+	local text = L.chbGlyphs;
+
+	if glyph == nil then
+		return L.chbGlyph;
+	end
+	if glyph.items ~= nil then
+		text = text .. " " .. #glyph.items;
+	else
+		text = text .. " 0";
+	end
+	local n1 = CHD_GetTableCount(glyph[1] or {});
+	local n2 = CHD_GetTableCount(glyph[2] or {});
+	text = text .. string.format(" (%d, %d)", n1, n2);
+
+	return text;
+end
+
+local function CHD_GetGlyphCount(glyph)
+	if glyph == nil then
+		return 0;
+	end
+
+	local n1 = CHD_GetTableCount(glyph[1] or {});
+	local n2 = CHD_GetTableCount(glyph[2] or {});
+
+	return n1 + n2;
+end
+
 function CHD_FillFieldCountClient(dump)
 	if not dump then
 		return false;
@@ -159,7 +188,7 @@ function CHD_FillFieldCountClient(dump)
 	res.currency = CHD_GetTableCount(dump.currency);
 	res.equipment = #dump.equipment;
 	res.reputation = #dump.reputation;
-	res.glyph = #dump.glyph;
+	res.glyph = CHD_GetGlyphCount(dump.glyph);
 	res.inventory = CHD_GetTableCount(dump.inventory);
 	res.questlog = #dump.questlog;
 	res.spell = CHD_GetTableCount(dump.spell);
@@ -263,6 +292,8 @@ end
 
 function CHD_GetGlyphInfo()
 	local res ={ {}, {} };
+	local items = {};
+	local numGlyphSlot = 0;
 --[[
 The major glyph at the top of the user interface (level 15)
 The minor glyph at the bottom of the user interface (level 15)
@@ -272,11 +303,35 @@ The minor glyph at the top right of the user interface (level 70)
 The major glyph at the bottom left of the user interface (level 80)
 --]]
 	CHD_Message(L.GetPlyph);
+
+	if not WOW3 then
+		for i = 1, GetNumGlyphs() do
+			-- name, glyphType, isKnown, icon, castSpell = GetGlyphInfo(index);
+			-- glyphType: 1 for minor glyphs, 2 for major glyphs, 3 for prime glyphs (number)
+			local name, glyphType, isKnown, icon, castSpell = GetGlyphInfo(i);
+			if isKnown and castSpell then
+			--	print(i, glyphType, castSpell, name);
+				table.insert(items, {["T"] = glyphType, ["I"] = castSpell});
+			end
+		end
+		numGlyphSlot = NUM_GLYPH_SLOTS;
+		res.items = items;
+	else
+		numGlyphSlot = 6; -- GetNumGlyphSockets always returns 6 in 3.3.5a?
+	end
+
 	for talentGroup = 1,2 do
-		for socket = 1, GetNumGlyphSockets() do -- GetNumGlyphSockets always returns 6 in 3.3.5a?
-			local enabled, glyphType, glyphSpell = GetGlyphSocketInfo(socket, talentGroup);
-			if enabled and glyphType then
-				table.insert(res[talentGroup], glyphSpell);
+		local glyphs = res[talentGroup];
+		for socket = 1, numGlyphSlot do
+			-- enabled, glyphType, glyphTooltipIndex, glyphSpell, icon = GetGlyphSocketInfo(socket, talentGroup)
+			local enabled, glyphType, glyphSpell;
+			if WOW3 then
+				enabled, glyphType, glyphSpell = GetGlyphSocketInfo(socket, talentGroup);
+			else
+				enabled, glyphType, _, glyphSpell = GetGlyphSocketInfo(socket, talentGroup);
+			end
+			if enabled and glyphType and glyphSpell then
+				table.insert(glyphs, {["T"] = glyphType, ["I"] = glyphSpell});
 			end
 		end
 	end
@@ -984,8 +1039,7 @@ function CHD_OnDumpClick()
 	else
 		dump.glyph = {};
 	end
-	CHD_frmMainchbGlyphsText:SetText(L.chbGlyphs .. string.format(" (%d)",
-		CHD_GetTableCount(dump.glyph)));
+	CHD_frmMainchbGlyphsText:SetText(CHD_GetGlyphText(dump.glyph));
 
 	if CHD_frmMainchbCurrency:GetChecked() then
 		dump.currency = CHD_trycall(CHD_GetCurrencyInfo) or {};
