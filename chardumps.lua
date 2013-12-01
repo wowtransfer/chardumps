@@ -958,7 +958,7 @@ function CHD_GetBankInfo()
 	for i = 40, 74 do -- main bank
 		local itemLink = GetInventoryItemLink("player", i)
 		if itemLink then
-			count = GetInventoryItemCount("player",i)
+			local count = GetInventoryItemCount("player",i)
 			for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink,".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do
 				res.mainbank[i] = {["I"] = tonumber(id), ["N"] = count, ["H"] = tonumber(enchant), ["G1"] = tonumber(gem1), ["G2"] = tonumber(gem2), ["G3"] = tonumber(gem3)};
 			end
@@ -976,7 +976,7 @@ function CHD_GetBankInfo()
 		for slot = 1, GetContainerNumSlots(i) do
 			local itemLink = GetContainerItemLink(i, slot)
 			if itemLink then
-				_, count = GetContainerItemInfo(i, slot);
+				local _, count = GetContainerItemInfo(i, slot);
 				for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink, ".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do
 					bag[slot] = {["I"] = tonumber(id), ["N"] = count, ["H"] = tonumber(enchant), ["G1"] = tonumber(gem1), ["G2"] = tonumber(gem2), ["G3"] = tonumber(gem3)};
 				end
