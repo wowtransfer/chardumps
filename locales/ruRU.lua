@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 	Chardumps Localization: Russian
 --]]
 local L = LibStub('AceLocale-3.0'):NewLocale('chardumps', 'ruRU');
