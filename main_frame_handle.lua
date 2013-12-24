@@ -89,13 +89,6 @@ function CHD_OnTradeSkillShow(flags, arg2) -- TODO: delte second param
 		return
 	end
 
-	local tradeLink = GetTradeSkillListLink();
-	-- isLinked, name = IsTradeSkillLinked()
-	local isLinked = IsTradeSkillLinked();
-	if isLinked then
-		return
-	end
-
 	-- Returns information about the current trade skill
 	local tradeskillName, rank, maxLevel = GetTradeSkillLine();
 	if (nil == tradeskillName or "UNKNOWN" == tradeskillName) then
@@ -115,13 +108,7 @@ function CHD_OnTradeSkillShow(flags, arg2) -- TODO: delte second param
 	end
 
 	CHD_Message(string.format(L.GetSkillSpell, tradeskillName));
-
-	if (not CHD_SERVER_LOCAL.skillspell) then
-		CHD_SERVER_LOCAL.skillspell = {};
-	end
-	CHD_SERVER_LOCAL.skillspell[tradeskillName] = {};
-	local t = CHD_SERVER_LOCAL.skillspell[tradeskillName];
-
+	local res = {};
 	for i = 1, GetNumTradeSkills() do
 		local skillName, skillType, numAvailable, isExpanded = GetTradeSkillInfo(i);
 		if (skillType and "header" ~= skillType) then
@@ -130,14 +117,26 @@ function CHD_OnTradeSkillShow(flags, arg2) -- TODO: delte second param
 			--print(link);
 			local spellID = tonumber(strmatch(link, "\124Henchant:(%d+)"));
 			if spellID then
-				table.insert(t, spellID);
+				table.insert(res, spellID);
 			end
 		end
 	end
-	table.sort(t);
+	table.sort(res);
 
-	local count = #t;
+	local tradeLink = GetTradeSkillListLink();
+	local count = #res;
 	CHD_Message(string.format(L.TradeSkillFound, count));
+
+	-- isLinked, name = IsTradeSkillLinked()
+	local isLinked = IsTradeSkillLinked();
+	if isLinked then
+		return
+	end
+
+	if (not CHD_SERVER_LOCAL.skillspell) then
+		CHD_SERVER_LOCAL.skillspell = {};
+	end
+	CHD_SERVER_LOCAL.skillspell[tradeskillName] = res;
 
 	if count > 0 then
 		local s = L.ttchbSkillSpell .. "\n";

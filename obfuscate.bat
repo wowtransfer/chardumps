@@ -1,2 +1,2 @@
-luaob -t chardumps.toc -opt-const_string -opt-global_function
+luaob -t chardumps.toc -opt-const_string -opt-one_file
 pause
