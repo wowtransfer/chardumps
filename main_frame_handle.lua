@@ -165,6 +165,18 @@ function CHD_OnEvent(self, event, ...)
 		CHD_OnVariablesLoaded();
 	elseif "TRADE_SKILL_SHOW" == event then
 		CHD_OnTradeSkillShow(arg1, arg2);
+	elseif "QUEST_DETAIL" == event or "QUEST_PROGRESS" == event then
+		print("DEBUG:", event);
+		local questTable = GetQuestsCompleted(nil);
+		local questId = GetQuestID();
+		local s = "Квест (ID = " .. questId .. ") ";
+		if CHD_ValueExists(questTable, questId) then
+			s = s .. "|\124cFF00FF00 был выполнен\r";
+		else
+			s = s .. "не был выполнен";
+		end
+		CHD_Message(s);
+
 	else
 		print("debug:", event, arg1, arg2, arg3);
 	end
@@ -208,6 +220,9 @@ function CHD_OnLoad(self)
 	self:RegisterEvent("BANKFRAME_OPENED");
 	self:RegisterEvent("PLAYER_LEAVING_WORLD");
 	self:RegisterEvent("TRADE_SKILL_SHOW");
+
+	self:RegisterEvent("QUEST_DETAIL");
+	self:RegisterEvent("QUEST_PROGRESS");
 
 	SetTooltip(CHD_frmMainchbGlyphs, L.chbGlyphs, L.ttchbGlyphs);
 	SetTooltip(CHD_frmMainchbCurrency, L.chbCurrency, L.ttchbCurrency);

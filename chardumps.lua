@@ -1236,13 +1236,6 @@ function CHD_OnDumpClick()
 
 	CHD_FillFieldCountClient(dump);
 
---[[	dump = {};
-	dump.string = "a";
-	dump[1] = 1;
-	dump[2] = 2;
-	dump.table = {[1] = 1, [2] = 2, [3] = 3};
-	dump.table.subtable = { ["s1"] = "sss" };
---]]
 	if CHD_frmMainchbCrypt:GetChecked() then
 		CHD_CLIENT = b64_enc(CHD_encode(dump));
 	else

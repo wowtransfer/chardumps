@@ -61,17 +61,31 @@ function CHD_trycall(fun)
 end
 
 function CHD_GetTableCount(t)
-	local size = 0;
-
 	if type(t) ~= "table" then
 		return 0;
 	end
 
+	local size = 0;
+
 	for k, v in pairs(t) do
-		size = size + 1
+		size = size + 1;
 	end
 
 	return size;
+end
+
+function CHD_ValueExists(t, value)
+	if type(t) ~= "table" then
+		return 0;
+	end
+
+	for _, v in pairs(t) do
+		if v == value then
+			return true;
+		end
+	end
+
+	return false;
 end
 
 function table.copy(t)
@@ -83,7 +97,6 @@ function table.copy(t)
 
 	return setmetatable(u, getmetatable(t));
 end
-
 
 function CHD_CreateMessageBox()
 	local theFrame = CreateFrame("Frame", nil, UIParent);
