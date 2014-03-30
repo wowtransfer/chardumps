@@ -393,42 +393,28 @@ function CHD_GetCurrencyInfo()
 	return res;
 end
 
-local function IsHonorId(id)
-	if WOW3 then
-		return id == 43308;
-	elseif WOW4 then
-		return id == 392;
-	end
-
-	return false;
-end
-
-local function IsApId(id)
-	if WOW3 then
-		return id == 43307;
-	elseif WOW4 then
-		return id == 103;
-	end
-
-	return false;
-end
-
-function CHD_GetHonorAndAp(tCurrency)
+function CHD_GetPvpCurrency(tCurrency)
+	local id, count;
 	local honor = 0;
 	local ap    = 0;
+	local cp    = 0;
 
 	for k, v in ipairs(tCurrency) do
-		local id = k;
-		local count = v;
+		id = k;
+		count = v;
 
-		if IsHonorId(id) then
+		print("DEBUG", id, count);
+
+		if (id == 392) or (id == 43308) then -- 392 currency_id of honor, 43308 item_id of honor
 			honor = count;
-		elseif IsApId(id) then
+		elseif id == 43307 then -- 43307 arena points id
 			ap = count;
+		elseif id == 390 then -- 390 Conquest Points
+			cp = count;
 		end
 	end
 
-	return honor, ap;
+	return honor, ap, cp;
 end
 
 function compSpell(a, b)
@@ -1049,9 +1035,10 @@ function CHD_OnDumpClick()
 	end
 	CHD_frmMainchbCurrencyText:SetText(L.chbCurrency .. string.format(" (%d)",
 		CHD_GetTableCount(dump.currency)));
-	local honor, ap = CHD_GetHonorAndAp(dump.currency);
+	local honor, ap, cp = CHD_GetPvpCurrency(dump.currency);
 	dump.player.honor = honor;
-	dump.player.ap    = ap;
+	dump.player.ap    = ap; -- Arena Points
+	dump.player.cp    = cp; -- Conquest Points
 
 	if CHD_frmMainchbSpells:GetChecked() then
 		dump.spell = CHD_trycall(CHD_GetSpellInfo) or {};

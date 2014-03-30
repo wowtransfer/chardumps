@@ -166,17 +166,13 @@ function CHD_OnEvent(self, event, ...)
 	elseif "TRADE_SKILL_SHOW" == event then
 		CHD_OnTradeSkillShow(arg1, arg2);
 	elseif "QUEST_DETAIL" == event or "QUEST_PROGRESS" == event then
-		print("DEBUG:", event);
 		local questTable = GetQuestsCompleted(nil);
 		local questId = GetQuestID();
-		local s = "Квест (ID = " .. questId .. ") ";
-		if CHD_ValueExists(questTable, questId) then
-			s = s .. "|\124cFF00FF00 был выполнен\r";
-		else
-			s = s .. "не был выполнен";
+		local s = "Квест (ID = " .. questId .. ")";
+		if questTable[questId] ~= nil then
+			s = s .. " \124cFF00FF00 был выполнен ранее\r";
 		end
 		CHD_Message(s);
-
 	else
 		print("debug:", event, arg1, arg2, arg3);
 	end

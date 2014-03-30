@@ -167,6 +167,10 @@ function OnCHD_frmMainbtnHideClick()
 	CHD_frmMain:Hide();
 end
 
+local function CHD_OnReloadClick()
+	ReloadUI();
+end
+
 
 function CHD_OnQueryQuestClick()
 	QueryQuestsCompleted();
@@ -277,11 +281,18 @@ function CHD_Init(self)
 
 	local btn = CHD_CreateButton("btnQuestQuery", 180, chbHeight * 9 + 8, 150, btnHeight, self);
 	btn:SetScript("OnClick", CHD_OnQueryQuestClick);
+
 	btn = CHD_CreateButton("btnDump", 0, 0, 100, btnHeight, self);
 	btn:SetScript("OnClick", CHD_OnDumpClick);
 	btn:ClearAllPoints();
 	btn:SetPoint("BOTTOM", 0, 10);
 	btn:SetPoint("RIGHT", -10, 0);
+
+	btn = CHD_CreateButton("btnReload", 0, 0, 100, btnHeight, self);
+	btn:SetScript("OnClick", CHD_OnReloadClick);
+	btn:ClearAllPoints();
+	btn:SetPoint("BOTTOM", 0, 10);
+	btn:SetPoint("RIGHT", -10 - 5 - 100, 0);
 
 	btn = CHD_CreateButton("btnHide", 10, chbHeight * 12, btnWidth, btnHeight, self);
 	btn:SetScript("OnClick", OnCHD_frmMainbtnHideClick);
