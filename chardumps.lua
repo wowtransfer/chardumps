@@ -399,11 +399,9 @@ function CHD_GetPvpCurrency(tCurrency)
 	local ap    = 0;
 	local cp    = 0;
 
-	for k, v in ipairs(tCurrency) do
+	for k, v in pairs(tCurrency) do
 		id = k;
 		count = v;
-
-		print("DEBUG", id, count);
 
 		if (id == 392) or (id == 43308) then -- 392 currency_id of honor, 43308 item_id of honor
 			honor = count;
