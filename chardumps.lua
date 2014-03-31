@@ -16,6 +16,7 @@ local CHD_bindings = CHD_bindings or {};
 	Functions
 --]]
 
+-- TODO: replace to other file
 function CHD_SetOptionsDef()
 	CHD_OPTIONS = {};
 
@@ -52,6 +53,7 @@ function CHD_SetOptionsDef()
 	return true;
 end
 
+-- TODO: replace to other file
 function CHD_SetOptions()
 	CHD_frmMainchbGlyphs:SetChecked(CHD_OPTIONS.chbGlyph);
 	CHD_frmMainchbCurrency:SetChecked(CHD_OPTIONS.chbCurrency);
@@ -89,6 +91,7 @@ function CHD_SetOptions()
 	return true;
 end
 
+-- TODO: replace to other file
 function CHD_SaveOptions()
 	CHD_OPTIONS.chbGlyph        = CHD_frmMainchbGlyphs:GetChecked();
 	CHD_OPTIONS.chbCurrency     = CHD_frmMainchbCurrency:GetChecked();
@@ -169,7 +172,29 @@ local function CHD_GetGlyphCount(glyph)
 	return n1 + n2;
 end
 
-function CHD_FillFieldCountClient(dump)
+local function CHD_GetBagItemCount(bankDump)
+	local count = 0;
+
+	for _, v in pairs(bankDump) do
+		count = count + CHD_GetTableCount(v);
+	end
+
+	return count;
+end
+
+function CHD_GetBankItemCount()
+	local count = 0;
+	local mainbankCount = CHD_GetTableCount(CHD_SERVER_LOCAL.bank.mainbank);
+
+	for k, v in pairs(CHD_SERVER_LOCAL.bank) do
+		count = count + CHD_GetTableCount(v);
+	end
+	count = count - mainbankCount;
+
+	return mainbankCount, count;
+end
+
+local function CHD_FillFieldCountClient(dump)
 	if not dump then
 		return false;
 	end
@@ -216,33 +241,11 @@ function CHD_FillFieldCountClient(dump)
 	return true;
 end
 
-function CHD_GetBankItemCount()
-	local count = 0;
-	local mainbankCount = CHD_GetTableCount(CHD_SERVER_LOCAL.bank.mainbank);
-
-	for k, v in pairs(CHD_SERVER_LOCAL.bank) do
-		count = count + CHD_GetTableCount(v);
-	end
-	count = count - mainbankCount;
-
-	return mainbankCount, count;
-end
-
-function CHD_GetBagItemCount(bankDump)
-	local count = 0;
-
-	for _, v in pairs(bankDump) do
-		count = count + CHD_GetTableCount(v);
-	end
-
-	return count;
-end
-
 --[[
 	Get data
 --]]
 
-function CHD_GetGlobalInfo()
+local function CHD_GetGlobalInfo()
 	local res = {};
 
 	CHD_Message(L.GetGlobal);
@@ -255,7 +258,7 @@ function CHD_GetGlobalInfo()
 	return res;
 end
 
-function CHD_GetPlayerInfo()
+local function CHD_GetPlayerInfo()
 	local res  = {};
 
 	CHD_Message(L.GetPlayer);
@@ -290,7 +293,7 @@ function CHD_GetPlayerInfo()
 	return res;
 end
 
-function CHD_GetGlyphInfo()
+local function CHD_GetGlyphInfo()
 	local res ={ {}, {} };
 	local items = {};
 	local numGlyphSlot = 0;
@@ -339,7 +342,7 @@ The major glyph at the bottom left of the user interface (level 80)
 	return res;
 end
 
-function CHD_GetCurrencyInfo()
+local function CHD_GetCurrencyInfo()
 	local res = {};
 
 	local i = 1;
@@ -393,7 +396,7 @@ function CHD_GetCurrencyInfo()
 	return res;
 end
 
-function CHD_GetPvpCurrency(tCurrency)
+local function CHD_GetPvpCurrency(tCurrency)
 	local id, count;
 	local honor = 0;
 	local ap    = 0;
@@ -415,11 +418,12 @@ function CHD_GetPvpCurrency(tCurrency)
 	return honor, ap, cp;
 end
 
+-- TODO: remove
 function compSpell(a, b)
 	return a[1] < b[1];
 end
 
-function CHD_GetSpellInfo()
+local function CHD_GetSpellInfo()
 	local res = {};
 
 	CHD_Message(L.GetSpell);
@@ -441,7 +445,7 @@ function CHD_GetSpellInfo()
 	return res;
 end
 
-function CHD_GetMountInfo()
+local function CHD_GetMountInfo()
 	local res = {};
 
 	CHD_Message();
@@ -454,7 +458,7 @@ function CHD_GetMountInfo()
 	return res;
 end
 
-function CHD_GetCritterInfo()
+local function CHD_GetCritterInfo()
 	local res = {};
 
 	CHD_Message(L.GetCritter);
@@ -467,7 +471,7 @@ function CHD_GetCritterInfo()
 	return res;
 end
 
-function CHD_GetRepInfo()
+local function CHD_GetRepInfo()
 	local res = {};
 	local tblRep = {};
 
@@ -492,7 +496,7 @@ function CHD_GetRepInfo()
 	return res;
 end
 
-function CHD_GetAchievementInfo()
+local function CHD_GetAchievementInfo()
 	local res = {};
 
 	CHD_Message(L.GetAchievement);
@@ -527,7 +531,7 @@ function CHD_GetAchievementInfo()
 	return res;
 end
 
-function CHD_GetActionsInfo()
+local function CHD_GetActionsInfo()
 	local res = {};
 
 --[[
@@ -583,7 +587,7 @@ HasCompletedAnyAchievement - Checks if the player has completed at least 1 achie
 SetAchievementComparisonUnit - Enables comparing achievements/statistics with another player
 --]]
 
-function CHD_GetCriteriasInfo()
+local function CHD_GetCriteriasInfo()
 	local res = {};
 
 	local categories = GetCategoryList(); --  A list of achievement category IDs (table)
@@ -616,7 +620,7 @@ criteriaId == 4654, Статистика. Расходные предменты персонажа.Количество различн
 	return res;
 end
 
-function CHD_GetStatisticInfo()
+local function CHD_GetStatisticInfo()
 	local res = {};
 
 	--local categories = GetCategoryList(); -- A list of achievement category IDs (table)
@@ -645,11 +649,12 @@ function CHD_GetStatisticInfo()
 	return res;
 end
 
+-- TODO: remove
 function compSkill(e1, e2)
 	return e1.N < e2.N;
 end
 
-function CHD_GetSkillInfo()
+local function CHD_GetSkillInfo()
 	local res = {};
 
 	if not WOW3 then
@@ -680,7 +685,7 @@ function CHD_GetSkillInfo()
 	return res;
 end
 
-function CHD_GetProfessionsInfo()
+local function CHD_GetProfessionsInfo()
 	local res = {};
 
 	if not WOW4 then
@@ -704,7 +709,7 @@ function CHD_GetProfessionsInfo()
 	return res;
 end
 
-function CHD_GetInventoryInfo()
+local function CHD_GetInventoryInfo()
 	local res = {};
 	local index = 24;
 
@@ -753,7 +758,7 @@ function CHD_GetInventoryInfo()
 	return res;
 end
 
-function CHD_GetBagInfo()
+local function CHD_GetBagInfo()
 	local res = {};
 
 	CHD_Message(L.GetBag);
@@ -781,7 +786,7 @@ function CHD_GetBagInfo()
 	return res;
 end
 
-function CHD_GetEquipmentInfo()
+local function CHD_GetEquipmentInfo()
 	local res = {};
 
 	CHD_Message(L.GetEquipment);
@@ -797,11 +802,12 @@ function CHD_GetEquipmentInfo()
 	return res;
 end
 
+-- TODO: remove
 function compQuestlog(e1, e2)
 	return e1.Q < e2.Q;
 end
 
-function CHD_GetQuestlogInfo()
+local function CHD_GetQuestlogInfo()
 	local res = {};
 	local numEntries, numQuests = GetNumQuestLogEntries();
 
@@ -831,7 +837,7 @@ function CHD_GetQuestlogInfo()
 	return res;
 end
 
-function CHD_GetPMacroInfo()
+local function CHD_GetPMacroInfo()
 	local res = {};
 
 	CHD_Message(L.GetMacro);
@@ -848,7 +854,7 @@ function CHD_GetPMacroInfo()
 	return res;
 end
 
-function CHD_GetAMacroInfo()
+local function CHD_GetAMacroInfo()
 	local res = {};
 
 	local count = 1;
@@ -864,7 +870,7 @@ function CHD_GetAMacroInfo()
 	return res;
 end
 
-function CHD_GetFriendsInfo()
+local function CHD_GetFriendsInfo()
 	local res = {};
 
 	CHD_Message(L.GetFriends);
@@ -876,7 +882,7 @@ function CHD_GetFriendsInfo()
 	return res;
 end
 
-function CHD_GetIgnoresInfo()
+local function CHD_GetIgnoresInfo()
 	local res = {};
 
 	CHD_Message(L.GetIgnores);
@@ -888,7 +894,7 @@ function CHD_GetIgnoresInfo()
 	return res;
 end
 
-function CHD_GetArenaInfo()
+local function CHD_GetArenaInfo()
 	local res = {};
 
 	CHD_Message(L.GetArena);
@@ -931,6 +937,7 @@ function CHD_GetQuestInfo()
 	return res;
 end
 
+-- TODO: replace to other file, main frame handle...
 function CHD_GetBankInfo()
 	local res = {};
 	-- BANK_CONTAINER is the bank window
@@ -975,7 +982,7 @@ function CHD_GetBankInfo()
 	return res;
 end
 
-function CHD_GetBindInfo()
+local function CHD_GetBindInfo()
 	local res = {};
 
 	CHD_Message(L.GetBind);
@@ -989,7 +996,7 @@ function CHD_GetBindInfo()
 	return res;
 end
 
-function CHD_GetTitlesInfo()
+local function CHD_GetTitlesInfo()
 	local res = {};
 
 	CHD_Message(L.GetTitles);
