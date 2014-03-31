@@ -1002,6 +1002,42 @@ function CHD_GetTitlesInfo()
 	return res;
 end
 
+local function CHD_GetTalentInfo()
+	local res = {};
+	local specTalentSpell, numTalents;
+	local name, _, tier, column, rank, maxRank;
+	local talentLink;
+
+	for specNum = 1,2 do
+		specTalent = {};
+		for tabIndex = 1,5 do -- GetNumTalentTabs() always return  3???
+			numTalents = GetNumTalents(tabIndex, false, false);
+			if (numTalents == nil) or (numTalents == 0) then
+				break
+			end
+			-- name, iconTexture, tier, column, rank, maxRank, isExceptional, meetsPrereq, previewRank, meetsPreviewPrereq = GetTalentInfo(tabIndex, talentIndex, inspect, pet, talentGroup);
+			for i = 1, numTalents do
+				name, _, tier, column, rank, maxRank = GetTalentInfo(tabIndex, i, false, false, specNum);
+			-- link = GetTalentLink(tabIndex, talentIndex, inspect, pet, talentGroup)
+			talentLink = GetTalentLink(tabIndex, i, false, false, specNum);
+
+			local talentId = tonumber(strmatch(talentLink, "Htalent:(%d+)"));
+			if (rank ~= nil) and (rank > 0) and (talentId > 0) then
+				-- TODO: ["name"] field remove
+				table.insert(specTalent, {["I"] = talentId, ["R"] = rank, ["N"] = name});
+			end
+
+			end
+		end
+
+		table.sort(specTalent, function (v1, v2) return v1.I < v2.I end);
+
+		res[specNum] = specTalent;
+	end
+
+	return res;
+end
+
 --[[
 	Saving data
 --]]
@@ -1218,6 +1254,8 @@ function CHD_OnDumpClick()
 	end
 	CHD_frmMainchbStatisticText:SetText(L.chbStatistic .. string.format(" (%d)",
 		CHD_GetTableCount(dump.statistic)));
+
+	dump.talent = CHD_trycall(CHD_GetTalentInfo) or {};
 
 	CHD_FillFieldCountClient(dump);
 
