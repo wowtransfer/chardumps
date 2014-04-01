@@ -35,6 +35,7 @@ function CHD_SetOptionsDef()
 	CHD_OPTIONS.chbMacro = true;
 	CHD_OPTIONS.chbArena = true;
 	CHD_OPTIONS.chbTitles = true;
+	CHD_OPTIONS.chbTalent = true;
 
 	CHD_OPTIONS.chbGlyph = true;
 	CHD_OPTIONS.chbCurrency = true;
@@ -75,6 +76,7 @@ function CHD_SetOptions()
 	CHD_frmMainchbMacro:SetChecked(CHD_OPTIONS.chbMacro);
 	CHD_frmMainchbFriend:SetChecked(CHD_OPTIONS.chbFriend);
 	CHD_frmMainchbArena:SetChecked(CHD_OPTIONS.chbArena);
+	CHD_frmMainchbTalent:SetChecked(CHD_OPTIONS.chbTalent);
 	CHD_frmMainchbTitles:SetChecked(CHD_OPTIONS.chbTitles);
 
 	CHD_frmMainchbTaxi:SetChecked(CHD_OPTIONS.chbTaxi);
@@ -113,6 +115,7 @@ function CHD_SaveOptions()
 	CHD_OPTIONS.chbMacro        = CHD_frmMainchbMacro:GetChecked();
 	CHD_OPTIONS.chbFriend       = CHD_frmMainchbFriend:GetChecked();
 	CHD_OPTIONS.chbArena        = CHD_frmMainchbArena:GetChecked();
+	CHD_OPTIONS.chbTalent       = CHD_frmMainchbTalent:GetChecked();
 	CHD_OPTIONS.chbTitles       = CHD_frmMainchbTitles:GetChecked();
 
 	CHD_OPTIONS.chbTaxi         = CHD_frmMainchbTaxi:GetChecked();
@@ -141,6 +144,28 @@ function CHD_GetSkillSpellText()
 	end
 
 	return s;
+end
+
+local function CHD_GetTalentText(talent)
+	local s = "(";
+
+	for i = 1,2 do
+		s = s .. #talent[i] .. ", ";
+	end
+	s = string.sub(s, 1, -3);
+	s = s .. ")";
+
+	return s;
+end
+
+local function CHD_GetTalentCount(talent)
+	local count = 0;
+
+	for i = 1,2 do
+		count = count + #talent[i];
+	end
+
+	return count;
 end
 
 local function CHD_GetGlyphText(glyph)
@@ -230,11 +255,15 @@ local function CHD_FillFieldCountClient(dump)
 		count =  count + #v;
 	end
 	res.taxi = count;
+
 	count = 0;
 	for k, v in pairs(dump.skillspell) do
 		count =  count + #v;
 	end
 	res.skillspell = count;
+
+	res.title = #dump.titles;
+	res.talent = CHD_GetTalentCount(dump.talent);
 
 	dump.CHD_FIELD_COUNT = res;
 
@@ -1015,6 +1044,7 @@ local function CHD_GetTalentInfo()
 	local name, _, tier, column, rank, maxRank;
 	local talentLink;
 
+	CHD_Message(L.GetTalent);
 	for specNum = 1,2 do
 		specTalent = {};
 		for tabIndex = 1,5 do -- GetNumTalentTabs() always return  3???
@@ -1262,7 +1292,12 @@ function CHD_OnDumpClick()
 	CHD_frmMainchbStatisticText:SetText(L.chbStatistic .. string.format(" (%d)",
 		CHD_GetTableCount(dump.statistic)));
 
-	dump.talent = CHD_trycall(CHD_GetTalentInfo) or {};
+	if CHD_frmMainchbTalent:GetChecked() then
+		dump.talent = CHD_trycall(CHD_GetTalentInfo) or {};
+	else
+		dump.talent = {};
+	end
+	CHD_frmMainchbTalentText:SetText(L.chbTalent .. CHD_GetTalentText(dump.talent));
 
 	CHD_FillFieldCountClient(dump);
 

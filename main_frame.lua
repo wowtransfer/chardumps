@@ -239,7 +239,7 @@ function CHD_Init(self)
 
 	local arrCheckboxName = {
 		"chbCurrency", "chbInventory", "chbBags", "chbEquipment",
-		"chbSpells", "chbMounts", "chbCritters", "chbGlyphs",
+		"chbSpells", "chbMounts", "chbCritters", "chbGlyphs", "chbTalent",
 		"chbFriend", "chbActions", "chbMacro", "chbBind",
 		"chbReputation", "chbAchievements", "chbStatistic", "chbCriterias",
 		"chbArena",
