@@ -166,6 +166,9 @@ function CHD_OnEvent(self, event, ...)
 	elseif "TRADE_SKILL_SHOW" == event then
 		CHD_OnTradeSkillShow(arg1, arg2);
 	elseif "QUEST_DETAIL" == event or "QUEST_PROGRESS" == event then
+		if WOW3 then
+			return
+		end
 		local questTable = GetQuestsCompleted(nil);
 		local questId = GetQuestID();
 		local s = "Квест (ID = " .. questId .. ")";

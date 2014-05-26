@@ -150,7 +150,11 @@ local function CHD_GetTalentText(talent)
 	local s = "(";
 
 	for i = 1,2 do
-		s = s .. #talent[i] .. ", ";
+		if talent[i] ~= nil then
+			s = s .. #talent[i] .. ", ";
+		else
+			s = s .. "0, ";
+		end
 	end
 	s = string.sub(s, 1, -3);
 	s = s .. ")";
@@ -162,7 +166,9 @@ local function CHD_GetTalentCount(talent)
 	local count = 0;
 
 	for i = 1,2 do
-		count = count + #talent[i];
+		if talent[i] ~= nil then
+			count = count + #talent[i];
+		end
 	end
 
 	return count;
@@ -262,7 +268,7 @@ local function CHD_FillFieldCountClient(dump)
 	end
 	res.skillspell = count;
 
-	res.title = #dump.titles;
+	res.title = #dump.title;
 	res.talent = CHD_GetTalentCount(dump.talent);
 
 	dump.CHD_FIELD_COUNT = res;
@@ -302,6 +308,9 @@ local function CHD_GetPlayerInfo()
 	res.kills            = honorableKills;
 	res.money            = math.floor(GetMoney() / 10000); -- convert to gold
 	res.specs            = GetNumTalentGroups();
+	if (GetActiveSpecGroup ~= nil) then
+		res.active_spec  = GetActiveSpecGroup();
+	end
 	res.health           = UnitHealth("player");
 	res.mana             = UnitMana("player");
 	res.totaltime        = tonumber(CHD_frmMainedtTotalTime:GetText());
@@ -469,7 +478,7 @@ local function CHD_GetSpellInfo()
 			end
 		end
 	end
---	table.sort(res, compSpell);
+	table.sort(res, function (v1, v2) return v1[1] < v2[1] end);
 
 	return res;
 end
@@ -1271,11 +1280,11 @@ function CHD_OnDumpClick()
 	CHD_frmMainchbSkillSpellText:SetText(CHD_GetSkillSpellText());
 
 	if (CHD_frmMainchbTitles:GetChecked()) then
-		dump.titles = CHD_trycall(CHD_GetTitlesInfo) or {};
+		dump.title = CHD_trycall(CHD_GetTitlesInfo) or {};
 	else
-		dump.titles = {};
+		dump.title = {};
 	end
-	CHD_frmMainchbTitlesText:SetText(L.chbTitles .. "(" .. #dump.titles .. ")");
+	CHD_frmMainchbTitlesText:SetText(L.chbTitles .. "(" .. #dump.title .. ")");
 
 	if (CHD_frmMainchbCriterias:GetChecked()) then
 		dump.criterias = CHD_trycall(CHD_GetCriteriasInfo) or {};
