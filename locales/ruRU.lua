@@ -85,6 +85,7 @@ L.GetQuest        = "Чтение выполненных заданий"
 L.CountOfCompletedQuests = "  количество выполненных заданий "
 L.GetTaxi         = "Чтение полетов для карты "
 L.CountOfTaxi     = "  количество полетов "
+
 L.Kalimdor        = "Калимдор"
 L.EasternKingdoms = "Восточные королевства"
 L.Outland         = "Запределье"
@@ -165,6 +166,9 @@ L.btnReload       = "Сохранить"
 L.CreatingDump    = "Создание дампа..."
 L.CreatedDump     = "Создание дампа прошло успешно"
 L.Comboboxes      = "Переключатели"
+L.Quest           = "Задание"
+L.QuestWasCompleted = "было выполнено ранее"
+L.QuestCompleted  = "выполнено"
 L.DumpDone        = "Создано! Дамп находится здесь:\
 каталог WoW/\
  WTF/\

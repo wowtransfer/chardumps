@@ -85,6 +85,7 @@ L.GetQuest        = "Get quest information"
 L.CountOfCompletedQuests = "  count of completed quests "
 L.GetTaxi         = "Get Taxi/Flight information for map "
 L.CountOfTaxi     = "  count of taxi "
+
 L.Kalimdor        = "Kalimdor"
 L.EasternKingdoms = "Eastern Kingdoms"
 L.Outland         = "Outland"
@@ -165,6 +166,9 @@ L.btnReload       = "Save"
 L.CreatingDump    = "Creating dump..."
 L.CreatedDump     = "Creation of dump was successful"
 L.Comboboxes      = "Checkboxes"
+L.Quest           = "Quest"
+L.QuestWasCompleted = "was completed"
+L.QuestCompleted  = "completed"
 L.DumpDone        = "DONE! You can find the dump here:\
 WoW Folder/\
  WTF/\

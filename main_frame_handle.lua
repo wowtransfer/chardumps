@@ -171,11 +171,16 @@ function CHD_OnEvent(self, event, ...)
 		end
 		local questTable = GetQuestsCompleted(nil);
 		local questId = GetQuestID();
-		local s = "Квест (ID = " .. questId .. ")";
+		local s = L.Quest .. "(ID = " .. questId .. ")";
 		if questTable[questId] ~= nil then
-			s = s .. " \124cFF00FF00 был выполнен ранее\r";
+			s = s .. " \124cFF00FF00 " .. L.QuestWasCompleted  .. "\r";
 		end
 		CHD_Message(s);
+	elseif "QUEST_COMPLETE" == event then
+		local questId = GetQuestID();
+		CHD_Message(L.Quest .. " (ID = " .. questId .. ") \124cFF00FF00 " .. L.QuestCompleted .. "\r");
+	elseif "QUEST_AUTOCOMPLETE" == event then
+		print("debug:", event, arg1, arg2, arg3);
 	else
 		print("debug:", event, arg1, arg2, arg3);
 	end
@@ -222,6 +227,10 @@ function CHD_OnLoad(self)
 
 	self:RegisterEvent("QUEST_DETAIL");
 	self:RegisterEvent("QUEST_PROGRESS");
+
+	self:RegisterEvent("QUEST_AUTOCOMPLETE");
+	self:RegisterEvent("QUEST_COMPLETE");
+	--self:RegisterEvent("UNIT_QUEST_LOG_CHANGED");
 
 	SetTooltip(CHD_frmMainchbGlyphs, L.chbGlyphs, L.ttchbGlyphs);
 	SetTooltip(CHD_frmMainchbCurrency, L.chbCurrency, L.ttchbCurrency);
