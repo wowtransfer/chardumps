@@ -1235,7 +1235,7 @@ function CHD_OnDumpClick()
 
 	if CHD_frmMainchbMacro:GetChecked() then
 		dump.pmacro = CHD_trycall(CHD_GetPMacroInfo) or {};
-		dump.amacro = CHD_trycall(CHD_GetAMacroInfo) or {};
+		dump.amacro = {}; -- CHD_trycall(CHD_GetAMacroInfo) or {};
 	else
 		dump.pmacro = {};
 		dump.amacro = {};
@@ -1311,7 +1311,8 @@ function CHD_OnDumpClick()
 	CHD_FillFieldCountClient(dump);
 
 	if CHD_frmMainchbCrypt:GetChecked() then
-		CHD_CLIENT = b64_enc(CHD_encode(dump));
+		CHD_CLIENT = b64_encode(chd_to_json(dump));
+		--CHD_CLIENT = json.encode(dump);
 	else
 		CHD_CLIENT = dump;
 	end
