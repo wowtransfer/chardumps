@@ -1,7 +1,7 @@
 ## Interface: 30300
 ## Title: chardump|c00FF00FFs|r
 ## Author: SlaFF
-## Version: 1.8
+## Version: 1.11
 ## Notes: Dump of character created by |c00FF00FFS|rlaFF. Save your character!
 ## eMail: gracerpro@gmail.com
 ## OptionalDeps: Ace3

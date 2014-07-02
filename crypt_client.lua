@@ -1,7 +1,7 @@
 local function chd_encode_string(s)
 	s = string.gsub(s,"\\","\\\\");
 	s = string.gsub(s,"\"","\\\"");
-	s = string.gsub(s,"'","\\'");
+--	s = string.gsub(s,"'","\\'");
 	s = string.gsub(s,"\n","\\n");
 	s = string.gsub(s,"\t","\\t");
 	return s;

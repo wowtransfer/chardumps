@@ -3,7 +3,7 @@
 		Main module
 	Chardumps
 		Dump of character.
-	version 1.8
+	version 1.11
 	Created by SlaFF
 		Gracer (Alliance)
 	thanks Sun, myth.project.info@gmail.com
