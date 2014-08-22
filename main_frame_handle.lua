@@ -177,6 +177,9 @@ function CHD_OnEvent(self, event, ...)
 		end
 		CHD_Message(s);
 	elseif "QUEST_COMPLETE" == event then
+		if WOW3 then
+			return
+		end
 		local questId = GetQuestID();
 		CHD_Message(L.Quest .. " (ID = " .. questId .. ") \124cFF00FF00 " .. L.QuestCompleted .. "\r");
 	elseif "QUEST_AUTOCOMPLETE" == event then
