@@ -263,7 +263,7 @@ local function CHD_FillFieldCountClient(dump)
 	res.taxi = count;
 
 	count = 0;
-	for k, v in pairs(dump.skillspell) do
+	for _, v in pairs(dump.skillspell) do
 		count =  count + #v;
 	end
 	res.skillspell = count;
