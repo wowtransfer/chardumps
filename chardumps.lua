@@ -290,6 +290,8 @@ local function CHD_GetGlobalInfo()
 	local _, build   = GetBuildInfo();
 	res.clientbuild  = tonumber(build);
 	res.addonversion = tostring(CHD_VERSION);
+	res.createtime   = time();
+	res.luaversion   = _VERSION;
 
 	return res;
 end
