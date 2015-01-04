@@ -288,7 +288,8 @@ local function CHD_GetGlobalInfo()
 	res.realm        = GetRealmName();
 	res.realmlist    = GetCVar("realmList");
 	local _, build   = GetBuildInfo();
-	res.clientbuild  = build;
+	res.clientbuild  = tonumber(build);
+	res.addonversion = tostring(CHD_VERSION);
 
 	return res;
 end

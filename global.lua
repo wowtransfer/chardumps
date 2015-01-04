@@ -13,12 +13,17 @@ CHD_SERVER_LOCAL = {};
 CHD_CLIENT = CHD_CLIENT or {};
 CHD_OPTIONS = CHD_OPTIONS or {};
 CHD_TAXI = CHD_TAXI or {};
+CHD_VERSION = "1.11";
 
-_, CHD_CLIENT_BUILD = GetBuildInfo();
-CHD_CLIENT_BUILD = tonumber(CHD_CLIENT_BUILD);
-if CHD_CLIENT_BUILD == 12340 then
+local _, clientBuild = GetBuildInfo();
+clientBuild = tonumber(clientBuild);
+
+-- define client build constant
+if clientBuild >= 6080 and clientBuild <= 8478 then
+	WOW2 = true;
+elseif clientBuild >= 9056 and clientBuild <= 12340 then
 	WOW3 = true;
-elseif CHD_CLIENT_BUILD == 15595 then
+elseif clientBuild >= 13164 and clientBuild <= 15595 then
 	WOW4 = true;
 end
 
