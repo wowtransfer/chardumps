@@ -321,15 +321,6 @@ local function CHD_GetPlayerInfo()
 		CHD_LogWarn(L.TotalTimeUndefined);
 		res.totaltime = 0;
 	end
-	res.leveltime        = tonumber(CHD_frmMainedtLevelTime:GetText());
-	if res.leveltime == nil then
-		CHD_LogWarn(L.LevelTimeUndefined);
-		res.leveltime = 0;
-	end
-
-	if res.totaltime < res.leveltime then
-		CHD_LogWarn(L.TotalLessLevel);
-	end
 
 	return res;
 end

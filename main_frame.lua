@@ -319,7 +319,6 @@ function CHD_Init(self)
 	btn:SetPoint("RIGHT", panSystem, -14 - btnW, 0);
 
 	CHD_CreateEditLabel("edtTotalTime", self, "BOTTOMRIGHT", -10, 62, 45, 20, L.TotalTime, 5);
-	CHD_CreateEditLabel("edtLevelTime", self, "BOTTOMRIGHT", -10, 40, 45, 20, L.LevelTime, 5);
 
 	CHD_OnLoad(self);
 end
