@@ -151,7 +151,7 @@ local function CHD_GetTalentText(talent)
 
 	for i = 1,2 do
 		if talent[i] ~= nil then
-			s = s .. #talent[i] .. ", ";
+			s = s .. CHD_GetTableCount(talent[i]) .. ", ";
 		else
 			s = s .. "0, ";
 		end
@@ -167,7 +167,7 @@ local function CHD_GetTalentCount(talent)
 
 	for i = 1,2 do
 		if talent[i] ~= nil then
-			count = count + #talent[i];
+			count = count + CHD_GetTableCount(talent[i]);
 		end
 	end
 
@@ -1063,8 +1063,7 @@ local function CHD_GetTalentInfo()
 
 			local talentId = tonumber(strmatch(talentLink, "Htalent:(%d+)"));
 			if (rank ~= nil) and (rank > 0) and (talentId > 0) then
-				-- TODO: ["name"] field remove
-				table.insert(specTalent, {["I"] = talentId, ["R"] = rank, ["N"] = name});
+				table.insert(specTalent, talentId, rank);
 			end
 
 			end
