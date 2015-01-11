@@ -849,14 +849,16 @@ end
 
 local function CHD_GetEquipmentInfo()
 	local res = {};
+	local equip;
 
 	CHD_Message(L.GetEquipment);
 	for i = 1, GetNumEquipmentSets() do
 		local name, icon = GetEquipmentSetInfo(i);
 		if name then
-			res[i] = GetEquipmentSetItemIDs(name); -- return table 1..19
-			res[i].name = name;
-			res[i].icon = icon;
+			equip = {};
+			equip["items"] = GetEquipmentSetItemIDs(name); -- return table 1..19
+			equip["name"] = name;
+			res[i] = equip;
 		end
 	end
 
