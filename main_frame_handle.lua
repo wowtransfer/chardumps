@@ -37,7 +37,7 @@ function CHD_OnTaximapOpened(arg1, arg2, arg3)
 	local arrContinent = {L.Kalimdor, L.EasternKingdoms, L.Outland, L.Northrend};
 	CHD_Message(L.GetTaxi .. arrContinent[continent]);
 	for i = 1, NumTaxiNodes() do
-		res[i] = TaxiNodeName(i);
+		table.insert(res, TaxiNodeName(i));
 	end
 
 	CHD_TAXI[continent] = res;

@@ -758,7 +758,16 @@ local function CHD_GetInventoryInfo()
 		if itemLink then
 			local count = GetInventoryItemCount("player", i);
 			for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink,".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do 
-				res[i] = {["I"] = tonumber(id), ["N"] = count, ["H"] = tonumber(enchant), ["G1"] = tonumber(gem1), ["G2"] = tonumber(gem2), ["G3"] = tonumber(gem3)};
+				local tmpItem = {
+					["I"] = tonumber(id)
+				};
+				if count > 1 then tmpItem["N"] = count end
+				if tonumber(enchant) > 0 then tmpItem["H"] = tonumber(enchant) end
+				if tonumber(gem1) > 0 then tmpItem["G1"] = tonumber(gem1) end
+				if tonumber(gem2) > 0 then tmpItem["G2"] = tonumber(gem2) end
+				if tonumber(gem3) > 0 then tmpItem["G3"] = tonumber(gem3) end
+
+				res[i] = tmpItem;
 			end
 		end
 	end
@@ -767,9 +776,18 @@ local function CHD_GetInventoryInfo()
 	for slot = 1, GetContainerNumSlots(container) do
 		local itemLink = GetContainerItemLink(container, slot);
 		if itemLink then
-			local _, count, _, _, _, _, _ = GetContainerItemInfo(container, slot);
+			local _, count = GetContainerItemInfo(container, slot);
 			for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink, ".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do 
-				res[index] = {["I"] = tonumber(id), ["N"] = count, ["H"] = tonumber(enchant), ["G1"] = tonumber(gem1), ["G2"] = tonumber(gem2), ["G3"] = tonumber(gem3)};
+				local tmpItem = {
+					["I"] = tonumber(id)
+				};
+				if count > 1 then tmpItem["N"] = count end
+				if tonumber(enchant) > 0 then tmpItem["H"] = tonumber(enchant) end
+				if tonumber(gem1) > 0 then tmpItem["G1"] = tonumber(gem1) end
+				if tonumber(gem2) > 0 then tmpItem["G2"] = tonumber(gem2) end
+				if tonumber(gem3) > 0 then tmpItem["G3"] = tonumber(gem3) end
+
+				res[index] = tmpItem;
 			end
 		end
 		index = index + 1;
@@ -782,7 +800,11 @@ local function CHD_GetInventoryInfo()
 		if itemLink then
 			local id = GetContainerItemID(container, slot);
 			local _, count = GetContainerItemInfo(container, slot);
-			res[index] = {["I"] = id, ["N"] = count};
+			tmpItem = {
+				["I"] = tonumber(id)
+			};
+			if count > 1 then tmpItem["N"] = count end
+			res[index] = tmpItem;
 		end
 		index = index + 1;
 	end
@@ -795,7 +817,7 @@ local function CHD_GetBagInfo()
 
 	CHD_Message(L.GetBag);
 
-	for bag = 1,NUM_BAG_SLOTS do
+	for bag = 1, NUM_BAG_SLOTS do
 		local nCount = 0;
 		local tmpBag = {};
 		for slot = 1, GetContainerNumSlots(bag) do
@@ -805,7 +827,14 @@ local function CHD_GetBagInfo()
 			if itemLink and count then
 				local tmpItem = {};
 				for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink,".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do
-					tmpItem = {["I"] = tonumber(id), ["N"] = count, ["H"] = tonumber(enchant), ["G1"] = tonumber(gem1), ["G2"] = tonumber(gem2), ["G3"] = tonumber(gem3)};
+					tmpItem = {
+						["I"] = tonumber(id)
+					};
+					if count > 1 then tmpItem["N"] = count end
+					if tonumber(enchant) > 0 then tmpItem["H"] = tonumber(enchant) end
+					if tonumber(gem1) > 0 then tmpItem["G1"] = tonumber(gem1) end
+					if tonumber(gem2) > 0 then tmpItem["G2"] = tonumber(gem2) end
+					if tonumber(gem3) > 0 then tmpItem["G3"] = tonumber(gem3) end
 				end
 				nCount = nCount + 1;
 				table.insert(tmpBag, tmpItem);
@@ -983,7 +1012,16 @@ function CHD_GetBankInfo()
 		if itemLink then
 			local count = GetInventoryItemCount("player",i)
 			for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink,".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do
-				res.mainbank[i] = {["I"] = tonumber(id), ["N"] = count, ["H"] = tonumber(enchant), ["G1"] = tonumber(gem1), ["G2"] = tonumber(gem2), ["G3"] = tonumber(gem3)};
+				local tmpItem = {
+					["I"] = tonumber(id)
+				};
+				if count > 1 then tmpItem["N"] = count end
+				if tonumber(enchant) > 0 then tmpItem["H"] = tonumber(enchant) end
+				if tonumber(gem1) > 0 then tmpItem["G1"] = tonumber(gem1) end
+				if tonumber(gem2) > 0 then tmpItem["G2"] = tonumber(gem2) end
+				if tonumber(gem3) > 0 then tmpItem["G3"] = tonumber(gem3) end
+
+				res.mainbank[i] = tmpItem;
 			end
 			nCount = nCount + 1;
 		end
@@ -1001,7 +1039,16 @@ function CHD_GetBankInfo()
 			if itemLink then
 				local _, count = GetContainerItemInfo(i, slot);
 				for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink, ".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do
-					bag[slot] = {["I"] = tonumber(id), ["N"] = count, ["H"] = tonumber(enchant), ["G1"] = tonumber(gem1), ["G2"] = tonumber(gem2), ["G3"] = tonumber(gem3)};
+					local tmpItem = {
+						["I"] = tonumber(id)
+					};
+					if count > 1 then tmpItem["N"] = count end
+					if tonumber(enchant) > 0 then tmpItem["H"] = tonumber(enchant) end
+					if tonumber(gem1) > 0 then tmpItem["G1"] = tonumber(gem1) end
+					if tonumber(gem2) > 0 then tmpItem["G2"] = tonumber(gem2) end
+					if tonumber(gem3) > 0 then tmpItem["G3"] = tonumber(gem3) end
+
+					bag[slot] = tmpItem;
 				end
 				nCount = nCount + 1;
 			end
