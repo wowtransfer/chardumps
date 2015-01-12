@@ -1,10 +1,9 @@
 --[[
 	Chardumps Localization: English
 --]]
-local L = LibStub("AceLocale-3.0"):NewLocale("chardumps", "enUS", true);
-if not L then
-	return
-end
+chardumps = chardumps or {};
+
+local L = {};
 
 L.AddonName       = "Chardumps"
 L.Version         = "1.11"
@@ -169,10 +168,12 @@ L.QuestWasCompleted = "was completed"
 L.QuestCompleted  = "completed"
 L.DumpDone        = "DONE! You can find the dump here:\
 WoW Folder/\
- WTF/\
-  Account/\
-   %AccountName%/\
-    %RealmName%/\
-     %PlayerName%/\
-      SavedVariables/\
-       \124cFF00FF00chardumps.lua\124r"
+WTF/\
+Account/\
+%AccountName%/\
+%RealmName%/\
+%PlayerName%/\
+SavedVariables/\
+\124cFF00FF00chardumps.lua\124r";
+
+chardumps.locale = L;

@@ -8,8 +8,8 @@
 		Gracer (Alliance)
 	thanks Sun, myth.project.info@gmail.com
 --]]
-chardumps = LibStub("AceAddon-3.0"):NewAddon("chardumps");
-local L = LibStub("AceLocale-3.0"):GetLocale("chardumps");
+chardumps = chardumps or {};
+local L = chardumps:GetLocale();
 local CHD_bindings = CHD_bindings or {};
 
 --[[
@@ -289,7 +289,7 @@ local function CHD_GetGlobalInfo()
 	res.realmlist    = GetCVar("realmList");
 	local _, build   = GetBuildInfo();
 	res.clientbuild  = tonumber(build);
-	res.addonversion = tostring(CHD_VERSION);
+	res.addonversion = chardumps:GetVersion();
 	res.createtime   = time();
 	res.luaversion   = _VERSION;
 

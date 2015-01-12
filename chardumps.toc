@@ -1,10 +1,10 @@
 ## Interface: 30300
 ## Title: chardump|c00FF00FFs|r
-## Author: SlaFF
+## Author: gracerpro
 ## Version: 1.11
-## Notes: Dump of character created by |c00FF00FFS|rlaFF. Save your character!
+## Notes: Save your character and make dump now!
 ## eMail: gracerpro@gmail.com
-## OptionalDeps: Ace3
+## OptionalDeps:
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariablesPerCharacter: CHD_CLIENT,CHD_TAXI,CHD_OPTIONS
@@ -13,11 +13,12 @@ embeds.xml
 locales\enUS.lua
 locales\ruRU.lua
 
-b64.lua
-
 valid_bindings.lua
 
 global.lua
+
+b64.lua
+
 main_frame_handle.lua
 main_frame.lua
 crypt_client.lua

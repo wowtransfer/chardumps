@@ -1,8 +1,8 @@
 --[[
 
 --]]
-local L = LibStub("AceLocale-3.0"):GetLocale("chardumps");
---CHD_TAXI = CHD_TAXI or {};
+chardumps = chardumps or {};
+local L = chardumps:GetLocale();
 
 function CHD_GetTaxiText()
 	return L.chbTaxi .. string.format(" (%d, %d, %d, %d)",

@@ -6,14 +6,24 @@ print("CHD_TAXI: ", CHD_TAXI);
 print("CHD_OPTIONS: ", CHD_OPTIONS);
 print("MAX_NUM_CONTINENT: ", MAX_NUM_CONTINENT);
 --]]
-local L = LibStub("AceLocale-3.0"):GetLocale("chardumps");
+
+chardumps = chardumps or {};
+
+function chardumps:GetLocale()
+	return self.locale;
+end
+
+function chardumps:GetVersion()
+	return "1.11";
+end
+
+local L = chardumps:GetLocale();
 CHD = CHD or {};
 CHD_arrCheckboxes = {};
 CHD_SERVER_LOCAL = {};
 CHD_CLIENT = CHD_CLIENT or {};
 CHD_OPTIONS = CHD_OPTIONS or {};
 CHD_TAXI = CHD_TAXI or {};
-CHD_VERSION = "1.11";
 
 local _, clientBuild = GetBuildInfo();
 clientBuild = tonumber(clientBuild);

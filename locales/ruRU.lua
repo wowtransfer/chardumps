@@ -1,9 +1,10 @@
 --[[
 	Chardumps Localization: Russian
 --]]
-local L = LibStub('AceLocale-3.0'):NewLocale('chardumps', 'ruRU');
-if not L then
-	return
+local L = {};
+
+if (string.lower(GetLocale()) ~= "ruru") then
+	return false;
 end
 
 L.AddonName       = "Chardumps"
@@ -169,10 +170,12 @@ L.QuestWasCompleted = "было выполнено ранее"
 L.QuestCompleted  = "выполнено"
 L.DumpDone        = "Создано! Дамп находится здесь:\
 каталог WoW/\
- WTF/\
-  Account/\
-   %ИмяАккаунта%/\
-    %ИмяРеалма%/\
-     %ИмяПерсонажа%/\
-      SavedVariables/\
-       \124cFF00FF00chardumps.lua\124r"
+WTF/\
+Account/\
+%ИмяАккаунта%/\
+%ИмяРеалма%/\
+%ИмяПерсонажа%/\
+SavedVariables/\
+\124cFF00FF00chardumps.lua\124r";
+
+chardumps.locale = L;

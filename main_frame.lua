@@ -1,7 +1,8 @@
 --[[
 
 --]]
-local L = LibStub("AceLocale-3.0"):GetLocale("chardumps");
+chardumps = chardumps or {};
+local L = chardumps:GetLocale();
 local CHD_arrCheckboxes = CHD_arrCheckboxes or {};
 --CHD_OPTIONS = CHD_OPTIONS;
 --CHD_TAXI = CHD_TAXI or {};
