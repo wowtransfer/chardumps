@@ -45,7 +45,7 @@ L.chbTaxi         = "Taxi"
 
 L.chbCrypt        = "Crypt"
 
-L.loadmessage = "Addon is loaded, created by SlaFF, GracerPro@gmail.com"
+L.loadmessage = "Addon is loaded, created by gracerpro@gmail.com"
 
 -- Get...
 L.GetGlobal       = "Get global information"

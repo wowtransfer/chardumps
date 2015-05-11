@@ -44,7 +44,7 @@ if (string.lower(GetLocale()) == "ruru") then
 
 	L.chbCrypt        = "Шифрование"
 
-	L.loadmessage = "Аддон загружен, создатель SlaFF, GracerPro@gmail.com"
+	L.loadmessage = "Аддон загружен, создатель gracerpro@gmail.com"
 
 	-- Get...
 	L.GetGlobal       = "Чтение глобальной информации"
