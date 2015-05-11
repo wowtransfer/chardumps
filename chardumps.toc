@@ -8,7 +8,6 @@
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariablesPerCharacter: CHD_CLIENT,CHD_TAXI,CHD_OPTIONS
-embeds.xml
 
 locales\enUS.lua
 locales\ruRU.lua
