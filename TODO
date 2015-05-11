@@ -1,0 +1,4 @@
+* Remove functions from global storage
+* Add new interface, where each field has one or more frames
+* Add achievements hints (on tabard, food, npc)
+* Add bank and mail frames for hint
