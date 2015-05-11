@@ -629,24 +629,16 @@ local function CHD_GetCriteriasInfo()
 		--local name, parentID, flags = GetCategoryInfo(categoryId);
 		--if categoryId == 178 then --
 		local numItems, numCompleted = GetCategoryNumAchievements(categoryId); -- Returns the number of achievements/statistics to display in a category.
-		--local categoryItem = {};
-		--categoryItem.N = name;
---[[
-criteriaId == 4654, Достижения. Общее. Счастливое непонимание, Попробуйте 25 различных видов напитков
-criteriaId == 4654, Статистика. Расходные предменты персонажа.Количество различных выпитых напитков
-Совпадает
---]]
+
 		for i = 1, numItems do
 			local achievementID, name, points, completed, Month, Day, Year, description, flags, _, rewardText, isGuildAch = GetAchievementInfo(categoryId, i);
 			for j = 1, GetAchievementNumCriteria(achievementID) do
 				local description, type, completedCriteria, quantity, requiredQuantity, characterName, flags, assetID, quantityString, criteriaID = GetAchievementCriteriaInfo(achievementID, j);
 				if criteriaID and quantity > 0 then
-					--table.insert(categoryItem, criteriaID, {["Q"] = quantity, ["D"] = description, ["C"] = completedCriteria});
 					table.insert(res, criteriaID, quantity);
 				end
 			end
 		end
-		--table.insert(res, categoryId, categoryItem);
 	end
 
 	return res;
