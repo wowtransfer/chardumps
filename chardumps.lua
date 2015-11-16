@@ -1351,6 +1351,8 @@ function CHD_OnDumpClick()
 		CHD_CLIENT = dump;
 	end
 
+	CHD_frmMainbtnReload:Enable();
+
 	CHD_Message(L.CreatedDump);
 	CHD_Message(L.DumpDone);
 end

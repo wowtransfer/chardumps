@@ -294,6 +294,7 @@ function CHD_Init(self)
 	btn:ClearAllPoints();
 	btn:SetPoint("BOTTOM", 0, 10);
 	btn:SetPoint("RIGHT", -10 - 5 - 100, 0);
+	btn:Disable();
 
 	btn = CHD_CreateButton("btnHide", 10, chbHeight * 12, btnWidth, btnHeight, self);
 	btn:SetScript("OnClick", OnCHD_frmMainbtnHideClick);
