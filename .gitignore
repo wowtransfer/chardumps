@@ -1,0 +1,10 @@
+
+data/*
+nbproject/*
+
+build.settings
+*.proj
+
+
+!.gitignore
+!.gitkeep
