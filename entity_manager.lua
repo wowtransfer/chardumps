@@ -41,5 +41,17 @@ function entityManager:init()
   
 end
 
+---
+-- @return string[]
+function entityManager:GetNames()
+  if self.names == nil then
+    self.names = {};
+    for key, value in pairs(self.entities) do
+      table.insert(self.names, key);
+    end
+    sort(self.names);
+  end
+  return self.names;
+end
 
 chardumps.entityManager = entityManager;

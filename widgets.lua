@@ -1,44 +1,112 @@
 local chardumps = chardumps;
 local widgets = {
-  chbWidth = 24;
-  chbHeight = 22;
-  btnWidth = 20;
-  btnHeight = 20;
+  chbWidth = 24,
+  chbHeight = 22,
+  btnWidth = 20,
+  btnHeight = 20,
   --frameWidth = 540;
   --frameHeight = 310;
+  frameIndex = 0,
 };
 
-function widgets:CreateCheckbox(name, x, y, parent)
+---
+-- @param table parent
+-- @param table params
+-- @field [parent=#params] string text
+-- @field [parent=#params] string name
+-- @field [parent=#params] number x
+-- @field [parent=#params] number y
+-- @field [parent=#params] number cx
+-- @field [parent=#params] number cy
+-- @field [parent=#params] string tooltipTitle
+-- @field [parent=#params] string tooltip
+--
+function widgets:CreateCheckbox(parent, params)
   local L = chardumps:GetLocale();
-  local chbName = parent:GetName() .. name;
+  params = params or {};
+  parent = parent or UIParent;
+
+  local chbName;
+  if params.name ~= nil then
+    chbName = params.name;
+  else
+    chbName = parent:GetName() .. self:genFrameName();
+  end
+
   local chb = CreateFrame("CheckButton", chbName, parent, "ChatConfigCheckButtonTemplate");
-  chb:ClearAllPoints();
-  chb:SetPoint("TOPLEFT", parent, x, -y);
-  chb:SetWidth(self.chbWidth);
-  chb:SetHeight(self.chbHeight);
+
+  if params.x ~= nil and params.y ~= nil then
+    chb:ClearAllPoints();
+    chb:SetPoint("TOPLEFT", params.x, params.y);
+  end
+
+  params.cx = params.cx or widgets.chbWidth;
+  params.cy = params.cy or widgets.chbHeight;
+  chb:SetWidth(params.cx);
+  chb:SetHeight(params.cy);
+
   chb:SetChecked(true);
 
-  self:SetTooltip(chb, L[name], L["tt" .. name]);
+  params.tooltipTitle = params.tooltipTitle or L[chbName];
+  if params.tooltipTitle ~= nil then
+    widgets:SetTooltip(chb, params.tooltipTitle, L["tt" .. chbName]);
+  end
 
-  local chbText = getglobal(chbName .. "Text");
-  chbText:SetText(L[name]);
+  local chbText = getglobal(chb:GetName() .. "Text");
+  print(chb:GetName(), chbText);
+  params.text = params.text or L[chbName];
+  chbText:SetText(params.text);
 
   return chb;
 end
 
-function widgets:CreateButton(name, x, y, cx, cy, parent, title)
+---
+-- @return string
+function widgets:genFrameName()
+  self.frameIndex = self.frameIndex + 1;
+  return "chdFrame" .. self.frameIndex;
+end
+
+---
+-- @param table params
+-- @field [parent=#params] string text
+-- @field [parent=#params] string name
+-- @field [parent=#params] number x
+-- @field [parent=#params] number y Relative TOPLEFT
+-- @field [parent=#params] number cx
+-- @field [parent=#params] number cy
+-- @field [parent=#params] string tooltipTitle
+-- @field [parent=#params] string tooltip
+--
+function widgets:CreateButton(parent, params)
   local L = chardumps:GetLocale();
-  local btnName = parent:GetName() .. name;
-  local btn = CreateFrame("Button", btnName, parent, "OptionsButtonTemplate");
-  btn:ClearAllPoints();
-  btn:SetPoint("TOPLEFT", parent, x, -y);
-  btn:SetWidth(cx);
-  btn:SetHeight(cy);
-  if not title then
-    title = L[name];
+  params = params or {};
+  parent = parent or UIParent;
+
+  local btnName;
+  if params.name ~= nil then
+    btnName = params.name;
+  else
+    btnName = parent:GetName() .. self:genFrameName();
   end
-  widgets:SetTooltip(btn, title, L["tt" .. name]);
-  btn:SetText(L[name]);
+
+  local btn = CreateFrame("Button", btnName, parent, "OptionsButtonTemplate");
+  if params.x ~= nil and params.y ~= nil then
+    btn:ClearAllPoints();
+    btn:SetPoint("TOPLEFT", parent, params.x, params.y);
+  end
+
+  params.cx = params.cx or widgets.btnWidth;
+  params.cy = params.cy or widgets.btnHeight;
+  btn:SetWidth(params.cx);
+  btn:SetHeight(params.cy);
+
+  params.tooltipTitle = params.tooltipTitle or L[btnName];
+  if params.tooltipTitle ~= nil then
+    widgets:SetTooltip(btn, params.tooltipTitle, L["tt" .. btnName]);
+  end
+  params.text = params.text or L[btnName];
+  btn:SetText(params.text);
 
   return btn;
 end
@@ -134,6 +202,9 @@ end
 ---
 -- Add tooltip to the frame
 function widgets:SetTooltip(frame, title, text)
+  if title == nil then
+    return false;
+  end
   frame.tooltipTitle = title;
   frame.tooltipText = text;
   frame:SetScript("OnEnter", function()
@@ -166,10 +237,8 @@ function widgets:GetBackdrop()
   return backdrop;
 end
 
-local framePrefix = "chd";
-
 function widgets:GetFrameName(name, parentName)
-  local result = framePrefix;
+  local result = "";
   if parentName ~= nil and type(parentName) == "string" then
     result = result .. parentName:sub(1, 1):upper() .. parentName:sub(2);
   end

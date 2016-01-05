@@ -43,31 +43,51 @@ function mainFrame:init()
   frameMin:Show();
 
   local btn;
-  btn = widgets:CreateButton("btnHide", 0, 0, widgets.btnWidth, widgets.btnHeight, frame);
+  btn = widgets:CreateButton(frameMin, {name = "btnHide"});
   btn:SetScript("OnClick", self.OnHideClick);
-  btn:SetParent(frameMin);
   btn:ClearAllPoints();
-  btn:SetPoint("CENTER", frameMin, 0, 0);
-  btn:SetPoint("RIGHT", frameMin, -11, 0);
+  btn:SetPoint("CENTER", 0, 0);
+  btn:SetPoint("RIGHT", -11, 0);
 
-  btn = widgets:CreateButton("btnMinimize", 0, 0, widgets.btnWidth, widgets.btnHeight, frame);
+  btn = widgets:CreateButton(frameMin, {name = "btnMinimize"});
   btn:SetScript("OnClick", self.OnMinimizeClick);
-  btn:SetParent(frameMin);
   btn:ClearAllPoints();
-  btn:SetPoint("CENTER", frameMin, 0, 0);
-  btn:SetPoint("RIGHT", frameMin, -14 - btnW, 0);
+  btn:SetPoint("CENTER", 0, 0);
+  btn:SetPoint("RIGHT", -14 - btnW, 0);
 
-  btn = widgets:CreateButton("btnDump", 0, 0, 100, widgets.btnHeight, frame);
+  btn = widgets:CreateButton(frame, {name = "btnDump", cx = 100});
   btn:ClearAllPoints();
   btn:SetScript("OnClick", self.OnDumpClick);
   btn:SetPoint("BOTTOMRIGHT", -10, 10);
 
-  self.btnSave = widgets:CreateButton("btnReload", 0, 0, 100, widgets.btnHeight, frame);
+  self.btnSave = widgets:CreateButton(frame, {name = "btnReload", cx = 100});
   self.btnSave:ClearAllPoints();
   self.btnSave:SetScript("OnClick", self.OnSaveClick);
   self.btnSave:SetPoint("BOTTOMRIGHT", -10 - 5 - 100, 10);
   self.btnSave:Disable();
 
+
+  -- Checkbox list
+  
+  -- checkbox
+  -- button
+  -- text
+
+  local y = 30;
+  local x = 0;
+  local entityNames = chardumps.entityManager:GetNames();
+
+  for i, name in pairs(entityNames) do
+    local btn = widgets:CreateButton(frame, {x = 10, y = -y, cx = 12, cy = 12, tooltipTitle = "Delete"});
+    btn.chdEntityName = name;
+    local text = L[name];
+    print(name);
+    local chb = widgets:CreateCheckbox(frame, {x = 26, y = -y, cx = 14, cy = 14, tooltipTitle = text, text = text});
+    chb.chdEntityName = name;
+
+    y = y + 14;
+  end
+  
 --[[
   -- frames
   local chb = CHD_CreateCheckBox("chbCrypt", 10, 10, frame);

@@ -1343,8 +1343,7 @@ function CHD_OnDumpClick()
 
 	CHD_frmMainbtnReload:Enable();
 
-	CHD_Message(L.CreatedDump);
-	CHD_Message(L.DumpDone);
+	
 end
 
 local CHD_frmMain = CreateFrame("Frame", "CHD_frmMain", UIParent); -- global main form
