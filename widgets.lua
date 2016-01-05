@@ -111,6 +111,7 @@ function widgets:CreateButton(parent, params)
 end
 
 local function CreateMessageBox()
+  local L = chardumps:GetLocale();
   local dialog = CreateFrame("Frame", nil, UIParent);
 
   dialog:ClearAllPoints();
@@ -164,8 +165,8 @@ local function CreateMessageBox()
   dialog.YesButton:SetHeight(24);
   dialog.YesButton:SetPoint("BOTTOMRIGHT", dialog, "BOTTOM", -4, 4);
   dialog.YesButton:SetScript("OnClick", function()
-    if dialog.onOK then
-      dialog:onOK();
+    if dialog.onOk then
+      dialog:onOk();
     end
     dialog:Hide();
   end);
@@ -182,8 +183,6 @@ local function CreateMessageBox()
     dialog.Title:SetText(title);
   end
 
-  --dialog:Hide();
-
   return dialog;
 end
 
@@ -193,9 +192,9 @@ function widgets:ShowMessageBox(title, onOk)
   if self.messageBox == nil then
     self.messageBox = CreateMessageBox();
   end
-  self.messageBox:setTitle(title);
+  self.messageBox:SetTitle(title);
   self.messageBox.onOk = onOk;
-  self.messageBox.Show();
+  self.messageBox:Show();
 end
 
 ---

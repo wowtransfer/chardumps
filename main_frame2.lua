@@ -83,15 +83,19 @@ function mainFrame:init()
 
   local btnDeleteAllTooltip = L.deleteAll;
   local btn = widgets:CreateButton(frame, {x = 10, y = -10, cx = 12, cy = 12, tooltipTitle = btnDeleteAllTooltip});
+  btn:SetScript("OnClick", self.OnDeleteAllClick);
   local chbAllTooltip = L.ttchbAll;
   local chbAll = widgets:CreateCheckbox(frame, {x = 26, y = -10, cx = 14, cy = 14, tooltipTitle = chbAllTooltip});
+  chbAll:SetScript("OnClick", self.OnChbAllClick);
 
+  self.entityCheckboxes = {};
   for i, name in pairs(entityNames) do
     local btn = widgets:CreateButton(frame, {x = 10, y = -y, cx = 12, cy = 12, tooltipTitle = "Delete"});
     btn.chdEntityName = name;
     local text = L[name];
     local chb = widgets:CreateCheckbox(frame, {x = 26, y = -y, cx = 14, cy = 14, tooltipTitle = text, text = text});
     chb.chdEntityName = name;
+    table.insert(self.entityCheckboxes, chb);
 
     y = y + 14;
   end
@@ -186,6 +190,20 @@ end
 
 function mainFrame:OnSaveClick()
 	ReloadUI();
+end
+
+function mainFrame:OnDeleteAllClick()
+  local L = chardumps:GetLocale();
+  chardumps.widgets:ShowMessageBox(L.areyousure, function()
+    print("Delete all...");
+  end);
+end
+
+function mainFrame:OnChbAllClick()
+  local checked = self:GetChecked();
+  for _, chb in pairs(mainFrame.entityCheckboxes) do
+    chb:SetChecked(checked);
+  end
 end
 
 function mainFrame:OnMinimizeClick()
