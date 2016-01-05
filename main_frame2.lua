@@ -5,9 +5,36 @@ local mainFrame = {
     -- entityName = {
       -- checkbox (Yes/No),
       -- Data View (Frame),
-      -- Delete Button (Button)}
+      -- Delete Button (Button)
+      -- Active Button (Button)
+    -- }
+  },
+  captionHeight = 30,
+  bttomPanelHeight = 40,
+  defaultWidth = 600,
+  defaultHeight = 440,
+  defaultEntityWidth = 200,
+  dataFrame = {
+    defaultTop = 30,
+    defaultLeft = 210,
+    defaultWidth = 400,
+    defaultHeight = 380,
   },
 };
+
+function mainFrame:CreateEntityFrame(name, parent)
+  local frameName = chardumps.widgets:genFrameName();
+  local frame = CreateFrame("ScrollingMessageFrame", frameName, parent);
+  frame:ClearAllPoints();
+  frame:SetPoint("TOPRIGHT", -10, -self.dataFrame.defaultTop);
+  frame:SetWidth(self.dataFrame.defaultWidth);
+  frame:SetHeight(self.dataFrame.defaultHeight);
+  frame:SetBackdrop(chardumps.widgets:GetBackdrop());
+  frame:SetFontObject("GameFontNormal");
+  frame:Hide();
+
+  return frame;
+end
 
 function mainFrame:init()
   local L = chardumps:GetLocale();
@@ -16,10 +43,11 @@ function mainFrame:init()
 
   frame:EnableMouse(true);
   frame:SetMovable(true);
+  frame:SetResizable(true); 
   frame:ClearAllPoints();
   frame:SetPoint("CENTER", UIParent);
-  frame:SetWidth(600);
-  frame:SetHeight(440);
+  frame:SetWidth(self.defaultWidth);
+  frame:SetHeight(self.defaultHeight);
   frame:SetFrameStrata("DIALOG");
   frame:SetScript("OnLoad", self.OnLoad);
   frame:SetScript("OnEvent", self.OnEvent);
@@ -95,19 +123,26 @@ function mainFrame:init()
   for i, name in pairs(entityNames) do
     local btn = widgets:CreateButton(frame, {x = 10, y = -y, cx = 12, cy = 12, tooltipTitle = "Delete"});
     btn.chdEntityName = name;
+    local btnActive = widgets:CreateButton(frame, {x = 26, y = -y, cx = 12, cy = 12, tooltipTitle = "Active"});
+    btnActive.chdEntityName = name;
+    btnActive:SetScript("OnClick", function()
+      mainFrame:SetActiveDataFrame(btnActive.chdEntityName);
+    end);
     local text = L[name];
-    local chb = widgets:CreateCheckbox(frame, {x = 26, y = -y, cx = 14, cy = 14, tooltipTitle = text, text = text});
+    local chb = widgets:CreateCheckbox(frame, {x = 40, y = -y, cx = 14, cy = 14, tooltipTitle = text, text = text});
     chb.chdEntityName = name;
 
     local entityData = {};
     entityData.checkbox = chb;
     entityData.deleteButton = btn;
-    entityData.dataView = nil;
+    entityData.activeButton = btnActive;
+    entityData.dataFrame = self:CreateEntityFrame(name, frame);
     self.entitiesData[name] = entityData;
 
     y = y + 14;
   end
-  
+  self:SetActiveDataFrame();
+
 --[[
   -- frames
   local chb = CHD_CreateCheckBox("chbCrypt", 10, 10, frame);
@@ -169,6 +204,19 @@ function mainFrame:init()
 
   self.frameMin = frameMin;
   self.frame = frame;
+end
+
+function mainFrame:SetActiveDataFrame(name)
+  if name == nil then
+    local entityNames = chardumps.entityManager:GetNames();
+    name = entityNames[1];
+  end
+  if self.activeDataDrame ~= nil then
+    self.activeDataDrame:Hide();
+  end
+  local frame = self.entitiesData[name].dataFrame;
+  frame:Show();
+  self.activeDataDrame = frame;
 end
 
 function mainFrame:OnHideClick()
