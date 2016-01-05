@@ -43,17 +43,21 @@ function mainFrame:init()
   frameMin:Show();
 
   local btn;
-  btn = widgets:CreateButton(frameMin, {name = "btnHide"});
+  btn = widgets:CreateButton(frameMin);
+  btn:SetText("x");
   btn:SetScript("OnClick", self.OnHideClick);
   btn:ClearAllPoints();
   btn:SetPoint("CENTER", 0, 0);
   btn:SetPoint("RIGHT", -11, 0);
+  widgets:SetTooltip(btn, L.ttbtnHide);
 
-  btn = widgets:CreateButton(frameMin, {name = "btnMinimize"});
+  btn = widgets:CreateButton(frameMin);
+  btn:SetText("_");
   btn:SetScript("OnClick", self.OnMinimizeClick);
   btn:ClearAllPoints();
   btn:SetPoint("CENTER", 0, 0);
   btn:SetPoint("RIGHT", -14 - btnW, 0);
+  widgets:SetTooltip(btn, L.ttbtnMinimize);
 
   btn = widgets:CreateButton(frame, {name = "btnDump", cx = 100});
   btn:ClearAllPoints();
@@ -81,7 +85,6 @@ function mainFrame:init()
     local btn = widgets:CreateButton(frame, {x = 10, y = -y, cx = 12, cy = 12, tooltipTitle = "Delete"});
     btn.chdEntityName = name;
     local text = L[name];
-    print(name);
     local chb = widgets:CreateCheckbox(frame, {x = 26, y = -y, cx = 14, cy = 14, tooltipTitle = text, text = text});
     chb.chdEntityName = name;
 

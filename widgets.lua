@@ -53,7 +53,6 @@ function widgets:CreateCheckbox(parent, params)
   end
 
   local chbText = getglobal(chb:GetName() .. "Text");
-  print(chb:GetName(), chbText);
   params.text = params.text or L[chbName];
   chbText:SetText(params.text);
 
