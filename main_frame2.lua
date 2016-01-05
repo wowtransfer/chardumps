@@ -23,14 +23,39 @@ function mainFrame:init()
   frame:SetBackdrop(chardumps.widgets:GetBackdrop());
   frame:SetFrameStrata("DIALOG");
   frame:Show();
-  local title = frame:CreateTitleRegion();
-  title:SetAllPoints();
+  local titleRegion = frame:CreateTitleRegion();
+  titleRegion:SetAllPoints();
 
   local str = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
   str:SetPoint("CENTER", frame, 0, 0);
   str:SetPoint("TOP", frame, 0, -5);
   str:SetTextColor(1.0, 1.0, 0.0, 1.0);
   str:SetText(L.AddonName .. " v " .. L.Version);
+
+
+  local btnW = widgets.btnWidth;
+  local frameMin = CreateFrame("Frame", widgets:GetFrameName("minFrame", frame:GetName()), frame);
+  -- frameMin:CreateTitleRegion():SetAllPoints(); TODO
+  frameMin:ClearAllPoints();
+  frameMin:SetPoint("TOPRIGHT", frame, 0, 0);
+  frameMin:SetWidth(5 + 5 + btnW*3 + 3*3 + 5);
+  frameMin:SetHeight(5 + widgets.btnHeight + 5);
+  frameMin:Show();
+
+  local btn;
+  btn = widgets:CreateButton("btnHide", 0, 0, widgets.btnWidth, widgets.btnHeight, frame);
+  btn:SetScript("OnClick", self.OnHideClick);
+  btn:SetParent(frameMin);
+  btn:ClearAllPoints();
+  btn:SetPoint("CENTER", frameMin, 0, 0);
+  btn:SetPoint("RIGHT", frameMin, -11, 0);
+
+  btn = widgets:CreateButton("btnMinimize", 0, 0, widgets.btnWidth, widgets.btnHeight, frame);
+  btn:SetScript("OnClick", self.OnMinimizeClick);
+  btn:SetParent(frameMin);
+  btn:ClearAllPoints();
+  btn:SetPoint("CENTER", frameMin, 0, 0);
+  btn:SetPoint("RIGHT", frameMin, -14 - btnW, 0);
 
 --[[
   -- frames
@@ -102,33 +127,31 @@ function mainFrame:init()
   btn:SetPoint("RIGHT", -10 - 5 - 100, 0);
   btn:Disable();
 
-  btn = CHD_CreateButton("btnHide", 10, chbHeight * 12, btnWidth, btnHeight, frame);
-  btn:SetScript("OnClick", OnCHD_frmMainbtnHideClick);
-  btn = CHD_CreateButton("btnMinimize", 10, chbHeight * 12, btnWidth, btnHeight, frame);
-  btn:SetScript("OnClick", OnCHD_frmMainbtnMinimizeClick);
-
-  local btnW = btn:GetWidth();
-  local panSystem = CreateFrame("Frame", frame:GetName() .. "panSystem", frame);
-  panSystem:ClearAllPoints();
-  panSystem:SetPoint("TOPRIGHT", frame, 0, 0);
-  panSystem:SetWidth(5 + 5 + btnW*2 + 3*3 + 5);
-  panSystem:SetHeight(5 + btn:GetHeight() + 5);
-  panSystem:Show();
-
-  btn = getglobal(frame:GetName() .. "btnHide");
-  btn:SetParent(panSystem);
-  btn:ClearAllPoints();
-  btn:SetPoint("CENTER", panSystem, 0, 0);
-  btn:SetPoint("RIGHT", panSystem, -11, 0);
-  btn = getglobal(frame:GetName() .. "btnMinimize");
-  btn:SetParent(panSystem);
-  btn:ClearAllPoints();
-  btn:SetPoint("CENTER", panSystem, 0, 0);
-  btn:SetPoint("RIGHT", panSystem, -14 - btnW, 0);
-
 --]]
 
+  self.frameMin = frameMin;
   self.frame = frame;
+end
+
+function mainFrame:OnHideClick()
+  mainFrame.frameMin:Hide();
+  mainFrame.frame:Hide();
+end
+
+function mainFrame:OnMinimizeClick()
+  local frame = mainFrame.frame;
+  local frameMin = mainFrame.frameMin;
+  if frame:IsVisible() then
+    frameMin:SetBackdrop(chardumps.widgets:GetBackdrop());
+    frameMin:SetParent(UIParent);
+    frame:Hide();
+    chardumps.options.mimimize = true;
+  else
+    frameMin:SetBackdrop(nil);
+    frameMin:SetParent(frame);
+    frame:Show();
+    chardumps.options.mimimize = false;
+  end
 end
 
 function mainFrame:OnLoad()

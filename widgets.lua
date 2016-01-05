@@ -1,14 +1,21 @@
 local chardumps = chardumps;
-local widgets = {};
+local widgets = {
+  chbWidth = 24;
+  chbHeight = 22;
+  btnWidth = 20;
+  btnHeight = 20;
+  --frameWidth = 540;
+  --frameHeight = 310;
+};
 
-function widgets:checkbox(name, x, y, parent)
+function widgets:CreateCheckbox(name, x, y, parent)
   local L = chardumps:GetLocale();
   local chbName = parent:GetName() .. name;
   local chb = CreateFrame("CheckButton", chbName, parent, "ChatConfigCheckButtonTemplate");
   chb:ClearAllPoints();
   chb:SetPoint("TOPLEFT", parent, x, -y);
-  chb:SetWidth(chbWidth);
-  chb:SetHeight(chbHeight);
+  chb:SetWidth(self.chbWidth);
+  chb:SetHeight(self.chbHeight);
   chb:SetChecked(true);
 
   self:SetTooltip(chb, L[name], L["tt" .. name]);
@@ -19,15 +26,7 @@ function widgets:checkbox(name, x, y, parent)
   return chb;
 end
 
-local chbWidth = 24;
-local chbHeight = 22;
-local btnWidth = 20;
-local btnHeight = 20;
-local frameWidth = 540;
-local frameHeight = 310;
-
-
-function widgets:button(name, x, y, cx, cy, parent, title)
+function widgets:CreateButton(name, x, y, cx, cy, parent, title)
   local L = chardumps:GetLocale();
   local btnName = parent:GetName() .. name;
   local btn = CreateFrame("Button", btnName, parent, "OptionsButtonTemplate");
@@ -44,7 +43,7 @@ function widgets:button(name, x, y, cx, cy, parent, title)
   return btn;
 end
 
-local function createMessageBox()
+local function CreateMessageBox()
   local dialog = CreateFrame("Frame", nil, UIParent);
 
   dialog:ClearAllPoints();
@@ -123,9 +122,9 @@ end
 
 ---
 -- Simple dialog with Ok and Cancel buttons
-function widgets:showMessageBox(title, onOk)
+function widgets:ShowMessageBox(title, onOk)
   if self.messageBox == nil then
-    self.messageBox = createMessageBox();
+    self.messageBox = CreateMessageBox();
   end
   self.messageBox:setTitle(title);
   self.messageBox.onOk = onOk;
