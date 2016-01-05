@@ -57,6 +57,17 @@ function mainFrame:init()
   btn:SetPoint("CENTER", frameMin, 0, 0);
   btn:SetPoint("RIGHT", frameMin, -14 - btnW, 0);
 
+  btn = widgets:CreateButton("btnDump", 0, 0, 100, widgets.btnHeight, frame);
+  btn:ClearAllPoints();
+  btn:SetScript("OnClick", self.OnDumpClick);
+  btn:SetPoint("BOTTOMRIGHT", -10, 10);
+
+  btn = widgets:CreateButton("btnReload", 0, 0, 100, widgets.btnHeight, frame);
+  btn:ClearAllPoints();
+  btn:SetScript("OnClick", self.OnSaveClick);
+  btn:SetPoint("BOTTOMRIGHT", -10 - 5 - 100, 10);
+  btn:Disable();
+
 --[[
   -- frames
   local chb = CHD_CreateCheckBox("chbCrypt", 10, 10, frame);
@@ -114,18 +125,7 @@ function mainFrame:init()
   local btn = CHD_CreateButton("btnQuestQuery", 180, chbHeight * 9 + 8, 150, btnHeight, frame);
   btn:SetScript("OnClick", CHD_OnQueryQuestClick);
 
-  btn = CHD_CreateButton("btnDump", 0, 0, 100, btnHeight, frame);
-  btn:SetScript("OnClick", CHD_OnDumpClick);
-  btn:ClearAllPoints();
-  btn:SetPoint("BOTTOM", 0, 10);
-  btn:SetPoint("RIGHT", -10, 0);
-
-  btn = CHD_CreateButton("btnReload", 0, 0, 100, btnHeight, frame);
-  btn:SetScript("OnClick", CHD_OnReloadClick);
-  btn:ClearAllPoints();
-  btn:SetPoint("BOTTOM", 0, 10);
-  btn:SetPoint("RIGHT", -10 - 5 - 100, 0);
-  btn:Disable();
+  
 
 --]]
 
@@ -147,6 +147,14 @@ function mainFrame:Show()
   mainFrame.frameMin:SetParent(mainFrame.frame);
   mainFrame.frameMin:Show();
   mainFrame.frame:Show();
+end
+
+function mainFrame:OnDumpClick()
+
+end
+
+function mainFrame:OnSaveClick()
+	
 end
 
 function mainFrame:OnMinimizeClick()
