@@ -62,11 +62,11 @@ function mainFrame:init()
   btn:SetScript("OnClick", self.OnDumpClick);
   btn:SetPoint("BOTTOMRIGHT", -10, 10);
 
-  btn = widgets:CreateButton("btnReload", 0, 0, 100, widgets.btnHeight, frame);
-  btn:ClearAllPoints();
-  btn:SetScript("OnClick", self.OnSaveClick);
-  btn:SetPoint("BOTTOMRIGHT", -10 - 5 - 100, 10);
-  btn:Disable();
+  self.btnSave = widgets:CreateButton("btnReload", 0, 0, 100, widgets.btnHeight, frame);
+  self.btnSave:ClearAllPoints();
+  self.btnSave:SetScript("OnClick", self.OnSaveClick);
+  self.btnSave:SetPoint("BOTTOMRIGHT", -10 - 5 - 100, 10);
+  self.btnSave:Disable();
 
 --[[
   -- frames
@@ -125,8 +125,6 @@ function mainFrame:init()
   local btn = CHD_CreateButton("btnQuestQuery", 180, chbHeight * 9 + 8, 150, btnHeight, frame);
   btn:SetScript("OnClick", CHD_OnQueryQuestClick);
 
-  
-
 --]]
 
   self.frameMin = frameMin;
@@ -150,11 +148,16 @@ function mainFrame:Show()
 end
 
 function mainFrame:OnDumpClick()
+  local L = chardumps:GetLocale();
 
+  
+  mainFrame.btnSave:Enable();
+  chardumps.log.message(L.CreatedDump);
+  chardumps.log.message(L.DumpDone);
 end
 
 function mainFrame:OnSaveClick()
-	
+	ReloadUI();
 end
 
 function mainFrame:OnMinimizeClick()
