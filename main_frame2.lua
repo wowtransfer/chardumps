@@ -134,8 +134,19 @@ function mainFrame:init()
 end
 
 function mainFrame:OnHideClick()
+  mainFrame.Hide();
+end
+
+function mainFrame:Hide()
   mainFrame.frameMin:Hide();
   mainFrame.frame:Hide();
+end
+
+function mainFrame:Show()
+  mainFrame.frameMin:SetBackdrop(nil);
+  mainFrame.frameMin:SetParent(mainFrame.frame);
+  mainFrame.frameMin:Show();
+  mainFrame.frame:Show();
 end
 
 function mainFrame:OnMinimizeClick()

@@ -82,28 +82,6 @@ function OnCHD_frmMainbtnSkillSpellDelClick()
 	CHD.MessageBox:Show();
 end
 
-
-function OnCHD_frmMainbtnMinimizeClick()
-	if CHD_frmMain:IsVisible() then
-		CHD_frmMainpanSystem:SetBackdrop(chardumps.widgets:getBackdrop());
-		CHD_frmMainpanSystem:SetParent("UIParent");
-		CHD_frmMain:Hide();
-		CHD_OPTIONS.chbMinimize = true;
-	else
-		CHD_frmMainpanSystem:SetBackdrop(nil);
-		CHD_frmMainpanSystem:SetParent(CHD_frmMain);
-		CHD_frmMain:Show();
-		CHD_OPTIONS.chbMinimize = false;
-	end
-end
-
-function OnCHD_frmMainbtnHideClick()
-	if CHD_frmMainpanSystem:IsVisible() then
-		CHD_frmMainpanSystem:Hide();
-	end
-	CHD_frmMain:Hide();
-end
-
 local function CHD_OnReloadClick()
 	ReloadUI();
 end

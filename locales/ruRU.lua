@@ -9,7 +9,7 @@ local chardumps = chardumps or {};
 local L = {};
 
 L.AddonName       = "Chardumps"
-L.Version         = "1.11"
+L.Version         = "2.1"
 
 -- help
 L.help1 = "/chardumps or /chd -- консольная команда"

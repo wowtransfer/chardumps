@@ -67,8 +67,12 @@ function chardumps:initSlashCommands()
     dump = function() print("dump...") end,
     clear = function() print("clear...") end,
     save = function() print("save...") end,
-    show = function() print("show...") end,
-    hide = function() print("hide...") end,
+    show = function()
+      chardumps.mainFrame:Show();
+    end,
+    hide = function()
+      chardumps.mainFrame.OnHideClick();
+    end,
     version = function() print("version...") end,
   };
 
