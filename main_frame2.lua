@@ -81,6 +81,11 @@ function mainFrame:init()
   local x = 0;
   local entityNames = chardumps.entityManager:GetNames();
 
+  local btnDeleteAllTooltip = L.deleteAll;
+  local btn = widgets:CreateButton(frame, {x = 10, y = -10, cx = 12, cy = 12, tooltipTitle = btnDeleteAllTooltip});
+  local chbAllTooltip = L.ttchbAll;
+  local chbAll = widgets:CreateCheckbox(frame, {x = 26, y = -10, cx = 14, cy = 14, tooltipTitle = chbAllTooltip});
+
   for i, name in pairs(entityNames) do
     local btn = widgets:CreateButton(frame, {x = 10, y = -y, cx = 12, cy = 12, tooltipTitle = "Delete"});
     btn.chdEntityName = name;
