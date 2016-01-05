@@ -1,24 +1,28 @@
 ## Interface: 30300
-## Title: chardump|c00FF00FFs|r
+## Title: chardumps
 ## Author: gracerpro
-## Version: 1.11
+## Version: 2.1
+## X-Date: 2016-01-07
+## X-Website: http://wowtransfer.com
+## X-Feedback: admin@wowtransfer.com
 ## Notes: Save your character and make dump now!
 ## eMail: gracerpro@gmail.com
-## OptionalDeps:
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariablesPerCharacter: CHD_CLIENT,CHD_TAXI,CHD_OPTIONS
 
+global.lua
 locales\enUS.lua
 locales\ruRU.lua
-
 valid_bindings.lua
-
-global.lua
-
 b64.lua
 
-main_frame_handle.lua
-main_frame.lua
-crypt_client.lua
-chardumps.lua
+encryption.lua
+functions.lua
+entity_manager.lua
+widgets.lua
+options.lua
+dumper.lua
+log.lua
+main_frame2.lua
+chardumps2.lua

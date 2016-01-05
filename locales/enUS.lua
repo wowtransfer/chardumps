@@ -1,8 +1,7 @@
 --[[
 	Chardumps Localization: English
 --]]
-chardumps = chardumps or {};
-
+local chardumps = chardumps or {};
 local L = {};
 
 L.AddonName       = "Chardumps"

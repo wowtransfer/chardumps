@@ -1,74 +1,10 @@
---[[
-
---]]
-chardumps = chardumps or {};
+local chardumps = chardumps;
 local L = chardumps:GetLocale();
 local CHD_arrCheckboxes = CHD_arrCheckboxes or {};
---CHD_OPTIONS = CHD_OPTIONS;
---CHD_TAXI = CHD_TAXI or {};
 
-local chbWidth = 24;
-local chbHeight = 22;
-local btnWidth = 20;
-local btnHeight = 20;
-local FrameWidth = 540;
-local FrameHeight = 310;
 
-local function CHD_CreateCheckBox(name, x, y, parent)
-	local chbName = parent:GetName() .. name;
-	local chb = CreateFrame("CheckButton", chbName, parent, "ChatConfigCheckButtonTemplate");
-	chb:ClearAllPoints();
-	chb:SetPoint("TOPLEFT", parent, x, -y);
-	chb:SetWidth(chbWidth);
-	chb:SetHeight(chbHeight);
-	chb:SetChecked(true);
 
-	SetTooltip(chb, L[name], L["tt" .. name]);
 
-	local chbText = getglobal(chbName .. "Text");
-	chbText:SetText(L[name]);
-
-	return chb;
-end
-
-local function CHD_CreateButton(name, x, y, cx, cy, parent, title)
-	local btnName = parent:GetName() .. name;
-	local btn = CreateFrame("Button", btnName, parent, "OptionsButtonTemplate");
-	btn:ClearAllPoints();
-	btn:SetPoint("TOPLEFT", parent, x, -y);
-	btn:SetWidth(cx);
-	btn:SetHeight(cy);
-	if not title then
-		title = L[name];
-	end
-	SetTooltip(btn, title, L["tt" .. name]);
-	btn:SetText(L[name]);
-
-	return btn;
-end
-
-local function CHD_CreateEditLabel(name, parent, anchorPoint, x, y, cx, cy, title, maxLen)
-	local edt = CreateFrame("EditBox", parent:GetName() .. name, parent, "InputBoxTemplate");
-	edt:ClearAllPoints();
-	edt:SetPoint(anchorPoint, x, y);
-	edt:SetTextInsets(0, 0, 3, 3);
-	edt:SetWidth(cx);
-	edt:SetHeight(cy);
-	edt:SetAutoFocus(false);
-	if maxLen then
-		edt:SetMaxLetters(maxLen);
-	end
-
-	local label = parent:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
-	label:SetPoint("TOPRIGHT", edt, "TOPLEFT", -10, 0);
-	label:SetJustifyH("LEFT");
-	label:SetHeight(cy - 2);
-	label:SetText(title);
-
-	edt.label = label;
-
-	return edt;
-end
 
 function OnCHD_frmMainbtnCheckAllClick()
 	for k,v in pairs(CHD_arrCheckboxes) do
@@ -149,7 +85,7 @@ end
 
 function OnCHD_frmMainbtnMinimizeClick()
 	if CHD_frmMain:IsVisible() then
-		CHD_frmMainpanSystem:SetBackdrop(CHD_GetBackdrop());
+		CHD_frmMainpanSystem:SetBackdrop(chardumps.widgets:getBackdrop());
 		CHD_frmMainpanSystem:SetParent("UIParent");
 		CHD_frmMain:Hide();
 		CHD_OPTIONS.chbMinimize = true;
@@ -184,27 +120,7 @@ function CHD_OnQueryQuestClick()
 	end
 end;
 
-function CHD_SlashCmdHandler(cmd)
-	local cmdlist = {strsplit(" ", cmd)};
-
-	if cmdlist[1] == "show" then
-		CHD_frmMainpanSystem:SetBackdrop(nil);
-		CHD_frmMainpanSystem:SetParent(CHD_frmMain);
-		CHD_frmMainpanSystem:Show();
-		CHD_frmMain:Show();
-	elseif cmdlist[1] == "debug" then
-		CHD_Debug();
-	else
-		CHD_Message(L.help1);
-		CHD_Message(L.help2);
-		CHD_Message(L.help3);
-	end
-end
-
 function CHD_Init(self)
-	SlashCmdList["CHD"] = CHD_SlashCmdHandler;
-	SLASH_CHD1 = "/chardumps";
-	SLASH_CHD2 = "/chd";
 
 	self:EnableMouse(true);
 	self:SetMovable(true);
@@ -215,7 +131,7 @@ function CHD_Init(self)
 	self:SetFrameStrata("DIALOG");
 	self:SetScript("OnLoad", CHD_OnLoad);
 	self:SetScript("OnEvent", CHD_OnEvent);
-	self:SetBackdrop(CHD_GetBackdrop());
+	self:SetBackdrop(chardumps.widgets:getBackdrop());
 	self:SetFrameStrata("DIALOG");
 	self:Show();
 	local title = self:CreateTitleRegion();
@@ -319,8 +235,6 @@ function CHD_Init(self)
 	btn:ClearAllPoints();
 	btn:SetPoint("CENTER", panSystem, 0, 0);
 	btn:SetPoint("RIGHT", panSystem, -14 - btnW, 0);
-
-	CHD_CreateEditLabel("edtTotalTime", self, "BOTTOMRIGHT", -10, 62, 45, 20, L.TotalTime, 5);
 
 	CHD_OnLoad(self);
 end

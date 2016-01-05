@@ -1,4 +1,6 @@
-CHD_bindings = {
+local chardumps = chardumps;
+
+chardumps.bindings = {
 	["TARGETPET"] = true,
 	["ACTIONPAGE4"] = true,
 	["TOGGLEKEYRING"] = true,

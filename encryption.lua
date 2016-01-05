@@ -1,4 +1,7 @@
-local function chd_encode_string(s)
+local chardumps = chardumps;
+local encryption = {};
+
+local function encodeString(s)
 	s = string.gsub(s,"\\","\\\\");
 	s = string.gsub(s,"\"","\\\"");
 --	s = string.gsub(s,"'","\\'");
@@ -19,25 +22,25 @@ values:
 	boolean
 	nil
 --]]
-local function chd_is_array(tbl)
+local function isArray(obj)
 	local count = 0;
 
-	for k, v in pairs(tbl) do
+	for k, v in pairs(obj) do
 		if not (type(k) == 'number' and k > 0 and math.floor(k) == k) then
 			return false
 		end
 		count = count + 1;
 	end
 
-	return count == table.getn(tbl);
+	return count == table.getn(obj);
 end
 
-local function chd_is_encodeable(value)
+local function isEncodeable(value)
 	local t = type(value);
 	return t == 'string' or t == 'number' or t=='table' or t == 'boolean';
 end
 
-local function chd_encode(obj)
+function encryption:encode(obj)
 	if obj == nil then
 		return 'null';
 	end
@@ -45,7 +48,7 @@ local function chd_encode(obj)
 	local t = type(obj);
 
 	if t == 'string' then
-		return '"' .. chd_encode_string(obj) .. '"';
+		return '"' .. encodeString(obj) .. '"';
 	end
 
 	if t == 'number' or t == 'boolean' then
@@ -56,19 +59,19 @@ local function chd_encode(obj)
 		local ret = {};
 		local value;
 
-		local bArray = chd_is_array(obj);
+		local bArray = isArray(obj);
 		if bArray then
 			for _, v in ipairs(obj) do
 				if v ~= nil then
-					value = chd_encode(v);
+					value = self:encode(v);
 					table.insert(ret, value);
 				end
 			end
 			return '[' .. table.concat(ret, ',') .. ']';
 		else
 			for key, value in pairs(obj) do
-				if chd_is_encodeable(key) and chd_is_encodeable(value) then
-					table.insert(ret, '"' .. chd_encode_string(tostring(key)) .. '":' .. chd_encode(value));
+				if isEncodeable(key) and isEncodeable(value) then
+					table.insert(ret, '"' .. encodeString(tostring(key)) .. '":' .. chd_encode(value));
 				end
 			end
 			return '{' .. table.concat(ret, ',') .. '}';
@@ -78,6 +81,8 @@ local function chd_encode(obj)
 	assert(false, 'unsupported type ' .. t .. ':' .. tostring(obj));
 end
 
-function chd_to_json(dump)
-	return chd_encode(dump);
+function encryption:toJson(dump)
+	return self:encode(dump);
 end
+
+chardumps.encryption = encryption;

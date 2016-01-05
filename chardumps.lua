@@ -1,14 +1,4 @@
---[[
-	chardumps.lua
-		Main module
-	Chardumps
-		Dump of character.
-	version 1.11
-	Created by SlaFF
-		Gracer (Alliance)
-	thanks Sun, myth.project.info@gmail.com
---]]
-chardumps = chardumps or {};
+local chardumps = chardumps or {};
 local L = chardumps:GetLocale();
 local CHD_bindings = CHD_bindings or {};
 
@@ -151,7 +141,7 @@ local function CHD_GetTalentText(talent)
 
 	for i = 1,2 do
 		if talent[i] ~= nil then
-			s = s .. CHD_GetTableCount(talent[i]) .. ", ";
+			s = s .. chardumps.getTableLength(talent[i]) .. ", ";
 		else
 			s = s .. "0, ";
 		end
@@ -167,7 +157,7 @@ local function CHD_GetTalentCount(talent)
 
 	for i = 1,2 do
 		if talent[i] ~= nil then
-			count = count + CHD_GetTableCount(talent[i]);
+			count = count + chardumps.getTableLength(talent[i]);
 		end
 	end
 
@@ -185,8 +175,8 @@ local function CHD_GetGlyphText(glyph)
 	else
 		text = text .. " 0";
 	end
-	local n1 = CHD_GetTableCount(glyph[1] or {});
-	local n2 = CHD_GetTableCount(glyph[2] or {});
+	local n1 = chardumps.getTableLength(glyph[1] or {});
+	local n2 = chardumps.getTableLength(glyph[2] or {});
 	text = text .. string.format(" (%d, %d)", n1, n2);
 
 	return text;
@@ -197,8 +187,8 @@ local function CHD_GetGlyphCount(glyph)
 		return 0;
 	end
 
-	local n1 = CHD_GetTableCount(glyph[1] or {});
-	local n2 = CHD_GetTableCount(glyph[2] or {});
+	local n1 = chardumps.getTableLength(glyph[1] or {});
+	local n2 = chardumps.getTableLength(glyph[2] or {});
 
 	return n1 + n2;
 end
@@ -207,7 +197,7 @@ local function CHD_GetBagItemCount(bankDump)
 	local count = 0;
 
 	for _, v in pairs(bankDump) do
-		count = count + CHD_GetTableCount(v);
+		count = count + chardumps.getTableLength(v);
 	end
 
 	return count;
@@ -215,10 +205,10 @@ end
 
 function CHD_GetBankItemCount()
 	local count = 0;
-	local mainbankCount = CHD_GetTableCount(CHD_SERVER_LOCAL.bank.mainbank);
+	local mainbankCount = chardumps.getTableLength(CHD_SERVER_LOCAL.bank.mainbank);
 
 	for k, v in pairs(CHD_SERVER_LOCAL.bank) do
-		count = count + CHD_GetTableCount(v);
+		count = count + chardumps.getTableLength(v);
 	end
 	count = count - mainbankCount;
 
@@ -232,22 +222,22 @@ local function CHD_FillFieldCountClient(dump)
 
 	local res = {};
 
-	res.achievement = CHD_GetTableCount(dump.achievement);
-	res.action = CHD_GetTableCount(dump.action);
-	res.criterias = CHD_GetTableCount(dump.criterias);
-	res.statistic = CHD_GetTableCount(dump.statistic);
+	res.achievement = chardumps.getTableLength(dump.achievement);
+	res.action = chardumps.getTableLength(dump.action);
+	res.criterias = chardumps.getTableLength(dump.criterias);
+	res.statistic = chardumps.getTableLength(dump.statistic);
 	res.arena = #dump.arena;
 	res.critter = #dump.critter;
 	res.mount = #dump.mount;
 
 	res.bag = CHD_GetBagItemCount(dump.bag);
-	res.currency = CHD_GetTableCount(dump.currency);
+	res.currency = chardumps.getTableLength(dump.currency);
 	res.equipment = #dump.equipment;
 	res.reputation = #dump.reputation;
 	res.glyph = CHD_GetGlyphCount(dump.glyph);
-	res.inventory = CHD_GetTableCount(dump.inventory);
+	res.inventory = chardumps.getTableLength(dump.inventory);
 	res.questlog = #dump.questlog;
-	res.spell = CHD_GetTableCount(dump.spell);
+	res.spell = chardumps.getTableLength(dump.spell);
 	res.skill = #dump.skill;
 	res.pmacro = #dump.pmacro;
 	res.friend = #dump.friend;
@@ -1148,7 +1138,7 @@ function CHD_OnDumpClick()
 		dump.currency = {};
 	end
 	CHD_frmMainchbCurrencyText:SetText(L.chbCurrency .. string.format(" (%d)",
-		CHD_GetTableCount(dump.currency)));
+		chardumps.getTableLength(dump.currency)));
 	local honor, ap, cp = CHD_GetPvpCurrency(dump.currency);
 	dump.player.honor = honor;
 	dump.player.ap    = ap; -- Arena Points
@@ -1159,7 +1149,7 @@ function CHD_OnDumpClick()
 	else
 		dump.spell = {};
 	end
-	CHD_frmMainchbSpellsText:SetText(L.chbSpells .. string.format(" (%d)", CHD_GetTableCount(dump.spell)));
+	CHD_frmMainchbSpellsText:SetText(L.chbSpells .. string.format(" (%d)", chardumps.getTableLength(dump.spell)));
 	if CHD_frmMainchbMounts:GetChecked() then
 		dump.mount = CHD_trycall(CHD_GetMountInfo) or {};
 	else
@@ -1179,7 +1169,7 @@ function CHD_OnDumpClick()
 		dump.reputation = {};
 	end;
 	CHD_frmMainchbReputationText:SetText(L.chbReputation .. string.format(" (%d)",
-		CHD_GetTableCount(dump.reputation)));
+		chardumps.getTableLength(dump.reputation)));
 
 	if CHD_frmMainchbAchievements:GetChecked() then
 		dump.achievement = CHD_trycall(CHD_GetAchievementInfo) or {};
@@ -1187,7 +1177,7 @@ function CHD_OnDumpClick()
 		dump.achievement = {};
 	end
 	CHD_frmMainchbAchievementsText:SetText(L.chbAchievements .. string.format(" (%d)",
-		CHD_GetTableCount(dump.achievement)));
+		chardumps.getTableLength(dump.achievement)));
 
 	if CHD_frmMainchbActions:GetChecked() then
 		dump.action = CHD_trycall(CHD_GetActionsInfo) or {};
@@ -1195,7 +1185,7 @@ function CHD_OnDumpClick()
 		dump.action = {};
 	end
 	CHD_frmMainchbActionsText:SetText(L.chbActions .. string.format(" (%d)",
-		CHD_GetTableCount(dump.action)));
+		chardumps.getTableLength(dump.action)));
 
 	dump.skill = {};
 	if CHD_frmMainchbSkills:GetChecked() then
@@ -1203,7 +1193,7 @@ function CHD_OnDumpClick()
 	end
 	if WOW3 then
 		CHD_frmMainchbSkillsText:SetText(L.chbSkills .. string.format(" (%d)",
-			CHD_GetTableCount(dump.skill)));
+			chardumps.getTableLength(dump.skill)));
 	end
 
 	if CHD_frmMainchbProfessions:GetChecked() then
@@ -1224,7 +1214,7 @@ function CHD_OnDumpClick()
 	if not CHD_SERVER_LOCAL.bank then
 		CHD_SERVER_LOCAL.bank = {}
 	end
-	local bankTable = table.copy(CHD_SERVER_LOCAL.bank);
+	local bankTable = chardumps.copyTable(CHD_SERVER_LOCAL.bank);
 	if not bankTable.mainbank then
 		bankTable.mainbank = {};
 	else
@@ -1236,7 +1226,7 @@ function CHD_OnDumpClick()
 	dump.bank = bankTable;
 
 	CHD_frmMainchbInventoryText:SetText(L.chbInventory .. string.format(" (%d)",
-		CHD_GetTableCount(dump.inventory)));
+		chardumps.getTableLength(dump.inventory)));
 
 	if CHD_frmMainchbBind:GetChecked() then
 		dump.bind = CHD_trycall(CHD_GetBindInfo) or {};
@@ -1326,14 +1316,14 @@ function CHD_OnDumpClick()
 		dump.criterias = {};
 	end
 	CHD_frmMainchbCriteriasText:SetText(L.chbCriterias .. string.format(" (%d)",
-		CHD_GetTableCount(dump.criterias)));
+		chardumps.getTableLength(dump.criterias)));
 	if (CHD_frmMainchbStatistic:GetChecked()) then
 		dump.statistic = CHD_trycall(CHD_GetStatisticInfo) or {};
 	else
 		dump.statistic = {};
 	end
 	CHD_frmMainchbStatisticText:SetText(L.chbStatistic .. string.format(" (%d)",
-		CHD_GetTableCount(dump.statistic)));
+		chardumps.getTableLength(dump.statistic)));
 
 	if CHD_frmMainchbTalent:GetChecked() then
 		dump.talent = CHD_trycall(CHD_GetTalentInfo) or {};

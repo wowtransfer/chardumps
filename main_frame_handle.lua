@@ -1,7 +1,7 @@
 --[[
 
 --]]
-chardumps = chardumps or {};
+local chardumps = chardumps;
 local L = chardumps:GetLocale();
 
 function CHD_GetTaxiText()
@@ -56,16 +56,6 @@ function CHD_OnVariablesLoaded()
 	-- server
 	CHD_SERVER_LOCAL = {};
 
---[[
-	if not CHD_TAXI then
-		CHD_TAXI = {};
-	end
-	for i = 1, MAX_NUM_CONTINENT do
-		if not CHD_TAXI[i] then
-			CHD_TAXI[i] = {};
-		end
-	end
---]]
 	CHD_SERVER_LOCAL.quest = {};
 	CHD_SERVER_LOCAL.bank = {};
 	CHD_SERVER_LOCAL.bank.mainbank = {};
@@ -274,8 +264,6 @@ function CHD_OnLoad(self)
 	SetTooltip(CHD_frmMainbtnCheckAll, L.Comboboxes, L.ttbtnCheckAll);
 	SetTooltip(CHD_frmMainbtnCheckNone, L.Comboboxes, L.ttbtnCheckNone);
 	SetTooltip(CHD_frmMainbtnCheckInv, L.Comboboxes, L.ttbtnCheckInv);
-
-	CHD_CreateMessageBox();
 
 	if WOW3 then
 		CHD_frmMainchbProfessions:Disable();
