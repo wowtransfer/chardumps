@@ -1,22 +1,25 @@
 local chardumps = chardumps;
 
-local mainFrame = {};
+local mainFrame = {
+  entitiesData = {
+    -- entityName = {
+      -- checkbox (Yes/No),
+      -- Data View (Frame),
+      -- Delete Button (Button)}
+  },
+};
 
 function mainFrame:init()
   local L = chardumps:GetLocale();
   local widgets = chardumps.widgets;
-  print("main name:", widgets:GetFrameName("frmMain"));
-  print("main form:", _G[widgets:GetFrameName("frmMain")]);
   local frame = CreateFrame("Frame", widgets:GetFrameName("frmMain"), UIParent);
-  print("main form:", _G[widgets:GetFrameName("frmMain")]);
-  print("frame", frame:GetName());
 
   frame:EnableMouse(true);
   frame:SetMovable(true);
   frame:ClearAllPoints();
   frame:SetPoint("CENTER", UIParent);
-  frame:SetWidth(500);
-  frame:SetHeight(400);
+  frame:SetWidth(600);
+  frame:SetHeight(440);
   frame:SetFrameStrata("DIALOG");
   frame:SetScript("OnLoad", self.OnLoad);
   frame:SetScript("OnEvent", self.OnEvent);
@@ -88,14 +91,19 @@ function mainFrame:init()
   local chbAll = widgets:CreateCheckbox(frame, {x = 26, y = -10, cx = 14, cy = 14, tooltipTitle = chbAllTooltip});
   chbAll:SetScript("OnClick", self.OnChbAllClick);
 
-  self.entityCheckboxes = {};
+  -- Create entity's structure
   for i, name in pairs(entityNames) do
     local btn = widgets:CreateButton(frame, {x = 10, y = -y, cx = 12, cy = 12, tooltipTitle = "Delete"});
     btn.chdEntityName = name;
     local text = L[name];
     local chb = widgets:CreateCheckbox(frame, {x = 26, y = -y, cx = 14, cy = 14, tooltipTitle = text, text = text});
     chb.chdEntityName = name;
-    table.insert(self.entityCheckboxes, chb);
+
+    local entityData = {};
+    entityData.checkbox = chb;
+    entityData.deleteButton = btn;
+    entityData.dataView = nil;
+    self.entitiesData[name] = entityData;
 
     y = y + 14;
   end
@@ -201,8 +209,8 @@ end
 
 function mainFrame:OnChbAllClick()
   local checked = self:GetChecked();
-  for _, chb in pairs(mainFrame.entityCheckboxes) do
-    chb:SetChecked(checked);
+  for name, data in pairs(mainFrame.entitiesData) do
+    data.checkbox:SetChecked(checked);
   end
 end
 
