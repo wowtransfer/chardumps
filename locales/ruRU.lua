@@ -1,7 +1,7 @@
 --[[
 	Chardumps Localization: Russian
 --]]
-if (string.lower(GetLocale()) == "ruru") then
+if (string.lower(GetLocale()) ~= "ruru") then
 	return false;
 end
 
