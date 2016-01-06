@@ -40,7 +40,7 @@ function chardumps:init()
 
   self.options:Init();
 	self.entityManager:Init();
-	self.dumper.Init();
+	self.dumper:Init();
 	self.mainFrame:Init();
 end
 

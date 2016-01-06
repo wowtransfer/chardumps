@@ -154,18 +154,9 @@ function mainFrame:Init()
   end
   self:SetActiveDataFrame();
 
-  --[[
-
-  local chb = CHD_CreateCheckBox("chbCrypt", 10, 10, frame);
-
-
-
+--[[
   local btn = CHD_CreateButton("btnQuestQuery", 180, chbHeight * 9 + 8, 150, btnHeight, frame);
-
   btn:SetScript("OnClick", CHD_OnQueryQuestClick);
-
-
-
 --]]
 
   self.frameMin = frameMin;
