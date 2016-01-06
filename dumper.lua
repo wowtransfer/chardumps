@@ -217,7 +217,7 @@ function dumper:GetBankItemCount()
     count = count - mainbankCount;
   end
 
-  return {mainbank = mainbankCount, bags = count};
+  return mainbankCount + count;
 end
 
 function dumper:GetSkillspellCount()
@@ -228,6 +228,19 @@ function dumper:GetSkillspellCount()
   end
 
   return count;
+end
+
+---
+-- @return #number
+function dumper:GetTaxiCount()
+  local taxiData = self:GetDynamicData("taxi");
+  local count = 0;
+
+  for i = 1, chardumps.MAX_NUM_CONTINENT do
+    count = count + #taxiData[i];
+  end
+
+	return count;
 end
 
 chardumps.dumper = dumper;

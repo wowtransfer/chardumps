@@ -307,12 +307,12 @@ function mainFrame:OnEvent(event, ...)
       bankData = chardumps:TryCall(chardumps.dumper.GetBankData) or {};
     end
     chardumps.dumper:SetDynamicData("bank", bankData);
-    local counts = chardumps.dumper:GetBankItemCount();
-    self:UpdateEntityText("bank", string.format(" (%d, %d)", counts.mainbank, counts.items));
+    local count = chardumps.dumper:GetBankItemCount();
+    self:UpdateEntityText("bank", string.format(" (%d)", count));
   elseif "PLAYER_LEAVING_WORLD" == event then
     --CHD_SaveOptions();
   elseif "TAXIMAP_OPENED" == event then
-    --CHD_OnTaximapOpened(arg1, arg2);
+    mainFrame:OnTaximapOpened();
   elseif "VARIABLES_LOADED" == event then
     --CHD_OnVariablesLoaded();
   elseif "TRADE_SKILL_SHOW" == event then
@@ -408,6 +408,41 @@ function mainFrame:OnTradeSkillShow(flags)
     end
     mainFrame:UpdateEntityText("skillspell", string.format("(%d)", chardumps.dumper:GetSkillspellCount()));
   end
+end
+
+function mainFrame:OnTaximapOpened()
+	if not mainFrame:IsEntityChecked("taxi") then
+    return
+  end
+
+  local res = {};
+--[[
+-1 - Cosmic map
+0 - Azeroth
+1 - Kalimdor
+2 - Eastern Kingdoms
+3 - Outland
+4 - Northrend
+5 - The Maelstrom
+6 - Pandaria
+--]]
+  local continent = GetCurrentMapContinent();
+  if (continent < 1) or (continent > chardumps.MAX_NUM_CONTINENT) then
+    return
+  end
+
+  local L = chardumps:GetLocale();
+  local arrContinent = {L.Kalimdor, L.EasternKingdoms, L.Outland, L.Northrend};
+  chardumps.log:Message(L.GetTaxi .. arrContinent[continent]);
+  for i = 1, NumTaxiNodes() do
+    table.insert(res, TaxiNodeName(i));
+  end
+
+  CHD_TAXI[continent] = res;
+
+  mainFrame:UpdateEntityText("taxi", chardumps.dumper:GetTaxiCount());
+
+  chardumps.log:Message(L.CountOfTaxi .. tostring(#res));
 end
 
 chardumps.mainFrame = mainFrame;

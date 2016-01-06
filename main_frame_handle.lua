@@ -12,43 +12,6 @@ function CHD_GetTaxiText()
 		#CHD_TAXI[4] or 0);
 end
 
-function CHD_OnTaximapOpened(arg1, arg2, arg3)
-	if not CHD_frmMainchbTaxi:GetChecked() then
-		return false;
-	end
-
-	local res = {};
---[[
--1 - Cosmic map
-0 - Azeroth
-1 - Kalimdor
-2 - Eastern Kingdoms
-3 - Outland
-4 - Northrend
-5 - The Maelstrom
-6 - Pandaria
---]]
---	print("debug: GetMapInfo():", GetMapInfo());
-	local continent = GetCurrentMapContinent();
-	if (continent < 1) or (continent > MAX_NUM_CONTINENT) then
-		return false;
-	end
-
-	local arrContinent = {L.Kalimdor, L.EasternKingdoms, L.Outland, L.Northrend};
-	CHD_Message(L.GetTaxi .. arrContinent[continent]);
-	for i = 1, NumTaxiNodes() do
-		table.insert(res, TaxiNodeName(i));
-	end
-
-	CHD_TAXI[continent] = res;
-
-	CHD_frmMainchbTaxiText:SetText(CHD_GetTaxiText());
-
-	CHD_Message(L.CountOfTaxi .. tostring(#CHD_TAXI[continent]));
-
-	return true;
-end
-
 function CHD_OnVariablesLoaded()
 	-- client
 	CHD_CLIENT = {};
