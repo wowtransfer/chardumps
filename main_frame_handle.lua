@@ -4,14 +4,6 @@
 local chardumps = chardumps;
 local L = chardumps:GetLocale();
 
-function CHD_GetTaxiText()
-	return L.chbTaxi .. string.format(" (%d, %d, %d, %d)",
-		#CHD_TAXI[1] or 0,
-		#CHD_TAXI[2] or 0,
-		#CHD_TAXI[3] or 0,
-		#CHD_TAXI[4] or 0);
-end
-
 function CHD_OnVariablesLoaded()
 	-- client
 	CHD_CLIENT = {};

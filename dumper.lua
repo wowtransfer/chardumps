@@ -46,6 +46,7 @@ function dumper:GetBagData()
 end
 
 function dumper:GetBankData()
+  local L = chardumps:GetLocale();
   local res = {};
 
   -- NUM_BAG_SLOTS+1 to NUM_BAG_SLOTS+NUM_BANKBAGSLOTS are your bank bags
@@ -210,9 +211,9 @@ function dumper:GetBankItemCount()
   local bankData = self.dynamicDump["bank"];
 
   if bankData then
-    mainbankCount = chardumps:getTableLength(bankData.mainbank);
+    mainbankCount = chardumps:GetTableLength(bankData.mainbank);
     for _, v in pairs(bankData) do
-      count = count + chardumps:getTableLength(v);
+      count = count + chardumps:GetTableLength(v);
     end
     count = count - mainbankCount;
   end

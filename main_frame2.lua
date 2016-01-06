@@ -159,6 +159,7 @@ function mainFrame:Init()
 
     y = y + 14;
   end
+  self:CreateEntityWidgets(frame);
   self:SetActiveDataFrame();
 
 --[[
@@ -168,7 +169,7 @@ function mainFrame:Init()
   local events = {
     "TAXIMAP_OPENED", "VARIABLES_LOADED", "BANKFRAME_OPENED", "PLAYER_LEAVING_WORLD",
     "TRADE_SKILL_SHOW", "QUEST_DETAIL", "QUEST_PROGRESS", "QUEST_AUTOCOMPLETE",
-    "QUEST_COMPLETE", -- UNIT_QUEST_LOG_CHANGED
+    "QUEST_COMPLETE", "QUEST_QUERY_COMPLETE", -- UNIT_QUEST_LOG_CHANGED
   }
   for _, name in pairs(events) do
     frame:RegisterEvent(name);
@@ -176,6 +177,16 @@ function mainFrame:Init()
 
   self.frameMin = frameMin;
   self.frame = frame;
+end
+
+function mainFrame:CreateEntityWidgets(frame)
+  local questData = self.entitiesData["quest"];
+  if questData then
+    local btnQueryQuest = chardumps.widgets:CreateButton(questData.dataFrame, {x = 5, y = -5, cx = 150, name = "btnQuestQuery"});
+    btnQueryQuest:SetScript("OnClick", function()
+      QueryQuestsCompleted();
+    end);
+  end
 end
 
 function mainFrame:SetActiveDataFrame(name)
@@ -301,6 +312,7 @@ function mainFrame:IsEntityChecked(name)
 end
 
 function mainFrame:OnEvent(event, ...)
+  chardumps.log:Debug(event);
   if "BANKFRAME_OPENED" == event then
     local bankData = {};
     if mainFrame:IsEntityChecked("bank") then
@@ -308,7 +320,7 @@ function mainFrame:OnEvent(event, ...)
     end
     chardumps.dumper:SetDynamicData("bank", bankData);
     local count = chardumps.dumper:GetBankItemCount();
-    self:UpdateEntityText("bank", string.format(" (%d)", count));
+    mainFrame:UpdateEntityText("bank", count);
   elseif "PLAYER_LEAVING_WORLD" == event then
     --CHD_SaveOptions();
   elseif "TAXIMAP_OPENED" == event then
@@ -336,9 +348,15 @@ function mainFrame:OnEvent(event, ...)
     chardumps.log:Message(L.Quest .. " (ID = " .. questId .. ") \124cFF00FF00 " .. L.QuestCompleted .. "\r");
   elseif "QUEST_AUTOCOMPLETE" == event then
     print("debug:", event, arg1, arg2, arg3);
+  elseif "QUEST_QUERY_COMPLETE" == event then
+    mainFrame:OnQuestQueryComplete();
   else
     print("debug:", event, arg1, arg2, arg3);
   end
+end
+
+function mainFrame:OnQuestQueryComplete()
+  
 end
 
 -- http://wowprogramming.com/docs/api_categories#tradeskill
@@ -416,16 +434,16 @@ function mainFrame:OnTaximapOpened()
   end
 
   local res = {};
---[[
--1 - Cosmic map
-0 - Azeroth
-1 - Kalimdor
-2 - Eastern Kingdoms
-3 - Outland
-4 - Northrend
-5 - The Maelstrom
-6 - Pandaria
---]]
+  --[[
+  -1 - Cosmic map
+  0 - Azeroth
+  1 - Kalimdor
+  2 - Eastern Kingdoms
+  3 - Outland
+  4 - Northrend
+  5 - The Maelstrom
+  6 - Pandaria
+  --]]
   local continent = GetCurrentMapContinent();
   if (continent < 1) or (continent > chardumps.MAX_NUM_CONTINENT) then
     return

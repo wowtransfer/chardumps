@@ -3,7 +3,9 @@ local chardumps = chardumps;
 ---
 -- Safe function call
 function chardumps:TryCall(fun)
-  local status, result = xpcall(fun, chardumps.log.error);
+  local status, result = xpcall(fun, function(message)
+    print(string.format("\124cFF9F3FFFchardumps:\124c00FF0000 %s\124r", message));
+  end);
   if status then
     return result;
   end

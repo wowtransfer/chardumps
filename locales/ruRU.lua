@@ -109,7 +109,7 @@ L.GetTitles       = "Чтение званий"
 
 L.GetBank         = "Чтение банка"
 L.ReadMainBankBag = "  главная сумка банка: %d предметов"
-L.ScaningBankTotal= "  банковская ячейка %d, количество %d"
+L.ScaningBankTotal= "  банковская ячейка %d, предметов %d"
 L.GetBind         = "Чтение биндов"
 L.GetQuest        = "Чтение выполненных заданий"
 L.CountOfCompletedQuests = "  количество выполненных заданий "

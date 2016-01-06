@@ -105,7 +105,7 @@ L.GetTitles       = "Get titles"
 
 L.GetBank         = "Get bank`s information"
 L.ReadMainBankBag = "  main bank: %d items"
-L.ScaningBankTotal= "  bank`s bag: %d, count: %d"
+L.ScaningBankTotal= "  bank`s bag: %d, items: %d"
 L.GetBind         = "Get bindings information"
 L.GetQuest        = "Get quest information"
 L.CountOfCompletedQuests = "  count of completed quests "

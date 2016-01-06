@@ -8,15 +8,15 @@ function log:Message(...)
   end
 end
 
-function log:error(message)
+function log:Error(message)
   print(string.format("\124cFF9F3FFFchardumps:\124c00FF0000 %s\124r", message));
 end
 
-function log:warning(message)
+function log:Warning(message)
   print(string.format("\124cFF9F3FFFchardumps:\124c00FFFF00 %s\124r", message));
 end
 
-function log:debug(message)
+function log:Debug(message)
   print(string.format("\124cFF9F3FFFchardumps:\124c00FFFF00 %s\124r", message));
 end
 
