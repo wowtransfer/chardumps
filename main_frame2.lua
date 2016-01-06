@@ -165,6 +165,14 @@ function mainFrame:Init()
   local btn = CHD_CreateButton("btnQuestQuery", 180, chbHeight * 9 + 8, 150, btnHeight, frame);
   btn:SetScript("OnClick", CHD_OnQueryQuestClick);
 --]]
+  local events = {
+    "TAXIMAP_OPENED", "VARIABLES_LOADED", "BANKFRAME_OPENED", "PLAYER_LEAVING_WORLD",
+    "TRADE_SKILL_SHOW", "QUEST_DETAIL", "QUEST_PROGRESS", "QUEST_AUTOCOMPLETE",
+    "QUEST_COMPLETE", -- UNIT_QUEST_LOG_CHANGED
+  }
+  for _, name in pairs(events) do
+    frame:RegisterEvent(name);
+  end
 
   self.frameMin = frameMin;
   self.frame = frame;
@@ -181,6 +189,22 @@ function mainFrame:SetActiveDataFrame(name)
   local frame = self.entitiesData[name].dataFrame;
   frame:Show();
   self.activeDataDrame = frame;
+end
+
+function mainFrame:UpdateEntityText(name, text)
+  local data = self.entitiesData[name];
+  if data then
+    local chb = data.checkbox;
+    local label = getglobal(chb:GetName() .. "Text");
+    if label then
+      local L = chardumps:GetLocale();
+      local entityName = L[name];
+      if text then
+        entityName = entityName .. " " .. text;
+      end
+      label:SetText(entityName);
+    end
+  end
 end
 
 function mainFrame:OnHideClick()
@@ -266,8 +290,124 @@ function mainFrame:OnLoad()
 
 end
 
-function mainFrame:OnEvent()
+---
+-- @return #boolean
+function mainFrame:IsEntityChecked(name)
+  local data = self.entitiesData[name];
+  if data then
+    return data.checkbox:GetChecked();
+  end
+  return false;
+end
 
+function mainFrame:OnEvent(event, ...)
+  if "BANKFRAME_OPENED" == event then
+    local bankData = {};
+    if mainFrame:IsEntityChecked("bank") then
+      bankData = chardumps:TryCall(chardumps.dumper.GetBankData) or {};
+    end
+    chardumps.dumper:SetDynamicData("bank", bankData);
+    local counts = chardumps.dumper:GetBankItemCount();
+    self:UpdateEntityText("bank", string.format(" (%d, %d)", counts.mainbank, counts.items));
+  elseif "PLAYER_LEAVING_WORLD" == event then
+    --CHD_SaveOptions();
+  elseif "TAXIMAP_OPENED" == event then
+    --CHD_OnTaximapOpened(arg1, arg2);
+  elseif "VARIABLES_LOADED" == event then
+    --CHD_OnVariablesLoaded();
+  elseif "TRADE_SKILL_SHOW" == event then
+    mainFrame:OnTradeSkillShow(arg1);
+  elseif "QUEST_DETAIL" == event or "QUEST_PROGRESS" == event then
+    if chardumps:getPatchVersion() <= 3 then
+      return
+    end
+    local questTable = GetQuestsCompleted(nil);
+    local questId = GetQuestID();
+    local s = L.Quest .. "(ID = " .. questId .. ")";
+    if questTable[questId] ~= nil then
+      s = s .. " \124cFF00FF00 " .. L.QuestWasCompleted  .. "\r";
+    end
+    chardumps.log:Message(s);
+  elseif "QUEST_COMPLETE" == event then
+    if chardumps:getPatchVersion() <= 3 then
+      return
+    end
+    local questId = GetQuestID();
+    chardumps.log:Message(L.Quest .. " (ID = " .. questId .. ") \124cFF00FF00 " .. L.QuestCompleted .. "\r");
+  elseif "QUEST_AUTOCOMPLETE" == event then
+    print("debug:", event, arg1, arg2, arg3);
+  else
+    print("debug:", event, arg1, arg2, arg3);
+  end
+end
+
+-- http://wowprogramming.com/docs/api_categories#tradeskill
+function mainFrame:OnTradeSkillShow(flags)
+  if not mainFrame:IsEntityChecked("skillspell") then
+    return
+  end
+
+  local L = chardumps:GetLocale();
+  -- Returns information about the current trade skill
+  local tradeskillName, rank, maxLevel = GetTradeSkillLine();
+  if (nil == tradeskillName or "UNKNOWN" == tradeskillName) then
+    return
+  end
+
+  local i = 1;
+  while true do
+    local _, skillType = GetTradeSkillInfo(i);
+    if not skillType then
+      break;
+    end
+    if skillType == "header" then
+      ExpandTradeSkillSubClass(i);
+    end
+    i = i + 1;
+  end
+
+  chardumps.log:Message(string.format(L.GetSkillSpell, tradeskillName));
+  local res = {};
+  for i = 1, GetNumTradeSkills() do
+    local skillName, skillType, numAvailable, isExpanded = GetTradeSkillInfo(i);
+    if (skillType and "header" ~= skillType) then
+      local link = GetTradeSkillRecipeLink(i);
+      --link = string.gsub(link, "\124", "_");
+      --print(link);
+      local spellID = tonumber(strmatch(link, "\124Henchant:(%d+)"));
+      if spellID then
+        table.insert(res, spellID);
+      end
+    end
+  end
+  table.sort(res);
+
+  local tradeLink = GetTradeSkillListLink();
+  local count = #res;
+  chardumps.log:Message(string.format(L.TradeSkillFound, count));
+
+  -- isLinked, name = IsTradeSkillLinked()
+  local isLinked = IsTradeSkillLinked();
+  if isLinked then
+    return
+  end
+
+  local data = chardumps.dumper:GetDynamicData("skillspell");
+  data[tradeskillName] = res;
+  chardumps.dumper:SetDynamicData("skillspell", data);
+
+  if count > 0 then
+    local s = L.ttchbSkillSpell .. "\n";
+    -- Update text on the Tooltip
+    for k,v in pairs(data) do
+      s = s .. "- " .. k .. " (" .. #v .. ")\n";
+    end
+    local data = mainFrame.entitiesData["skillspell"];
+    if data then
+      chardumps.widgets:SetTooltip(data.checkbox, L.chbSkillSpell, s);
+    end
+    mainFrame:UpdateEntityText("skillspell", string.format("(%d)", chardumps.dumper:GetSkillspellCount()));
+  end
 end
 
 chardumps.mainFrame = mainFrame;

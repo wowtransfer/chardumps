@@ -203,17 +203,6 @@ local function CHD_GetBagItemCount(bankDump)
 	return count;
 end
 
-function CHD_GetBankItemCount()
-	local count = 0;
-	local mainbankCount = chardumps.getTableLength(CHD_SERVER_LOCAL.bank.mainbank);
-
-	for k, v in pairs(CHD_SERVER_LOCAL.bank) do
-		count = count + chardumps.getTableLength(v);
-	end
-	count = count - mainbankCount;
-
-	return mainbankCount, count;
-end
 
 local function CHD_FillFieldCountClient(dump)
 	if not dump then
@@ -984,65 +973,7 @@ end
 
 -- TODO: replace to other file, main frame handle...
 function CHD_GetBankInfo()
-	local res = {};
-	-- BANK_CONTAINER is the bank window
-	-- NUM_BAG_SLOTS+1 to NUM_BAG_SLOTS+NUM_BANKBAGSLOTS are your bank bags
-	res.mainbank = {};
-	local nCount = 0;
-
-	CHD_Message(L.GetBank);
-	for i = 40, 74 do -- main bank
-		local itemLink = GetInventoryItemLink("player", i)
-		if itemLink then
-			local count = GetInventoryItemCount("player",i)
-			for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink,".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do
-				local tmpItem = {
-					["I"] = tonumber(id)
-				};
-				if count > 1 then tmpItem["N"] = count end
-				if tonumber(enchant) > 0 then tmpItem["H"] = tonumber(enchant) end
-				if tonumber(gem1) > 0 then tmpItem["G1"] = tonumber(gem1) end
-				if tonumber(gem2) > 0 then tmpItem["G2"] = tonumber(gem2) end
-				if tonumber(gem3) > 0 then tmpItem["G3"] = tonumber(gem3) end
-
-				res.mainbank[i] = tmpItem;
-			end
-			nCount = nCount + 1;
-		end
-	end
-	CHD_Message(string.format(L.ReadMainBankBag, nCount));
-
-	nCount = 0;
-	j = 1;
-	for i = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do -- and 7 bank bags
-		res[j] = {};
-		local bag = res[j];
-		nCount = 0;
-		for slot = 1, GetContainerNumSlots(i) do
-			local itemLink = GetContainerItemLink(i, slot)
-			if itemLink then
-				local _, count = GetContainerItemInfo(i, slot);
-				for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink, ".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do
-					local tmpItem = {
-						["I"] = tonumber(id)
-					};
-					if count > 1 then tmpItem["N"] = count end
-					if tonumber(enchant) > 0 then tmpItem["H"] = tonumber(enchant) end
-					if tonumber(gem1) > 0 then tmpItem["G1"] = tonumber(gem1) end
-					if tonumber(gem2) > 0 then tmpItem["G2"] = tonumber(gem2) end
-					if tonumber(gem3) > 0 then tmpItem["G3"] = tonumber(gem3) end
-
-					bag[slot] = tmpItem;
-				end
-				nCount = nCount + 1;
-			end
-		end
-		CHD_Message(string.format(L.ScaningBankTotal, j, nCount));
-		i = i + 1;
-		j = j + 1;
-	end
-
-	return res;
+	
 end
 
 local function CHD_GetBindInfo()

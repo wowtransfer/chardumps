@@ -58,7 +58,7 @@ function entityManager:GetNames()
     for key, value in pairs(self.entities) do
       table.insert(self.names, key);
     end
-    sort(self.names);
+    table.sort(self.names);
   end
   return self.names;
 end

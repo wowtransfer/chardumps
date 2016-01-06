@@ -2,7 +2,7 @@ local chardumps = chardumps;
 
 ---
 -- Safe function call
-function chardumps:trycall(fun)
+function chardumps:TryCall(fun)
   local status, result = xpcall(fun, chardumps.log.error);
   if status then
     return result;
@@ -11,7 +11,7 @@ end
 
 ---
 -- Get table element count
-function chardumps:getTableLength(t)
+function chardumps:GetTableLength(t)
   if type(t) ~= "table" then
     return 0;
   end
@@ -26,7 +26,7 @@ end
 
 ---
 -- Copy the table
-function chardumps:copyTable(t)
+function chardumps:CopyTable(t)
   local u = {};
 
   for k, v in pairs(t) do
