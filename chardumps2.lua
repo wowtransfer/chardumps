@@ -33,7 +33,7 @@ end
 
 ---
 -- Main initialization
-function chardumps:init()
+function chardumps:Init()
 	self:checkWowVersion();
 	self:initSlashCommands();
 	self:initConstants();
@@ -95,4 +95,4 @@ function chardumps:checkWowVersion()
 	end
 end
 
-chardumps:init();
+chardumps:Init();

@@ -138,7 +138,14 @@ function mainFrame:Init()
     local text = L[name];
     local chb = widgets:CreateCheckbox(frame, {x = 40, y = -y, cx = 14, cy = 14, tooltipTitle = text, text = text});
     chb.chdEntityName = name;
-    if entity.always then
+    if entity.disable then
+      chb:SetChecked(false);
+      chb:Disable();
+      local label = getglobal(chb:GetName() .. "Text");
+      if label then
+        label:SetFontObject("GameFontDisable");
+      end
+    elseif entity.always then
       chb:SetChecked(true);
       chb:Disable();
     end
@@ -231,7 +238,9 @@ function mainFrame:OnChbAllClick()
   local entities = chardumps.entityManager:GetEntities();
   for name, data in pairs(mainFrame.entitiesData) do
     local entity = entities[name];
-    if not(entity and entity.always) then
+    local always = entity and entity.always;
+    local disable = entity and entity.disable;
+    if not(always or disable) then
       data.checkbox:SetChecked(checked);
     end
   end
