@@ -21,7 +21,7 @@ function dumper:getEntity(name)
   end
 end
 
-function dumper:init()
+function dumper:Init()
 
 end
 

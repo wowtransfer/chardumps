@@ -12,6 +12,7 @@
 ## SavedVariablesPerCharacter: CHD_CLIENT,CHD_TAXI,CHD_OPTIONS
 
 global.lua
+log.lua
 locales\enUS.lua
 locales\ruRU.lua
 valid_bindings.lua
@@ -23,6 +24,5 @@ entity_manager.lua
 widgets.lua
 options.lua
 dumper.lua
-log.lua
 main_frame2.lua
 chardumps2.lua

@@ -46,7 +46,7 @@ end
 --[[
 The entities depends on WoW's version
 --]]
-function entityManager:init()
+function entityManager:Init()
   
 end
 

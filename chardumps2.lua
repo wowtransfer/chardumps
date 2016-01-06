@@ -38,10 +38,10 @@ function chardumps:init()
 	self:initSlashCommands();
 	self:initConstants();
 
-  self.options:init();
-	self.entityManager:init();
-	self.dumper.init();
-	self.mainFrame:init();
+  self.options:Init();
+	self.entityManager:Init();
+	self.dumper.Init();
+	self.mainFrame:Init();
 end
 
 function chardumps:initConstants()
@@ -53,13 +53,13 @@ end
 function chardumps:initSlashCommands()
   local helpFun = function()
     local log = chardumps.log;
-    log:message("/chardumps, /chardumps help");
-    log:message("/chardumps dump");
-    log:message("/chardumps clear");
-    log:message("/chardumps save");
-    log:message("/chardumps show");
-    log:message("/chardumps hide");
-    log:message("/chardumps version");
+    log:Message("/chardumps, /chardumps help");
+    log:Message("/chardumps dump");
+    log:Message("/chardumps clear");
+    log:Message("/chardumps save");
+    log:Message("/chardumps show");
+    log:Message("/chardumps hide");
+    log:Message("/chardumps version");
   end
   local commandHandlers = {
     help = helpFun,

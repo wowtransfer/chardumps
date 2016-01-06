@@ -2,12 +2,12 @@ local chardumps = chardumps;
 
 local mainFrame = {
   entitiesData = {
-    -- entityName = {
-      -- checkbox (Yes/No),
-      -- Data View (Frame),
-      -- Delete Button (Button)
-      -- Active Button (Button)
-    -- }
+  -- entityName = {
+  -- checkbox (Yes/No),
+  -- Data View (Frame),
+  -- Delete Button (Button)
+  -- Active Button (Button)
+  -- }
   },
   captionHeight = 30,
   bttomPanelHeight = 40,
@@ -36,14 +36,14 @@ function mainFrame:CreateEntityFrame(name, parent)
   return frame;
 end
 
-function mainFrame:init()
+function mainFrame:Init()
   local L = chardumps:GetLocale();
   local widgets = chardumps.widgets;
   local frame = CreateFrame("Frame", widgets:GetFrameName("frmMain"), UIParent);
 
   frame:EnableMouse(true);
   frame:SetMovable(true);
-  frame:SetResizable(true); 
+  frame:SetResizable(true);
   frame:ClearAllPoints();
   frame:SetPoint("CENTER", UIParent);
   frame:SetWidth(self.defaultWidth);
@@ -101,12 +101,12 @@ function mainFrame:init()
   self.btnSave:SetPoint("BOTTOMRIGHT", -10 - 5 - 100, 10);
   self.btnSave:Disable();
 
-  self.btnCrypt = widgets:CreateCheckbox(frame, {name = "chbCrypt", cx = 14, cy = 14});
-  self.btnCrypt:ClearAllPoints();
-  self.btnCrypt:SetPoint("BOTTOMRIGHT", -10 - 5 - 300, 10);
+  self.chbCrypt = widgets:CreateCheckbox(frame, {name = "chbCrypt", cx = 14, cy = 14});
+  self.chbCrypt:ClearAllPoints();
+  self.chbCrypt:SetPoint("BOTTOMRIGHT", -10 - 5 - 300, 10);
 
   -- Checkbox list
-  
+
   -- checkbox
   -- button
   -- text
@@ -129,7 +129,7 @@ function mainFrame:init()
       local btn = widgets:CreateButton(frame, {x = 10, y = -y, cx = 12, cy = 12, tooltipTitle = "Delete"});
       btn.chdEntityName = name;
     end
-    
+
     local btnActive = widgets:CreateButton(frame, {x = 26, y = -y, cx = 12, cy = 12, tooltipTitle = "Active"});
     btnActive.chdEntityName = name;
     btnActive:SetScript("OnClick", function()
@@ -154,11 +154,17 @@ function mainFrame:init()
   end
   self:SetActiveDataFrame();
 
---[[
+  --[[
+
   local chb = CHD_CreateCheckBox("chbCrypt", 10, 10, frame);
 
+
+
   local btn = CHD_CreateButton("btnQuestQuery", 180, chbHeight * 9 + 8, 150, btnHeight, frame);
+
   btn:SetScript("OnClick", CHD_OnQueryQuestClick);
+
+
 
 --]]
 
@@ -198,14 +204,28 @@ end
 function mainFrame:OnDumpClick()
   local L = chardumps:GetLocale();
 
-  
+  local options = chardumps.options;
+  -- read options
+  for name, data in pairs(mainFrame.entitiesData) do
+    if (data.checkbox:GetChecked()) then
+      options:AddEntityForDump(name);
+    end
+  end
+  if mainFrame.chbCrypt:GetChecked() then
+    options:AddOptionForDump("crypt");
+  end
+
+  -- create dump...
+  local dumpOption = options:GetOptionsFroDump();
+
+
   mainFrame.btnSave:Enable();
-  chardumps.log.message(L.CreatedDump);
-  chardumps.log.message(L.DumpDone);
+  chardumps.log:Message(L.CreatedDump);
+  chardumps.log:Message(L.DumpDone);
 end
 
 function mainFrame:OnSaveClick()
-	ReloadUI();
+  ReloadUI();
 end
 
 function mainFrame:OnDeleteAllClick()
