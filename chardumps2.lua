@@ -34,15 +34,14 @@ end
 ---
 -- Main initialization
 function chardumps:init()
-  print("begin init");
 	self:checkWowVersion();
 	self:initSlashCommands();
 	self:initConstants();
 
   self.options:init();
 	self.entityManager:init();
+	self.dumper.init();
 	self.mainFrame:init();
-	print("end init");
 end
 
 function chardumps:initConstants()

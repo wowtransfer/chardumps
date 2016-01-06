@@ -110,7 +110,7 @@ function mainFrame:init()
 
   local y = 30;
   local x = 0;
-  local entityNames = chardumps.entityManager:GetNames();
+  local entities = chardumps.entityManager:GetEntities();
 
   local btnDeleteAllTooltip = L.deleteAll;
   local btn = widgets:CreateButton(frame, {x = 10, y = -10, cx = 12, cy = 12, tooltipTitle = btnDeleteAllTooltip});
@@ -121,9 +121,12 @@ function mainFrame:init()
   chbAll:SetScript("OnClick", self.OnChbAllClick);
 
   -- Create entity's structure
-  for i, name in pairs(entityNames) do
-    local btn = widgets:CreateButton(frame, {x = 10, y = -y, cx = 12, cy = 12, tooltipTitle = "Delete"});
-    btn.chdEntityName = name;
+  for name, entity in pairs(entities) do
+    if not entity.always then
+      local btn = widgets:CreateButton(frame, {x = 10, y = -y, cx = 12, cy = 12, tooltipTitle = "Delete"});
+      btn.chdEntityName = name;
+    end
+    
     local btnActive = widgets:CreateButton(frame, {x = 26, y = -y, cx = 12, cy = 12, tooltipTitle = "Active"});
     btnActive.chdEntityName = name;
     btnActive:SetScript("OnClick", function()
@@ -132,6 +135,10 @@ function mainFrame:init()
     local text = L[name];
     local chb = widgets:CreateCheckbox(frame, {x = 40, y = -y, cx = 14, cy = 14, tooltipTitle = text, text = text});
     chb.chdEntityName = name;
+    if entity.always then
+      chb:SetChecked(true);
+      chb:Disable();
+    end
 
     local entityData = {};
     entityData.checkbox = chb;
@@ -258,8 +265,12 @@ end
 
 function mainFrame:OnChbAllClick()
   local checked = self:GetChecked();
+  local entities = chardumps.entityManager:GetEntities();
   for name, data in pairs(mainFrame.entitiesData) do
-    data.checkbox:SetChecked(checked);
+    local entity = entities[name];
+    if not(entity and entity.always) then
+      data.checkbox:SetChecked(checked);
+    end
   end
 end
 

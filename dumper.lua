@@ -1,5 +1,8 @@
+local chardumps = chardumps;
 local dumper = {
 	data = {},
+	
+	entitiesData = {},
 };
 
 ---
@@ -17,3 +20,9 @@ function dumper:getEntity(name)
     return self.data[name];
   end
 end
+
+function dumper:init()
+
+end
+
+chardumps.dumper = dumper;

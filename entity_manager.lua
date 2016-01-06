@@ -9,11 +9,12 @@ local entityManager = {
 		criterias = {},
 		critter = {},
 		currency = {},
+		global = {always = true},
 		glyph = {},
 		equipment = {},
 		inventory = {},
 		mount = {},
-		player = {},
+		player = {always = true},
 		pet = {},
 		pmacro = {},
 		quest = {},
@@ -29,9 +30,17 @@ local entityManager = {
 	}
 };
 
+---
+-- @return table
+function entityManager:GetEntities()
+  return self.entities;
+end
 
+---
+-- @return boolean
 function entityManager:hasEntity(name)
-
+  local names = self:GetNames();
+  return names[name] ~= nil;
 end
 
 --[[
