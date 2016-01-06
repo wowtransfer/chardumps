@@ -156,7 +156,18 @@ function dumper:GetPMmacroData()
 end
 
 function dumper:GetQuestData()
+  local L = chardumps:GetLocale();
+  local res = {};
 
+  chardumps.log:Message(L.GetQuest);
+
+  local questTable = GetQuestsCompleted(nil);
+  for k, _ in pairs(questTable) do
+    table.insert(res, k);
+  end
+  sort(res);
+
+  return res;
 end
 
 function dumper:GetQuestlogData()
@@ -238,7 +249,9 @@ function dumper:GetTaxiCount()
   local count = 0;
 
   for i = 1, chardumps.MAX_NUM_CONTINENT do
-    count = count + #taxiData[i];
+    if taxiData[i] then
+      count = count + #taxiData[i];
+    end
   end
 
 	return count;

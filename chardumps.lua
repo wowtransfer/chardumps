@@ -953,29 +953,6 @@ local function CHD_GetArenaInfo()
 	return res;
 end
 
--- Get server data
-
-function CHD_GetQuestInfo()
-	local res = {};
-
-	CHD_Message(L.GetQuest);
-
-	local questTable = GetQuestsCompleted(nil);
-	for k, _ in pairs(questTable) do
-		table.insert(res, k);
-	end
-	sort(res);
-
-	CHD_Message(L.CountOfCompletedQuests .. string.format(" (%d)", #res));
-
-	return res;
-end
-
--- TODO: replace to other file, main frame handle...
-function CHD_GetBankInfo()
-	
-end
-
 local function CHD_GetBindInfo()
 	local res = {};
 

@@ -320,7 +320,7 @@ function mainFrame:OnEvent(event, ...)
     end
     chardumps.dumper:SetDynamicData("bank", bankData);
     local count = chardumps.dumper:GetBankItemCount();
-    mainFrame:UpdateEntityText("bank", count);
+    mainFrame:UpdateEntityText("bank", "(" .. count .. ")");
   elseif "PLAYER_LEAVING_WORLD" == event then
     --CHD_SaveOptions();
   elseif "TAXIMAP_OPENED" == event then
@@ -356,7 +356,11 @@ function mainFrame:OnEvent(event, ...)
 end
 
 function mainFrame:OnQuestQueryComplete()
-  
+  --local questData = chardumps.dumper:GetDynamicData("quest");
+  local questData = chardumps:TryCall(chardumps.dumper.GetQuestData) or {};
+  chardumps.dumper:SetDynamicData("quest", questData);
+  self:UpdateEntityText("quest", "(" .. #questData .. ")");
+  chardumps.log:Message(#questData);
 end
 
 -- http://wowprogramming.com/docs/api_categories#tradeskill
@@ -455,10 +459,12 @@ function mainFrame:OnTaximapOpened()
   for i = 1, NumTaxiNodes() do
     table.insert(res, TaxiNodeName(i));
   end
-
+  local taxiData = chardumps.dumper:GetDynamicData("taxi");
+  taxiData[continent] = res;
   CHD_TAXI[continent] = res;
+  chardumps.dumper:SetDynamicData("taxi", taxiData);
 
-  mainFrame:UpdateEntityText("taxi", chardumps.dumper:GetTaxiCount());
+  mainFrame:UpdateEntityText("taxi", "(" .. chardumps.dumper:GetTaxiCount() .. ")");
 
   chardumps.log:Message(L.CountOfTaxi .. tostring(#res));
 end
