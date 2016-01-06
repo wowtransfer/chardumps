@@ -20,6 +20,7 @@ local widgets = {
 -- @field [parent=#params] number cy
 -- @field [parent=#params] string tooltipTitle
 -- @field [parent=#params] string tooltip
+-- @field [parent=#params] boolean withoutText
 --
 function widgets:CreateCheckbox(parent, params)
   local L = chardumps:GetLocale();
@@ -33,7 +34,11 @@ function widgets:CreateCheckbox(parent, params)
     chbName = parent:GetName() .. self:genFrameName();
   end
 
-  local chb = CreateFrame("CheckButton", chbName, parent, "ChatConfigCheckButtonTemplate");
+  local template = "ChatConfigCheckButtonTemplate";
+  if params.withoutText then
+    template = nil;
+  end
+  local chb = CreateFrame("CheckButton", chbName, parent, template);
 
   if params.x ~= nil and params.y ~= nil then
     chb:ClearAllPoints();
@@ -45,7 +50,10 @@ function widgets:CreateCheckbox(parent, params)
   chb:SetWidth(params.cx);
   chb:SetHeight(params.cy);
 
-  chb:SetChecked(true);
+  chb:SetNormalTexture("Interface\\Buttons\\UI-CheckBox-Up");
+  chb:SetPushedTexture("Interface\\Buttons\\UI-CheckBox-Down");
+  chb:SetCheckedTexture("Interface\\Buttons\\UI-CheckBox-Check");
+  chb:SetHighlightTexture("Interface\\Buttons\\UI-CheckBox-Highlight");
 
   params.tooltipTitle = params.tooltipTitle or L[chbName];
   if params.tooltipTitle ~= nil then
@@ -53,8 +61,10 @@ function widgets:CreateCheckbox(parent, params)
   end
 
   local chbText = getglobal(chb:GetName() .. "Text");
-  params.text = params.text or L[chbName];
-  chbText:SetText(params.text);
+  if chbText then
+    params.text = params.text or L[chbName];
+    chbText:SetText(params.text);
+  end
 
   return chb;
 end

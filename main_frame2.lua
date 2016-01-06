@@ -116,7 +116,8 @@ function mainFrame:init()
   local btn = widgets:CreateButton(frame, {x = 10, y = -10, cx = 12, cy = 12, tooltipTitle = btnDeleteAllTooltip});
   btn:SetScript("OnClick", self.OnDeleteAllClick);
   local chbAllTooltip = L.ttchbAll;
-  local chbAll = widgets:CreateCheckbox(frame, {x = 26, y = -10, cx = 14, cy = 14, tooltipTitle = chbAllTooltip});
+  local chbAll = widgets:CreateCheckbox(frame, {x = 26, y = -10, cx = 14, cy = 14,
+    tooltipTitle = chbAllTooltip, withoutText = true});
   chbAll:SetScript("OnClick", self.OnChbAllClick);
 
   -- Create entity's structure
