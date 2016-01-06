@@ -101,6 +101,9 @@ function mainFrame:init()
   self.btnSave:SetPoint("BOTTOMRIGHT", -10 - 5 - 100, 10);
   self.btnSave:Disable();
 
+  self.btnCrypt = widgets:CreateCheckbox(frame, {name = "chbCrypt", cx = 14, cy = 14});
+  self.btnCrypt:ClearAllPoints();
+  self.btnCrypt:SetPoint("BOTTOMRIGHT", -10 - 5 - 300, 10);
 
   -- Checkbox list
   
@@ -116,7 +119,7 @@ function mainFrame:init()
   local btn = widgets:CreateButton(frame, {x = 10, y = -10, cx = 12, cy = 12, tooltipTitle = btnDeleteAllTooltip});
   btn:SetScript("OnClick", self.OnDeleteAllClick);
   local chbAllTooltip = L.ttchbAll;
-  local chbAll = widgets:CreateCheckbox(frame, {x = 26, y = -10, cx = 14, cy = 14,
+  local chbAll = widgets:CreateCheckbox(frame, {x = 40, y = -10, cx = 14, cy = 14,
     tooltipTitle = chbAllTooltip, withoutText = true});
   chbAll:SetScript("OnClick", self.OnChbAllClick);
 
@@ -152,58 +155,7 @@ function mainFrame:init()
   self:SetActiveDataFrame();
 
 --[[
-  -- frames
   local chb = CHD_CreateCheckBox("chbCrypt", 10, 10, frame);
-
-  CHD_CreateButton("btnCheckAll", 1 * (btnWidth + 3) + 5, chbHeight + 5, btnWidth, btnHeight, frame);
-  CHD_CreateButton("btnCheckNone", 2 * (btnWidth + 3) + 5, chbHeight + 5, btnWidth, btnHeight, frame);
-  CHD_CreateButton("btnCheckInv", 3 * (btnWidth + 3) + 5, chbHeight + 5, btnWidth, btnHeight, frame);
-
-  CHD_frmMainbtnCheckAll:SetScript("OnClick", OnCHD_frmMainbtnCheckAllClick);
-  CHD_frmMainbtnCheckNone:SetScript("OnClick", OnCHD_frmMainbtnCheckNoneClick);
-  CHD_frmMainbtnCheckInv:SetScript("OnClick", OnCHD_frmMainbtnCheckInvClick);
-
-  local arrCheckboxName = {
-    "chbCurrency", "chbInventory", "chbBags", "chbEquipment",
-    "chbSpells", "chbMounts", "chbCritters", "chbGlyphs", "chbTalent",
-    "chbFriend", "chbActions", "chbMacro", "chbBind",
-    "chbReputation", "chbAchievements", "chbStatistic", "chbCriterias",
-    "chbArena",
-    "chbTitles",
-    "chbSkills", "chbProfessions",
-    "chbQuestlog",
-    "chbPet"
-  };
-
-  local cx, cy = 170, chbHeight;
-  local x, y = 5, cy * 2 + 5;
-  for i = 1, #arrCheckboxName do
-    chb = CHD_CreateCheckBox(arrCheckboxName[i], x, y, frame);
-    table.insert(CHD_arrCheckboxes, chb);
-    y = y + cy;
-    if y > (chbHeight * 8 + 20) then
-      x = x + cx;
-      y = chbHeight;
-    end
-  end
-
-  local arrCheckboxDinName = {"chbQuests", "chbBank", "chbTaxi", "chbSkillSpell"};
-  for i = 1, #arrCheckboxDinName do
-    chb = CHD_CreateCheckBox(arrCheckboxDinName[i], 40, chbHeight * (i + 8) + 8, frame);
-    table.insert(CHD_arrCheckboxes, chb);
-  end
-
-  local arrButtonName = {"btnQuestDel", "btnBankDel", "btnTaxiDel", "btnSkillSpellDel"};
-  local arrButtonTitle = {"DeleteQuests", "DeleteBank", "DeleteTaxi", "DeleteSkillSpell"};
-  for i = 1,#arrButtonName do
-    local title = L[arrButtonTitle[i] ];
-    local btn = CHD_CreateButton(arrButtonName[i], 10, cy * (i + 8) + 8, btnWidth, btnHeight, frame, title);
-  end
-
-  CHD_frmMainbtnQuestDel:SetScript("OnClick", OnCHD_frmMainbtnQuestDelClick);
-  CHD_frmMainbtnBankDel:SetScript("OnClick", OnCHD_frmMainbtnBankDelClick);
-  CHD_frmMainbtnTaxiDel:SetScript("OnClick", OnCHD_frmMainbtnTaxiDelClick);
-  CHD_frmMainbtnSkillSpellDel:SetScript("OnClick", OnCHD_frmMainbtnSkillSpellDelClick);
 
   local btn = CHD_CreateButton("btnQuestQuery", 180, chbHeight * 9 + 8, 150, btnHeight, frame);
   btn:SetScript("OnClick", CHD_OnQueryQuestClick);
