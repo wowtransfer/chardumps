@@ -326,7 +326,7 @@ function mainFrame:OnEvent(event, ...)
   elseif "TAXIMAP_OPENED" == event then
     mainFrame:OnTaximapOpened();
   elseif "VARIABLES_LOADED" == event then
-    --CHD_OnVariablesLoaded();
+    mainFrame:OnVariablesLoaded();
   elseif "TRADE_SKILL_SHOW" == event then
     mainFrame:OnTradeSkillShow(arg1);
   elseif "QUEST_DETAIL" == event or "QUEST_PROGRESS" == event then
@@ -467,6 +467,25 @@ function mainFrame:OnTaximapOpened()
   mainFrame:UpdateEntityText("taxi", "(" .. chardumps.dumper:GetTaxiCount() .. ")");
 
   chardumps.log:Message(L.CountOfTaxi .. tostring(#res));
+end
+
+function mainFrame:OnVariablesLoaded()
+	CHD_CLIENT = {};
+
+  -- server
+  CHD_SERVER_LOCAL = {};
+
+  CHD_SERVER_LOCAL.quest = {};
+  CHD_SERVER_LOCAL.bank = {};
+  CHD_SERVER_LOCAL.bank.mainbank = {};
+  CHD_SERVER_LOCAL.skillspell = {};
+
+  --[[
+  if not CHD_trycall(CHD_SetOptions) then
+    CHD_SetOptionsDef();
+    CHD_trycall(CHD_SetOptions);
+  end
+  --]]
 end
 
 chardumps.mainFrame = mainFrame;
