@@ -165,36 +165,6 @@ local function CHD_GetPvpCurrency(tCurrency)
 	return honor, ap, cp;
 end
 
-
-local function CHD_GetStatisticInfo()
-	local res = {};
-
-	--local categories = GetCategoryList(); -- A list of achievement category IDs (table)
-	local categories = GetStatisticsCategoryList(); --  A list of statistic category IDs (table)
-
-	CHD_Message(L.GetStatistic);
-	for k, categoryId in ipairs(categories) do
-		--local name, parentID, flags = GetCategoryInfo(categoryId);
-		--print(string.format("categoryId: %d, name: %s, parentID: %d, flags: %d", categoryId, name, parentID, flags));
-
-		local numItems, numCompleted = GetCategoryNumAchievements(categoryId); -- Returns the number of achievements/statistics to display in a category.
-		--local categoryItem = {};
-		--categoryItem.N = name;
-
-		for i = 1, numItems do
-			local statisticID, name, points, completed, Month, Day, Year, description, flags, _, rewardText, isGuildAch = GetAchievementInfo(categoryId, i);
-			local description, type, completedCriteria, quantity, requiredQuantity, characterName, flags, assetID, quantityString, criteriaID = GetAchievementCriteriaInfo(statisticID, 1);
-			if criteriaID and completedCriteria and quantity > 0 then
-				--table.insert(categoryItem, criteriaID, {["Q"] = quantity, ["N"] = name});
-				table.insert(res, criteriaID, quantity);
-			end
-		end
-		--table.insert(res, categoryId, categoryItem);
-	end
-
-	return res;
-end
-
 -- TODO: remove
 function compSkill(e1, e2)
 	return e1.N < e2.N;

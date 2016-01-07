@@ -21,7 +21,12 @@ function dumper:Dump(options)
   dump.achievement = chardumps:TryCall(self.GetAchievementData) or {};
   dump.action = chardumps:TryCall(self.GetActionData) or {};
   dump.criterias = chardumps:TryCall(self.GetCriteriasData) or {};
-
+  dump.statistic = chardumps:TryCall(self.GetStatisticData) or {};
+  --dump.glyph  = chardumps:TryCall(self.) or {};
+  --dump.glyph  = chardumps:TryCall(self.) or {};
+  --dump.glyph  = chardumps:TryCall(self.) or {};
+  --dump.glyph  = chardumps:TryCall(self.) or {};
+  --dump.glyph  = chardumps:TryCall(self.) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
 
   if options.crypt then
@@ -513,7 +518,25 @@ function dumper:GetSpellData()
 end
 
 function dumper:GetStatisticData()
+  local L = chardumps:GetLocale();
+  local res = {};
 
+  local categories = GetStatisticsCategoryList();
+
+  chardumps.log:Message(L.GetStatistic);
+  for k, categoryId in ipairs(categories) do
+    local numItems, numCompleted = GetCategoryNumAchievements(categoryId);
+
+    for i = 1, numItems do
+      local statisticID, name, points, completed, Month, Day, Year, description, flags, _, rewardText, isGuildAch = GetAchievementInfo(categoryId, i);
+      local description, type, completedCriteria, quantity, requiredQuantity, characterName, flags, assetID, quantityString, criteriaID = GetAchievementCriteriaInfo(statisticID, 1);
+      if criteriaID and completedCriteria and quantity > 0 then
+        table.insert(res, criteriaID, quantity);
+      end
+    end
+  end
+
+  return res;
 end
 
 function dumper:GetTalentData()
