@@ -28,7 +28,7 @@ function dumper:Dump(options)
   dump.bag     = chardumps:TryCall(self.GetBagData) or {};
   dump.equipment  = chardumps:TryCall(self.GetEquipmentData) or {};
   dump.questlog = chardumps:TryCall(self.GetQuestlogData) or {};
-  --dump.glyph  = chardumps:TryCall(self.) or {};
+  dump.title = chardumps:TryCall(self.GetTitleData) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
@@ -747,7 +747,17 @@ function dumper:GetTaxiData()
 end
 
 function dumper:GetTitleData()
+  local L = chardumps:GetLocale();
+  local res = {};
 
+  chardumps.log:Message(L.GetTitles);
+  for i = 1, GetNumTitles() do
+    if IsTitleKnown(i) == 1 then
+      table.insert(res, i);
+    end
+  end
+
+  return res;
 end
 
 function dumper:SetDynamicData(name, value)

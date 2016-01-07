@@ -189,10 +189,6 @@ local function CHD_GetProfessionsInfo()
 	return res;
 end
 
-local function CHD_GetQuestlogInfo()
-	
-end
-
 local function CHD_GetArenaInfo()
 	local res = {};
 
@@ -226,19 +222,6 @@ local function CHD_GetBindInfo()
 		local commandName, binding1, binding2 = GetBinding(i);
 		if (binding1 or binding2) and (CHD_bindings[commandName]) then
 			table.insert(res, {commandName, binding1, binding2});
-		end
-	end
-
-	return res;
-end
-
-local function CHD_GetTitlesInfo()
-	local res = {};
-
-	CHD_Message(L.GetTitles);
-	for i = 1, GetNumTitles() do
-		if IsTitleKnown(i) == 1 then
-			table.insert(res, i);
 		end
 	end
 
