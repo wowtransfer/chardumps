@@ -13,6 +13,7 @@ function dumper:Dump(options)
   dump.global = chardumps:TryCall(self.GetGlobalData) or {};
   dump.player = chardumps:TryCall(self.GetPlayerData) or {};
   dump.glyph  = chardumps:TryCall(self.GetGlyphData) or {};
+  dump.currency = chardumps:TryCall(self.GetCurrencyData) or {};
   
   --dump.glyph  = chardumps:TryCall(self.) or {};
 
@@ -132,7 +133,57 @@ function dumper:GetCritterData()
 end
 
 function dumper:GetCurrencyData()
+  local L = chardumps:GetLocale();
+  local res = {};
 
+  chardumps.log:Message(L.GetCurrency);
+
+  local i = 1;
+  while true do
+    local name, isHeader = GetCurrencyListInfo(i);
+    if (not name) then
+      break;
+    end
+    if isHeader then
+      ExpandCurrencyList(i, 1);
+    end
+    i = i + 1;
+  end
+
+  local tCurrency = {};
+  local patchVersion = chardumps:getPatchVersion();
+  if patchVersion == 3 then
+    tCurrency = {
+      121, 122, 103, 42, 241, 390, 81, 61, 384, 386, 221, 341, 101,
+      301, 102, 123, 392, 321, 395, 161, 124, 385, 201, 125, 126
+    };
+  elseif patchVersion == 4 then
+    tCurrency = {
+      789, 241, 390, 61, 515, 398, 384, 697, 81, 615, 393, 392, 361,
+      402, 395, 738, 754, 416, 677, 752, 614, 400, 394, 397, 676, 777,
+      401, 391, 385, 396, 399, 776
+    };
+  end
+
+  if patchVersion == 3 then
+    for i = 1, GetCurrencyListSize() do
+      -- name, isHeader, isExpanded, isUnused, isWatched, count, extraCurrencyType, icon, itemID = GetCurrencyListInfo(index)
+      local _, isHeader, _, _, _, count, _, _, itemID = GetCurrencyListInfo(i);
+      if (not isHeader) and itemID and (count > 0) then
+        table.insert(res, itemID, count);
+      end
+    end
+  elseif patchVersion == 4 then
+    for _, currencyId in ipairs(tCurrency) do
+      -- name, amount, texturePath, earnedThisWeek, weeklyMax, totalMax, isDiscovered = GetCurrencyInfo(id)
+      local name, amount, _, _, _, _, isDiscovered = GetCurrencyInfo(currencyId);
+      if name and isDiscovered and amount > 0 then
+        table.insert(res, currencyId, amount);
+      end
+    end
+  end
+
+  return res;
 end
 
 function dumper:GetGlobalData()
