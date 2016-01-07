@@ -16,7 +16,8 @@ function dumper:Dump(options)
   dump.currency = chardumps:TryCall(self.GetCurrencyData) or {};
   dump.spell  = chardumps:TryCall(self.GetSpellData) or {};
   dump.mount  = chardumps:TryCall(self.GetMountData) or {};
-  
+  dump.critter  = chardumps:TryCall(self.GetCritterData) or {};
+
   --dump.glyph  = chardumps:TryCall(self.) or {};
 
   if options.crypt then
@@ -131,7 +132,17 @@ function dumper:GetCriteriasData()
 end
 
 function dumper:GetCritterData()
+  local L = chardumps:GetLocale();
+  local res = {};
 
+  chardumps.log:Message(L.GetCritter);
+  for i = 1, GetNumCompanions("CRITTER") do
+    local _, _, spellID = GetCompanionInfo("CRITTER", i);
+    res[i] = spellID;
+  end
+  table.sort(res);
+
+  return res;
 end
 
 function dumper:GetCurrencyData()

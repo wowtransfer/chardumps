@@ -165,19 +165,6 @@ local function CHD_GetPvpCurrency(tCurrency)
 	return honor, ap, cp;
 end
 
-local function CHD_GetCritterInfo()
-	local res = {};
-
-	CHD_Message(L.GetCritter);
-	for i = 1, GetNumCompanions("CRITTER") do
-		local _, _, spellID = GetCompanionInfo("CRITTER", i);
-		res[i] = spellID;
-	end
-	sort(res);
-
-	return res;
-end
-
 local function CHD_GetRepInfo()
 	local res = {};
 	local tblRep = {};
