@@ -57,8 +57,16 @@ function dumper:UpdateAllFrames()
   end
 end
 
+function dumper:UpdateDynamicAllFrames()
+  local names = chardumps.entityManager:GetDynamicNames();
+  for _, name in pairs(names) do
+    self:UpdateFrame(name);
+  end
+end
+
 function dumper:UpdateFrame(name)
   local count = self:GetEntityCount(name);
+  print(name, count);
   chardumps.mainFrame:UpdateEntityText(name, count);
 end
 
@@ -71,10 +79,15 @@ function dumper:GetEntityCount(name)
 
   if type(fun) == "function" then
     count = fun(self);
-	elseif type(entity) == "table" then
-	  count = #entity;
-	  if count == 0 then
-      count = chardumps:GetTableLength(entity);
+	else
+	  if entity == nil then -- dynamic data?
+      local data = self:GetDynamicData(name);
+      count = #data; -- TODO: GetTableLength
+    elseif type(entity) == "table" then
+      count = #entity;
+      if count == 0 then
+        count = chardumps:GetTableLength(entity);
+      end
     end
 	end
 
@@ -937,6 +950,14 @@ function dumper:GetDynamicData(name)
   return self.dynamicDump[name] or {};
 end
 
+function dumper:GetDynamicDataAll()
+  return self.dynamicDump;
+end
+
+function dumper:SetDynamicDataAll(data)
+  self.dynamicDump = data or {};
+end
+
 ---
 --@return #table
 function dumper:GetBankItemsCount()
@@ -958,7 +979,8 @@ end
 function dumper:GetSkillspellItemsCount()
   local count = 0;
 
-  for _, v in pairs(self:GetDynamicData("skillspell")) do
+  local data = self:GetDynamicData("skillspell");
+  for k, v in pairs(data) do
     count = count + #v;
   end
 

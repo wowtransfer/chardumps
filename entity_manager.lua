@@ -4,7 +4,7 @@ local entityManager = {
 		achievement = {},
 		action = {},
 		bag = {},
-		bank = {},
+		bank = {dynamic = true},
 		bind = {},
 		criterias = {},
 		critter = {},
@@ -17,11 +17,11 @@ local entityManager = {
 		player = {always = true},
 		pet = {disable = true},
 		pmacro = {disable = true},
-		quest = {},
+		quest = {dynamic = true},
 		questlog = {},
 		reputation = {},
 		skill = {},
-		skillspell = {},
+		skillspell = {dynamic = true},
 		spell = {},
 		statistic = {},
 		talent = {},
@@ -65,6 +65,19 @@ function entityManager:GetNames()
     table.sort(self.names);
   end
   return self.names;
+end
+
+function entityManager:GetDynamicNames()
+  if self.dynamicNames == nil then
+    self.dynamicNames = {};
+    for key, entity in pairs(self.entities) do
+      if entity.dynamic then
+        table.insert(self.dynamicNames, key);
+      end
+    end
+    table.sort(self.dynamicNames);
+  end
+  return self.dynamicNames;
 end
 
 chardumps.entityManager = entityManager;

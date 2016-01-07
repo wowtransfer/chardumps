@@ -383,6 +383,9 @@ function mainFrame:OnPlayerLeavingWorld()
   CHD_OPTIONS.entities = entities;
   CHD_OPTIONS.crypt = self.chbCrypt:GetChecked();
   CHD_OPTIONS.minimize = options.minimize;
+
+  -- TODO: may be errors on the reading
+  CHD_OPTIONS.dynamicData = chardumps.dumper:GetDynamicDataAll();
 end
 
 function mainFrame:ApplyOptions()
@@ -524,6 +527,10 @@ function mainFrame:OnVariablesLoaded()
 	CHD_CLIENT = {};
 
   chardumps.log:Debug("VARIABLES_LOADED");
+
+  local dynamicData = CHD_OPTIONS.dynamicData;
+  chardumps.dumper:SetDynamicDataAll(dynamicData);
+  chardumps.dumper:UpdateDynamicAllFrames();
 
   self:ApplyOptions();
 end
