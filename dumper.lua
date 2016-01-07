@@ -27,7 +27,7 @@ function dumper:Dump(options)
   dump.pmacro  = chardumps:TryCall(self.GetPMacroData) or {};
   dump.bag     = chardumps:TryCall(self.GetBagData) or {};
   dump.equipment  = chardumps:TryCall(self.GetEquipmentData) or {};
-  --dump.glyph  = chardumps:TryCall(self.) or {};
+  dump.questlog = chardumps:TryCall(self.GetQuestlogData) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
@@ -597,7 +597,34 @@ function dumper:GetQuestData()
 end
 
 function dumper:GetQuestlogData()
+  local L = chardumps:GetLocale();
+  local res = {};
+  local numEntries, numQuests = GetNumQuestLogEntries();
 
+  chardumps.log:Message(L.GetQuestlog);
+  local j = 1;
+  for i = 1, numEntries do
+    local _, _, _, _, isHeader, isCollapsed, isComplete, isDaily, questID = GetQuestLogTitle(i);
+    local link, _, charges = GetQuestLogSpecialItemInfo(i);
+    -- - 1 - The quest was failed
+    --   1 - The quest was completed
+    -- nil - The quest has yet to reach a conclusion
+    -- questID, isComplete, itemID
+    if isHeader == nil then
+      if isComplete ~= 1 then
+        isComplete = 0;
+      end
+      local itemID = 0;
+      if link then
+        itemID = tonumber(strmatch(link, "Hitem:(%d+)"));
+      end
+      res[j] = {["Q"] = questID, ["B"] = isComplete, ["I"] = itemID};
+      j = j + 1;
+    end
+  end
+  table.sort(res, function(e1, e2) return e1.Q < e2.Q end);
+
+  return res;
 end
 
 function dumper:GetReputationData()
