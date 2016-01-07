@@ -5,6 +5,7 @@ nbproject/*
 build.settings
 *.proj
 
+.settings
 
 !.gitignore
 !.gitkeep
