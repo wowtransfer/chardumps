@@ -22,12 +22,13 @@ function dumper:Dump(options)
   dump.action = chardumps:TryCall(self.GetActionData) or {};
   dump.criterias = chardumps:TryCall(self.GetCriteriasData) or {};
   dump.statistic = chardumps:TryCall(self.GetStatisticData) or {};
+  dump.skill = chardumps:TryCall(self.GetSkillData) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
-  --dump.glyph  = chardumps:TryCall(self.) or {};
+  
 
   if options.crypt then
     -- TODO: crypt it
@@ -276,7 +277,7 @@ function dumper:GetCurrencyData()
   end
 
   local tCurrency = {};
-  local patchVersion = chardumps:getPatchVersion();
+  local patchVersion = chardumps:GetPatchVersion();
   if patchVersion == 3 then
     tCurrency = {
       121, 122, 103, 42, 241, 390, 81, 61, 384, 386, 221, 341, 101,
@@ -344,7 +345,7 @@ function dumper:GetGlyphData()
   --]]
   chardumps.log:Message(L.GetPlyph);
 
-  local moreWow3 = chardumps:getPatchVersion() > 3;
+  local moreWow3 = chardumps:GetPatchVersion() > 3;
   if moreWow3 then
     for i = 1, GetNumGlyphs() do
       -- name, glyphType, isKnown, icon, castSpell = GetGlyphInfo(index);
@@ -484,7 +485,35 @@ function dumper:GetReputationData()
 end
 
 function dumper:GetSkillData()
+  local L = chardumps:GetLocale();
+  local res = {};
 
+  if chardumps:GetPatchVersion() > 3 then
+    return res;
+  end
+
+  local i = 1;
+  while true do
+    local name, isHeader = GetSkillLineInfo(i);
+    if not name then
+      break;
+    end
+    if isHeader then
+      ExpandSkillHeader(i, 1);
+    end
+    i = i + 1;
+  end
+
+  chardumps.log:Message(L.GetSkill);
+  for i = 1, GetNumSkillLines() do
+    local skillName, _, _, skillRank, _, _, skillMaxRank = GetSkillLineInfo(i);
+    if skillName and (skillRank > 0) and (skillMaxRank > 0) then
+      table.insert(res, {["N"] = skillName, ["R"] = skillRank, ["M"] = skillMaxRank});
+    end
+  end
+  table.sort(res, function(e1, e2) return e1.N < e2.N end);
+
+  return res;
 end
 
 function dumper:GetSkillspellData()

@@ -16,7 +16,7 @@ function chardumps:GetVersion()
 	return "1.11";
 end
 
-function chardumps:getPatchVersion()
+function chardumps:GetPatchVersion()
 	if self.patchVertion == nil then
 		local _, clientBuild = GetBuildInfo();
 		clientBuild = tonumber(clientBuild);
@@ -90,7 +90,7 @@ end
 
 function chardumps:checkWowVersion()
   assert("Unsupported WoW version. ASSERT");
-	if self:getPatchVersion() == nil then
+	if self:GetPatchVersion() == nil then
 		error("Unsupported WoW version");
 	end
 end

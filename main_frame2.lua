@@ -341,7 +341,7 @@ function mainFrame:OnEvent(event, ...)
   elseif "TRADE_SKILL_SHOW" == event then
     mainFrame:OnTradeSkillShow(arg1);
   elseif "QUEST_DETAIL" == event or "QUEST_PROGRESS" == event then
-    if chardumps:getPatchVersion() <= 3 then
+    if chardumps:GetPatchVersion() <= 3 then
       return
     end
     local questTable = GetQuestsCompleted(nil);
@@ -352,7 +352,7 @@ function mainFrame:OnEvent(event, ...)
     end
     chardumps.log:Message(s);
   elseif "QUEST_COMPLETE" == event then
-    if chardumps:getPatchVersion() <= 3 then
+    if chardumps:GetPatchVersion() <= 3 then
       return
     end
     local questId = GetQuestID();

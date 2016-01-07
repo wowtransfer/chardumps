@@ -165,42 +165,6 @@ local function CHD_GetPvpCurrency(tCurrency)
 	return honor, ap, cp;
 end
 
--- TODO: remove
-function compSkill(e1, e2)
-	return e1.N < e2.N;
-end
-
-local function CHD_GetSkillInfo()
-	local res = {};
-
-	if not WOW3 then
-		return res;
-	end
-
-	local i = 1;
-	while true do
-		local name, isHeader = GetSkillLineInfo(i);
-		if not name then
-			break;
-		end
-		if isHeader then
-			ExpandSkillHeader(i, 1);
-		end
-		i = i + 1;
-	end
-
-	CHD_Message(L.GetSkill);
-	for i = 1, GetNumSkillLines() do
-		local skillName, _, _, skillRank, _, _, skillMaxRank = GetSkillLineInfo(i);
-		if skillName and (skillRank > 0) and (skillMaxRank > 0) then
-			table.insert(res, {["N"] = skillName, ["R"] = skillRank, ["M"] = skillMaxRank});
-		end
-	end
-	table.sort(res, compSkill);
-
-	return res;
-end
-
 local function CHD_GetProfessionsInfo()
 	local res = {};
 
