@@ -23,7 +23,7 @@ function dumper:Dump(options)
   dump.criterias = chardumps:TryCall(self.GetCriteriasData) or {};
   dump.statistic = chardumps:TryCall(self.GetStatisticData) or {};
   dump.skill = chardumps:TryCall(self.GetSkillData) or {};
-  --dump.glyph  = chardumps:TryCall(self.) or {};
+  dump.inventory  = chardumps:TryCall(self.GetInventoryData) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
@@ -345,7 +345,7 @@ function dumper:GetGlyphData()
   --]]
   chardumps.log:Message(L.GetPlyph);
 
-  local moreWow3 = chardumps:GetPatchVersion() > 3;
+  local moreWow3 = chardumps:etPatchVersion() > 3;
   if moreWow3 then
     for i = 1, GetNumGlyphs() do
       -- name, glyphType, isKnown, icon, castSpell = GetGlyphInfo(index);
@@ -386,7 +386,84 @@ function dumper:GetEquipmentData()
 end
 
 function dumper:GetInventoryData()
+  local L = chardumps:GetLocale();
+  local res = {};
+  local index = 24;
 
+  chardumps.log:Message(L.GetInventory);
+  -- 1..19 equipped items +
+  -- 20-23 Equipped Bags +
+  -- 24-39 Main Backpack +
+  -- 40-67 Main Bank
+  -- 68-74 Bank Bags
+  -- 86-117 Keys in Keyring +
+
+  for i = 1, 23 do
+    local itemLink = GetInventoryItemLink("player", i);
+    if itemLink then
+      local count = GetInventoryItemCount("player", i);
+      for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink,".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do 
+        local tmpItem = {
+          ["I"] = tonumber(id)
+        };
+        if count > 1 then tmpItem["N"] = count end
+        if tonumber(enchant) > 0 then tmpItem["H"] = tonumber(enchant) end
+        if tonumber(gem1) > 0 then tmpItem["G1"] = tonumber(gem1) end
+        if tonumber(gem2) > 0 then tmpItem["G2"] = tonumber(gem2) end
+        if tonumber(gem3) > 0 then tmpItem["G3"] = tonumber(gem3) end
+
+        res[i] = tmpItem;
+      end
+    end
+  end
+
+  local container = 0;
+  for slot = 1, GetContainerNumSlots(container) do
+    local itemLink = GetContainerItemLink(container, slot);
+    if itemLink then
+      local _, count = GetContainerItemInfo(container, slot);
+      for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink, ".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do 
+        local tmpItem = {
+          ["I"] = tonumber(id)
+        };
+        if count > 1 then tmpItem["N"] = count end
+        if tonumber(enchant) > 0 then tmpItem["H"] = tonumber(enchant) end
+        if tonumber(gem1) > 0 then tmpItem["G1"] = tonumber(gem1) end
+        if tonumber(gem2) > 0 then tmpItem["G2"] = tonumber(gem2) end
+        if tonumber(gem3) > 0 then tmpItem["G3"] = tonumber(gem3) end
+
+        res[index] = tmpItem;
+      end
+    end
+    index = index + 1;
+  end
+
+  container = -2;
+  index = 86;
+  for slot = 1, GetContainerNumSlots(container) do
+    local itemLink = GetContainerItemLink(container, slot);
+    if itemLink then
+      local id = GetContainerItemID(container, slot);
+      local _, count = GetContainerItemInfo(container, slot);
+      local tmpItem = {
+        ["I"] = tonumber(id)
+      };
+      if count > 1 then tmpItem["N"] = count end
+      res[index] = tmpItem;
+    end
+    index = index + 1;
+  end
+  
+  -- Add main bank
+  local bankData = dumper:GetDynamicData("bank");
+  if bankData.mainbank then
+    for i = 40, 74 do
+      res[i] = bankData.mainbank[i];
+    end
+  end
+  --bankData.mainbank = nil; -- TODO: why?
+
+  return res;
 end
 
 function dumper:GetMountData()
