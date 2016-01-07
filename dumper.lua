@@ -10,7 +10,8 @@ local dumper = {
 function dumper:Dump(options)
   local dump = {};
 
-  dump.global = self:GetGlobalData();
+  dump.global = chardumps:TryCall(self.GetGlobalData) or {};
+  dump.player = chardumps:TryCall(self.GetPlayerData) or {};
 
   if options.crypt then
     -- TODO: crypt it
@@ -166,7 +167,29 @@ function dumper:GetMountData()
 end
 
 function dumper:GetPlayerData()
+  local res  = {};
+  local L = chardumps:GetLocale();
 
+  chardumps.log:Message(L.GetPlayer);
+
+  res.name             = UnitName("player");
+  local _, class       = UnitClass("player");
+  res.class            = class;
+  res.level            = UnitLevel("player");
+  local _, race        = UnitRace("player");
+  res.race             = race;
+  res.gender           = UnitSex("player");
+  local honorableKills = GetPVPLifetimeStats()
+  res.kills            = honorableKills;
+  res.money            = math.floor(GetMoney() / 10000); -- convert to gold
+  res.specs            = GetNumTalentGroups();
+  if GetActiveSpecGroup ~= nil then
+    res.active_spec = GetActiveSpecGroup();
+  end
+  res.health           = UnitHealth("player");
+  res.mana             = UnitMana("player");
+
+  return res;
 end
 
 function dumper:GetPetData()

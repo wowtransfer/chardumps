@@ -143,35 +143,6 @@ end
 	Get data
 --]]
 
-local function CHD_GetPlayerInfo()
-	local res  = {};
-
-	CHD_Message(L.GetPlayer);
-	res.name             = UnitName("player");
-	local _, class       = UnitClass("player");
-	res.class            = class;
-	res.level            = UnitLevel("player");
-	local _, race        = UnitRace("player");
-	res.race             = race;
-	res.gender           = UnitSex("player");
-	local honorableKills = GetPVPLifetimeStats()
-	res.kills            = honorableKills;
-	res.money            = math.floor(GetMoney() / 10000); -- convert to gold
-	res.specs            = GetNumTalentGroups();
-	if (GetActiveSpecGroup ~= nil) then
-		res.active_spec  = GetActiveSpecGroup();
-	end
-	res.health           = UnitHealth("player");
-	res.mana             = UnitMana("player");
-	res.totaltime        = tonumber(CHD_frmMainedtTotalTime:GetText());
-	if res.totaltime == nil then
-		CHD_LogWarn(L.TotalTimeUndefined);
-		res.totaltime = 0;
-	end
-
-	return res;
-end
-
 local function CHD_GetGlyphInfo()
 	local res ={ {}, {} };
 	local items = {};
