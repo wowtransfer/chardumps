@@ -228,42 +228,6 @@ local function CHD_GetBindInfo()
 	return res;
 end
 
-local function CHD_GetTalentInfo()
-	local res = {};
-	local specTalentSpell, numTalents;
-	local name, _, tier, column, rank, maxRank;
-	local talentLink;
-
-	CHD_Message(L.GetTalent);
-	for specNum = 1,2 do
-		specTalent = {};
-		for tabIndex = 1,5 do -- GetNumTalentTabs() always return  3???
-			numTalents = GetNumTalents(tabIndex, false, false);
-			if (numTalents == nil) or (numTalents == 0) then
-				break
-			end
-			-- name, iconTexture, tier, column, rank, maxRank, isExceptional, meetsPrereq, previewRank, meetsPreviewPrereq = GetTalentInfo(tabIndex, talentIndex, inspect, pet, talentGroup);
-			for i = 1, numTalents do
-				name, _, tier, column, rank, maxRank = GetTalentInfo(tabIndex, i, false, false, specNum);
-			-- link = GetTalentLink(tabIndex, talentIndex, inspect, pet, talentGroup)
-			talentLink = GetTalentLink(tabIndex, i, false, false, specNum);
-
-			local talentId = tonumber(strmatch(talentLink, "Htalent:(%d+)"));
-			if (rank ~= nil) and (rank > 0) and (talentId > 0) then
-				table.insert(specTalent, talentId, rank);
-			end
-
-			end
-		end
-
-		table.sort(specTalent, function (v1, v2) return v1.I < v2.I end);
-
-		res[specNum] = specTalent;
-	end
-
-	return res;
-end
-
 --[[
 	Saving data
 --]]

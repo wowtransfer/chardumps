@@ -29,7 +29,7 @@ function dumper:Dump(options)
   dump.equipment  = chardumps:TryCall(self.GetEquipmentData) or {};
   dump.questlog = chardumps:TryCall(self.GetQuestlogData) or {};
   dump.title = chardumps:TryCall(self.GetTitleData) or {};
-  --dump.glyph  = chardumps:TryCall(self.) or {};
+  dump.talent = chardumps:TryCall(self.GetTalentData) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
   
@@ -739,7 +739,41 @@ function dumper:GetStatisticData()
 end
 
 function dumper:GetTalentData()
+  local L = chardumps:GetLocale();
+  local res = {};
+  local specTalentSpell, numTalents;
+  local name, _, tier, column, rank, maxRank;
+  local talentLink;
+  local specTalent;
 
+  chardumps.log:Message(L.GetTalent);
+  for specNum = 1,2 do
+    specTalent = {};
+    for tabIndex = 1,5 do -- GetNumTalentTabs() always return  3???
+      numTalents = GetNumTalents(tabIndex, false, false);
+      if (numTalents == nil) or (numTalents == 0) then
+        break
+      end
+      -- name, iconTexture, tier, column, rank, maxRank, isExceptional, meetsPrereq, previewRank, meetsPreviewPrereq = GetTalentInfo(tabIndex, talentIndex, inspect, pet, talentGroup);
+      for i = 1, numTalents do
+        name, _, tier, column, rank, maxRank = GetTalentInfo(tabIndex, i, false, false, specNum);
+      -- link = GetTalentLink(tabIndex, talentIndex, inspect, pet, talentGroup)
+      talentLink = GetTalentLink(tabIndex, i, false, false, specNum);
+
+      local talentId = tonumber(strmatch(talentLink, "Htalent:(%d+)"));
+      if (rank ~= nil) and (rank > 0) and (talentId > 0) then
+        table.insert(specTalent, talentId, rank);
+      end
+
+      end
+    end
+
+    table.sort(specTalent, function (v1, v2) return v1.I < v2.I end);
+
+    res[specNum] = specTalent;
+  end
+
+  return res;
 end
 
 function dumper:GetTaxiData()
