@@ -21,7 +21,7 @@ function options:Save()
 
 end
 
-function options:Load()
+function options:Load(accountOptions, playerOptions)
 
 end
 

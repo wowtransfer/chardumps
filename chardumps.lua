@@ -83,41 +83,6 @@ function CHD_SetOptions()
 	return true;
 end
 
--- TODO: replace to other file
-function CHD_SaveOptions()
-	CHD_OPTIONS.chbGlyph        = CHD_frmMainchbGlyphs:GetChecked();
-	CHD_OPTIONS.chbCurrency     = CHD_frmMainchbCurrency:GetChecked();
-	CHD_OPTIONS.chbSpells       = CHD_frmMainchbSpells:GetChecked();
-	CHD_OPTIONS.chbMounts       = CHD_frmMainchbMounts:GetChecked();
-	CHD_OPTIONS.chbCritters     = CHD_frmMainchbCritters:GetChecked();
-	CHD_OPTIONS.chbReputation   = CHD_frmMainchbReputation:GetChecked();
-	CHD_OPTIONS.chbAchievements = CHD_frmMainchbAchievements:GetChecked();
-	CHD_OPTIONS.chbCriterias    = CHD_frmMainchbCriterias:GetChecked();
-	CHD_OPTIONS.chbStatistic    = CHD_frmMainchbStatistic:GetChecked();
-	CHD_OPTIONS.chbActions      = CHD_frmMainchbActions:GetChecked();
-	CHD_OPTIONS.chbSkills       = CHD_frmMainchbSkills:GetChecked();
-	CHD_OPTIONS.chbProfessions  = CHD_frmMainchbProfessions:GetChecked();
-	CHD_OPTIONS.chbSkillSpell   = CHD_frmMainchbSkillSpell:GetChecked();
-	CHD_OPTIONS.chbInventory    = CHD_frmMainchbInventory:GetChecked();
-	CHD_OPTIONS.chbBags         = CHD_frmMainchbBags:GetChecked();
-	CHD_OPTIONS.chbEquipment    = CHD_frmMainchbEquipment:GetChecked();
-	CHD_OPTIONS.chbQuestlog     = CHD_frmMainchbQuestlog:GetChecked();
-	CHD_OPTIONS.chbMacro        = CHD_frmMainchbMacro:GetChecked();
-	CHD_OPTIONS.chbFriend       = CHD_frmMainchbFriend:GetChecked();
-	CHD_OPTIONS.chbArena        = CHD_frmMainchbArena:GetChecked();
-	CHD_OPTIONS.chbTalent       = CHD_frmMainchbTalent:GetChecked();
-	CHD_OPTIONS.chbTitles       = CHD_frmMainchbTitles:GetChecked();
-
-	CHD_OPTIONS.chbTaxi         = CHD_frmMainchbTaxi:GetChecked();
-	CHD_OPTIONS.chbQuests       = CHD_frmMainchbQuests:GetChecked();
-	CHD_OPTIONS.chbBank         = CHD_frmMainchbBank:GetChecked();
-	CHD_OPTIONS.chbBind         = CHD_frmMainchbBind:GetChecked();
-
-	CHD_OPTIONS.chbCrypt        = CHD_frmMainchbCrypt:GetChecked();
-
-	return true;
-end
-
 function CHD_GetSkillSpellText()
 	local s = "";
 	local count = 0;

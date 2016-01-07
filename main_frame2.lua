@@ -169,7 +169,7 @@ function mainFrame:Init()
   local events = {
     "TAXIMAP_OPENED", "VARIABLES_LOADED", "BANKFRAME_OPENED", "PLAYER_LEAVING_WORLD",
     "TRADE_SKILL_SHOW", "QUEST_DETAIL", "QUEST_PROGRESS", "QUEST_AUTOCOMPLETE",
-    "QUEST_COMPLETE", "QUEST_QUERY_COMPLETE", -- UNIT_QUEST_LOG_CHANGED
+    "QUEST_COMPLETE", "QUEST_QUERY_COMPLETE", "ADDON_LOADED", "PLAYER_LOGOUT", -- UNIT_QUEST_LOG_CHANGED
   }
   for _, name in pairs(events) do
     frame:RegisterEvent(name);
@@ -284,16 +284,17 @@ end
 function mainFrame:OnMinimizeClick()
   local frame = mainFrame.frame;
   local frameMin = mainFrame.frameMin;
+  print("frame:IsVisible()", frame:IsVisible());
   if frame:IsVisible() then
     frameMin:SetBackdrop(chardumps.widgets:GetBackdrop());
     frameMin:SetParent(UIParent);
     frame:Hide();
-    chardumps.options.mimimize = true;
+    chardumps.options.minimize = true;
   else
     frameMin:SetBackdrop(nil);
     frameMin:SetParent(frame);
     frame:Show();
-    chardumps.options.mimimize = false;
+    chardumps.options.minimize = false;
   end
 end
 
@@ -311,8 +312,17 @@ function mainFrame:IsEntityChecked(name)
   return false;
 end
 
+---
+-- @return #boolean
+function mainFrame:SetEntityChecked(name, value)
+  local data = self.entitiesData[name];
+  if data then
+    value = value or true;
+    data.checkbox:SetChecked(value);
+  end
+end
+
 function mainFrame:OnEvent(event, ...)
-  chardumps.log:Debug(event);
   if "BANKFRAME_OPENED" == event then
     local bankData = {};
     if mainFrame:IsEntityChecked("bank") then
@@ -322,9 +332,11 @@ function mainFrame:OnEvent(event, ...)
     local count = chardumps.dumper:GetBankItemCount();
     mainFrame:UpdateEntityText("bank", "(" .. count .. ")");
   elseif "PLAYER_LEAVING_WORLD" == event then
-    --CHD_SaveOptions();
+    mainFrame:OnPlayerLeavingWorld();
   elseif "TAXIMAP_OPENED" == event then
     mainFrame:OnTaximapOpened();
+  elseif "ADDON_LOADED" == event then
+    mainFrame:OnAddonLoaded(arg1);
   elseif "VARIABLES_LOADED" == event then
     mainFrame:OnVariablesLoaded();
   elseif "TRADE_SKILL_SHOW" == event then
@@ -350,8 +362,42 @@ function mainFrame:OnEvent(event, ...)
     print("debug:", event, arg1, arg2, arg3);
   elseif "QUEST_QUERY_COMPLETE" == event then
     mainFrame:OnQuestQueryComplete();
+  elseif "PLAYER_LOGOUT" == event then
+    chardumps.log:Debug(event .. " " .. arg1 .. " " .. arg2);
   else
     print("debug:", event, arg1, arg2, arg3);
+  end
+end
+
+function mainFrame:OnPlayerLeavingWorld()
+  --chardumps.options:Save(nil, CHD_OPTIONS);
+  local options = chardumps.options;
+  CHD_OPTIONS = {};
+
+  chardumps.log:Debug("PLAYER_LEAVING_WORLD")
+
+  local entities = {};
+  for name, data in pairs(self.entitiesData) do
+    entities[name] = data.checkbox:GetChecked();
+  end
+  CHD_OPTIONS.entities = entities;
+  CHD_OPTIONS.crypt = self.chbCrypt:GetChecked();
+  CHD_OPTIONS.minimize = options.minimize;
+end
+
+function mainFrame:ApplyOptions()
+  local CHD_OPTIONS = CHD_OPTIONS or {};
+  CHD_OPTIONS.entities = CHD_OPTIONS.entities or {};
+
+  chardumps.log:Dump(CHD_OPTIONS);
+
+  for name, checked in pairs(CHD_OPTIONS.entities) do
+    self:SetEntityChecked(name, checked);
+  end
+
+  self.chbCrypt:SetChecked(CHD_OPTIONS.crypt);
+  if CHD_OPTIONS.minimize then
+    self:OnMinimizeClick();
   end
 end
 
@@ -469,23 +515,19 @@ function mainFrame:OnTaximapOpened()
   chardumps.log:Message(L.CountOfTaxi .. tostring(#res));
 end
 
+function mainFrame:OnAddonLoaded(addonName)
+	if addonName ~= "chardumps" then
+	  return
+	end
+	chardumps.log:Debug("ADDON_LOADED");
+end
+
 function mainFrame:OnVariablesLoaded()
 	CHD_CLIENT = {};
 
-  -- server
-  CHD_SERVER_LOCAL = {};
+  chardumps.log:Debug("VARIABLES_LOADED");
 
-  CHD_SERVER_LOCAL.quest = {};
-  CHD_SERVER_LOCAL.bank = {};
-  CHD_SERVER_LOCAL.bank.mainbank = {};
-  CHD_SERVER_LOCAL.skillspell = {};
-
-  --[[
-  if not CHD_trycall(CHD_SetOptions) then
-    CHD_SetOptionsDef();
-    CHD_trycall(CHD_SetOptions);
-  end
-  --]]
+  self:ApplyOptions();
 end
 
 chardumps.mainFrame = mainFrame;
