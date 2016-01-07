@@ -31,8 +31,14 @@ function dumper:Dump(options)
   dump.title = chardumps:TryCall(self.GetTitleData) or {};
   dump.talent = chardumps:TryCall(self.GetTalentData) or {};
   dump.bind   = chardumps:TryCall(self.GetBindData) or {};
-  --dump.glyph  = chardumps:TryCall(self.) or {};
-  
+  dump.profession = chardumps:TryCall(self.GetProfessionData) or {};
+
+  dump.quest     = self:GetDynamicData("quest");
+  dump.taxi      = self:GetDynamicData("taxi");
+  dump.skillspel = self:GetDynamicData("skillspell");
+
+  dump.CHD_FIELD_COUNT = self:GetCounts(dump);
+
   if options.crypt then
     -- TODO: crypt it
     CHD_CLIENT = dump;
@@ -134,6 +140,21 @@ function dumper:GetActionData()
   end
 
   return res;
+end
+
+---
+-- @return #number
+function dumper:GetBagItemsCount()
+  local count = 0;
+  local bagData = self.dump.bag;
+
+  if bagData then
+    for _, v in pairs(bagData) do
+      count = count + #v;
+    end
+  end
+
+  return count;
 end
 
 function dumper:GetBagData()
@@ -376,6 +397,20 @@ function dumper:GetGlobalData()
   res.luaversion   = _VERSION;
 
   return res;
+end
+
+---
+-- @return #number
+function dumper:GetGlyphItemsCount()
+  local glyphData = self.dump.glyph;
+  local count = 0;
+
+  if glyphData then
+    count = count + chardumps:GetTableLength(glyphData[1]);
+    count = count + chardumps:GetTableLength(glyphData[2]);
+  end
+
+  return count;
 end
 
 function dumper:GetGlyphData()
@@ -749,6 +784,20 @@ function dumper:GetStatisticData()
   return res;
 end
 
+---
+-- @return #number
+function dumper:GetTalentItemsCount()
+	local count = 0;
+	local talentData = self.dump.talent;
+
+  if talentData then
+	  count = count + chardumps:GetTableLength(talentData[1]);
+	  count = count + chardumps:GetTableLength(talentData[2]);
+	end
+
+	return count;
+end
+
 function dumper:GetTalentData()
   local L = chardumps:GetLocale();
   local res = {};
@@ -805,6 +854,32 @@ function dumper:GetTitleData()
   return res;
 end
 
+function dumper:GetProfessionData()
+  local L = chardumps:GetLocale();
+	local res = {};
+
+  if chardumps:GetPatchVersion() < 4 then
+    return res;
+  end
+
+  chardumps.log:Message(L.GetProfessions);
+
+  local prof1, prof2, archaeology, fishing, cooking, firstAid = GetProfessions();
+  local indexes = {prof1, prof2, archaeology, fishing, cooking, firstAid};
+  for i = 1,6 do
+    -- name, texture, rank, maxRank, numSpells, spelloffset, skillLine, rankModifier, specializationIndex, specializationOffset = GetProfessionInfo(index)
+    if indexes[i] then
+      local name, _, rank, maxRank, numSpells, spelloffset, skillLine = GetProfessionInfo(indexes[i]);
+      if rank then
+        -- TODO: name delete
+        table.insert(res, {["N"] = name, ["R"] = rank, ["M"] = maxRank, ["K"] = skillLine});
+      end
+    end
+  end
+
+  return res;
+end
+
 function dumper:SetDynamicData(name, value)
   self.dynamicDump[name] = value;
 end
@@ -854,6 +929,41 @@ function dumper:GetTaxiCount()
   end
 
 	return count;
+end
+
+function dumper:GetCounts(dump)
+  dump = dump or self.dump;
+  local res = {};
+	if chardumps:GetTableLength(dump) == 0 then
+    return res;
+  end
+
+  res.achievement = chardumps:GetTableLength(dump.achievement);
+  res.action = chardumps:GetTableLength(dump.action);
+  res.criterias = chardumps:GetTableLength(dump.criterias);
+  res.statistic = chardumps:GetTableLength(dump.statistic);
+  res.critter = #dump.critter;
+  res.mount = #dump.mount;
+  res.bag = self:GetBagItemsCount();
+  res.currency = chardumps:GetTableLength(dump.currency);
+  res.equipment = #dump.equipment;
+  res.reputation = #dump.reputation;
+  res.glyph = self:GetGlyphItemsCount();
+  res.inventory = chardumps:GetTableLength(dump.inventory);
+  res.questlog = #dump.questlog;
+  res.spell = chardumps:GetTableLength(dump.spell);
+  res.skill = #dump.skill;
+  res.pmacro = #dump.pmacro;
+  res.pet = 0;
+  res.bank = self:GetBankItemCount();
+  res.bind = #dump.bind;
+  res.quest = #dump.quest;
+  res.taxi = self:GetTaxiCount();
+  res.skillspell = self:GetSkillspellCount();
+  res.title = #dump.title;
+  res.talent = self:GetTalentItemsCount();
+
+  return res;
 end
 
 chardumps.dumper = dumper;

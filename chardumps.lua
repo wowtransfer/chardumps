@@ -2,24 +2,6 @@ local chardumps = chardumps or {};
 local L = chardumps:GetLocale();
 local CHD_bindings = CHD_bindings or {};
 
-function CHD_GetSkillSpellText()
-	local s = "";
-	local count = 0;
-
-	for k, v in pairs(CHD_SERVER_LOCAL.skillspell) do
-		s = s .. #v .. ", ";
-		count = count + 1;
-	end
-	if count > 0 then
-		s = string.sub(s, 1, -3);
-		s = string.format("%s (%s)", L.chbSkillSpell, s);
-	else
-		s = L.chbSkillSpell;
-	end
-
-	return s;
-end
-
 local function CHD_GetTalentText(talent)
 	local s = "(";
 
@@ -48,96 +30,6 @@ local function CHD_GetTalentCount(talent)
 	return count;
 end
 
-local function CHD_GetGlyphText(glyph)
-	local text = L.chbGlyphs;
-
-	if glyph == nil then
-		return L.chbGlyph;
-	end
-	if glyph.items ~= nil then
-		text = text .. " " .. #glyph.items;
-	else
-		text = text .. " 0";
-	end
-	local n1 = chardumps.getTableLength(glyph[1] or {});
-	local n2 = chardumps.getTableLength(glyph[2] or {});
-	text = text .. string.format(" (%d, %d)", n1, n2);
-
-	return text;
-end
-
-local function CHD_GetGlyphCount(glyph)
-	if glyph == nil then
-		return 0;
-	end
-
-	local n1 = chardumps.getTableLength(glyph[1] or {});
-	local n2 = chardumps.getTableLength(glyph[2] or {});
-
-	return n1 + n2;
-end
-
-local function CHD_GetBagItemCount(bankDump)
-	local count = 0;
-
-	for _, v in pairs(bankDump) do
-		count = count + chardumps.getTableLength(v);
-	end
-
-	return count;
-end
-
-
-local function CHD_FillFieldCountClient(dump)
-	if not dump then
-		return false;
-	end
-
-	local res = {};
-
-	res.achievement = chardumps.getTableLength(dump.achievement);
-	res.action = chardumps.getTableLength(dump.action);
-	res.criterias = chardumps.getTableLength(dump.criterias);
-	res.statistic = chardumps.getTableLength(dump.statistic);
-	res.arena = #dump.arena;
-	res.critter = #dump.critter;
-	res.mount = #dump.mount;
-
-	res.bag = CHD_GetBagItemCount(dump.bag);
-	res.currency = chardumps.getTableLength(dump.currency);
-	res.equipment = #dump.equipment;
-	res.reputation = #dump.reputation;
-	res.glyph = CHD_GetGlyphCount(dump.glyph);
-	res.inventory = chardumps.getTableLength(dump.inventory);
-	res.questlog = #dump.questlog;
-	res.spell = chardumps.getTableLength(dump.spell);
-	res.skill = #dump.skill;
-	res.pmacro = #dump.pmacro;
-	res.friend = #dump.friend;
-	res.pet = 0;
-
-	_, res.bank = CHD_GetBankItemCount();
-	res.bind = #dump.bind;
-	res.quest = #dump.quest;
-	local count = 0;
-	for k, v in pairs(dump.taxi) do
-		count =  count + #v;
-	end
-	res.taxi = count;
-
-	count = 0;
-	for _, v in pairs(dump.skillspell) do
-		count =  count + #v;
-	end
-	res.skillspell = count;
-
-	res.title = #dump.title;
-	res.talent = CHD_GetTalentCount(dump.talent);
-
-	dump.CHD_FIELD_COUNT = res;
-
-	return true;
-end
 
 --[[
 	Get data
@@ -163,55 +55,6 @@ local function CHD_GetPvpCurrency(tCurrency)
 	end
 
 	return honor, ap, cp;
-end
-
-local function CHD_GetProfessionsInfo()
-	local res = {};
-
-	if not WOW4 then
-		return res;
-	end
-
-	CHD_Message(L.GetProfessions);
-	local prof1, prof2, archaeology, fishing, cooking, firstAid = GetProfessions();
-	local indexes = {prof1, prof2, archaeology, fishing, cooking, firstAid};
-	for i = 1,6 do
-		-- name, texture, rank, maxRank, numSpells, spelloffset, skillLine, rankModifier, specializationIndex, specializationOffset = GetProfessionInfo(index)
-		if indexes[i] then
-			local name, _, rank, maxRank, numSpells, spelloffset, skillLine = GetProfessionInfo(indexes[i]);
-			if rank then
-				-- TODO: name delete
-				table.insert(res, {["N"] = name, ["R"] = rank, ["M"] = maxRank, ["K"] = skillLine});
-			end
-		end
-	end
-
-	return res;
-end
-
-local function CHD_GetArenaInfo()
-	local res = {};
-
-	CHD_Message(L.GetArena);
-	for i = 1, 3 do
-		local teamName, teamSize, teamRating, _, _, seasonTeamPlayed, seasonTeamWins, _, seasonPlayerPlayed, _, playerRating, bg_red, bg_green, bg_blue, emblem, emblem_red, emblem_green, emblem_blue, border, border_red, border_green, border_blue = GetArenaTeam(i);
-		if teamName then
-			local arena = {};
-			arena.teamSize           = teamSize;
-			arena.teamName           = teamName;
-			arena.teamRating         = teamRating;
-			arena.seasonTeamPlayed   = seasonTeamPlayed;
-			arena.seasonTeamWins     = seasonTeamWins;
-			arena.seasonPlayerPlayed = seasonPlayerPlayed;
-			arena.playerRating       = playerRating;
-			arena.bg = {["R"] = bg_red, ["G"] = bg_green, ["B"] = bg_blue};
-			arena.emblem = {["S"] = emblem, ["R"] = emblem_red, ["G"] = emblem_green, ["B"] = emblem_blue};
-			arena.border = {["S"] = border, ["R"] = border_red, ["G"] = border_green, ["B"] = border_blue};
-			res[i] = arena;
-		end
-	end
-
-	return res;
 end
 
 --[[
