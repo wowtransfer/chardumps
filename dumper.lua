@@ -26,6 +26,10 @@ function dumper:Dump(options)
   dump.inventory  = chardumps:TryCall(self.GetInventoryData) or {};
   dump.pmacro  = chardumps:TryCall(self.GetPMacroData) or {};
   dump.bag     = chardumps:TryCall(self.GetBagData) or {};
+  dump.equipment  = chardumps:TryCall(self.GetEquipmentData) or {};
+  --dump.glyph  = chardumps:TryCall(self.) or {};
+  --dump.glyph  = chardumps:TryCall(self.) or {};
+  --dump.glyph  = chardumps:TryCall(self.) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
   
@@ -415,7 +419,22 @@ function dumper:GetGlyphData()
 end
 
 function dumper:GetEquipmentData()
+  local L = chardumps:GetLocale();
+  local res = {};
+  local equip;
 
+  chardumps.log:Message(L.GetEquipment);
+  for i = 1, GetNumEquipmentSets() do
+    local name, icon = GetEquipmentSetInfo(i);
+    if name then
+      equip = {};
+      equip["items"] = GetEquipmentSetItemIDs(name); -- return table 1..19
+      equip["name"] = name;
+      res[i] = equip;
+    end
+  end
+
+  return res;
 end
 
 function dumper:GetInventoryData()

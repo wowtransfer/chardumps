@@ -189,32 +189,6 @@ local function CHD_GetProfessionsInfo()
 	return res;
 end
 
-local function CHD_GetInventoryInfo()
-	
-end
-
-local function CHD_GetBagInfo()
-	
-end
-
-local function CHD_GetEquipmentInfo()
-	local res = {};
-	local equip;
-
-	CHD_Message(L.GetEquipment);
-	for i = 1, GetNumEquipmentSets() do
-		local name, icon = GetEquipmentSetInfo(i);
-		if name then
-			equip = {};
-			equip["items"] = GetEquipmentSetItemIDs(name); -- return table 1..19
-			equip["name"] = name;
-			res[i] = equip;
-		end
-	end
-
-	return res;
-end
-
 -- TODO: remove
 function compQuestlog(e1, e2)
 	return e1.Q < e2.Q;
