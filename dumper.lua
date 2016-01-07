@@ -46,6 +46,39 @@ function dumper:Dump(options)
     CHD_CLIENT = dump;
   end
   self.dump = dump;
+
+  self:UpdateAllFrames();
+end
+
+function dumper:UpdateAllFrames()
+  local names = chardumps.entityManager:GetNames();
+  for _, name in pairs(names) do
+    self:UpdateFrame(name);
+  end
+end
+
+function dumper:UpdateFrame(name)
+  local count = self:GetEntityCount(name);
+  chardumps.mainFrame:UpdateEntityText(name, count);
+end
+
+function dumper:GetEntityCount(name)
+	local count = 0;
+
+	local entity = self.dump[name];
+	local functionName = "Get" .. chardumps:Ucfirst(name) .. "ItemsCount";
+	local fun = self[functionName];
+
+  if type(fun) == "function" then
+    count = fun(self);
+	elseif type(entity) == "table" then
+	  count = #entity;
+	  if count == 0 then
+      count = chardumps:GetTableLength(entity);
+    end
+	end
+
+	return count;
 end
 
 ---
@@ -58,6 +91,7 @@ end
 
 function dumper:Clear()
   self.dump = {};
+  self:UpdateAllFrames();
 end
 
 function dumper:DeleteEntityData(name)
@@ -192,6 +226,21 @@ function dumper:GetBagData()
   end
 
   return res;
+end
+
+---
+-- @return #number
+function dumper:GetBagItemsCount()
+  local bagData = self.dump.bag;
+  local count = 0;
+
+  if bagData then
+    for _, v in pairs(bagData) do
+      count = count + table.getn(v);
+    end
+  end
+
+  return count;
 end
 
 function dumper:GetBankData()
@@ -428,7 +477,7 @@ function dumper:GetGlyphData()
   --]]
   chardumps.log:Message(L.GetPlyph);
 
-  local moreWow3 = chardumps:etPatchVersion() > 3;
+  local moreWow3 = chardumps:GetPatchVersion() > 3;
   if moreWow3 then
     for i = 1, GetNumGlyphs() do
       -- name, glyphType, isKnown, icon, castSpell = GetGlyphInfo(index);
@@ -890,7 +939,7 @@ end
 
 ---
 --@return #table
-function dumper:GetBankItemCount()
+function dumper:GetBankItemsCount()
   local count = 0;
   local mainbankCount = 0;
   local bankData = self.dynamicDump["bank"];
@@ -906,7 +955,7 @@ function dumper:GetBankItemCount()
   return mainbankCount + count;
 end
 
-function dumper:GetSkillspellCount()
+function dumper:GetSkillspellItemsCount()
   local count = 0;
 
   for _, v in pairs(self:GetDynamicData("skillspell")) do
@@ -918,7 +967,7 @@ end
 
 ---
 -- @return #number
-function dumper:GetTaxiCount()
+function dumper:GetTaxiItemsCount()
   local taxiData = self:GetDynamicData("taxi");
   local count = 0;
 
@@ -955,11 +1004,11 @@ function dumper:GetCounts(dump)
   res.skill = #dump.skill;
   res.pmacro = #dump.pmacro;
   res.pet = 0;
-  res.bank = self:GetBankItemCount();
+  res.bank = self:GetBankItemsCount();
   res.bind = #dump.bind;
   res.quest = #dump.quest;
-  res.taxi = self:GetTaxiCount();
-  res.skillspell = self:GetSkillspellCount();
+  res.taxi = self:GetTaxiItemsCount();
+  res.skillspell = self:GetSkillspellItemsCount();
   res.title = #dump.title;
   res.talent = self:GetTalentItemsCount();
 

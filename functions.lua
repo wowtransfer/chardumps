@@ -37,3 +37,9 @@ function chardumps:CopyTable(t)
 
   return setmetatable(u, getmetatable(t));
 end
+
+function chardumps:Ucfirst(s)
+  if type(s) == "string" then
+    return s:sub(1, 1):upper() .. s:sub(2);
+  end
+end

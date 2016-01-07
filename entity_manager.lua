@@ -36,6 +36,10 @@ function entityManager:GetEntities()
   return self.entities;
 end
 
+function entityManager:GetEntity(name)
+  return self.entities[name];
+end
+
 ---
 -- @return boolean
 function entityManager:hasEntity(name)

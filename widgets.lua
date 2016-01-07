@@ -248,15 +248,15 @@ end
 function widgets:GetFrameName(name, parentName)
   local result = "";
   if parentName ~= nil and type(parentName) == "string" then
-    result = result .. parentName:sub(1, 1):upper() .. parentName:sub(2);
+    result = result .. chardumps:Ucfirst(parentName);
   end
-  result = result .. name:sub(1, 1):upper() .. name:sub(2);
+  result = result .. chardumps:Ucfirst(name);
 
 	return result;
 end
 
 function widgets:GetWidget(name)
-  local realName = name:sub(1, 1):upper() .. name:sub(2);
+  local realName = chardumps:Ucfirst(name);
   local frameName = framePrefix .. realName;
   return getglobal(frameName);
 end

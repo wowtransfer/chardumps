@@ -202,17 +202,18 @@ function mainFrame:SetActiveDataFrame(name)
   self.activeDataDrame = frame;
 end
 
-function mainFrame:UpdateEntityText(name, text)
+function mainFrame:UpdateEntityText(name, count)
   local data = self.entitiesData[name];
   if data then
+    local entity = chardumps.entityManager:GetEntity(name);
     local chb = data.checkbox;
     local label = getglobal(chb:GetName() .. "Text");
-    if label then
+    local disable = entity and entity.disable;
+    if label and not disable then
       local L = chardumps:GetLocale();
       local entityName = L[name];
-      if text then
-        entityName = entityName .. " " .. text;
-      end
+      count = count or 0;
+      entityName = entityName .. " (" .. count .. ")";
       label:SetText(entityName);
     end
   end
@@ -263,7 +264,7 @@ end
 function mainFrame:OnDeleteAllClick()
   local L = chardumps:GetLocale();
   chardumps.widgets:ShowMessageBox(L.areyousure, function()
-    print("Delete all...");
+    chardumps.dumper:Clear();
   end);
 end
 
@@ -328,8 +329,8 @@ function mainFrame:OnEvent(event, ...)
       bankData = chardumps:TryCall(chardumps.dumper.GetBankData) or {};
     end
     chardumps.dumper:SetDynamicData("bank", bankData);
-    local count = chardumps.dumper:GetBankItemCount();
-    mainFrame:UpdateEntityText("bank", "(" .. count .. ")");
+    local count = chardumps.dumper:GetBankItemsCount();
+    mainFrame:UpdateEntityText("bank", count);
   elseif "PLAYER_LEAVING_WORLD" == event then
     mainFrame:OnPlayerLeavingWorld();
   elseif "TAXIMAP_OPENED" == event then
@@ -402,7 +403,7 @@ function mainFrame:OnQuestQueryComplete()
   --local questData = chardumps.dumper:GetDynamicData("quest");
   local questData = chardumps:TryCall(chardumps.dumper.GetQuestData) or {};
   chardumps.dumper:SetDynamicData("quest", questData);
-  self:UpdateEntityText("quest", "(" .. #questData .. ")");
+  self:UpdateEntityText("quest", #questData);
   chardumps.log:Message(#questData);
 end
 
@@ -471,7 +472,7 @@ function mainFrame:OnTradeSkillShow(flags)
     if data then
       chardumps.widgets:SetTooltip(data.checkbox, L.chbSkillSpell, s);
     end
-    mainFrame:UpdateEntityText("skillspell", string.format("(%d)", chardumps.dumper:GetSkillspellCount()));
+    mainFrame:UpdateEntityText("skillspell", chardumps.dumper:GetSkillspellItemsCount());
   end
 end
 
@@ -507,7 +508,7 @@ function mainFrame:OnTaximapOpened()
   CHD_TAXI[continent] = res;
   chardumps.dumper:SetDynamicData("taxi", taxiData);
 
-  mainFrame:UpdateEntityText("taxi", "(" .. chardumps.dumper:GetTaxiCount() .. ")");
+  mainFrame:UpdateEntityText("taxi", chardumps.dumper:GetTaxiItemsCount());
 
   chardumps.log:Message(L.CountOfTaxi .. tostring(#res));
 end
