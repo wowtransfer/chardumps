@@ -12,6 +12,9 @@ function dumper:Dump(options)
 
   dump.global = chardumps:TryCall(self.GetGlobalData) or {};
   dump.player = chardumps:TryCall(self.GetPlayerData) or {};
+  dump.glyph  = chardumps:TryCall(self.GetGlyphData) or {};
+  
+  --dump.glyph  = chardumps:TryCall(self.) or {};
 
   if options.crypt then
     -- TODO: crypt it
@@ -151,7 +154,54 @@ function dumper:GetGlobalData()
 end
 
 function dumper:GetGlyphData()
+  local L = chardumps:GetLocale();
+  local res = { {}, {} };
+  local items = {};
+  local numGlyphSlot = 0;
+  --[[
+  The major glyph at the top of the user interface (level 15)
+  The minor glyph at the bottom of the user interface (level 15)
+  The minor glyph at the top left of the user interface (level 30)
+  The major glyph at the bottom right of the user interface (level 50)
+  The minor glyph at the top right of the user interface (level 70)
+  The major glyph at the bottom left of the user interface (level 80)
+  --]]
+  chardumps.log:Message(L.GetPlyph);
 
+  local moreWow3 = chardumps:getPatchVersion() > 3;
+  if moreWow3 then
+    for i = 1, GetNumGlyphs() do
+      -- name, glyphType, isKnown, icon, castSpell = GetGlyphInfo(index);
+      -- glyphType: 1 for minor glyphs, 2 for major glyphs, 3 for prime glyphs (number)
+      local name, glyphType, isKnown, icon, castSpell = GetGlyphInfo(i);
+      if isKnown and castSpell then
+      --  print(i, glyphType, castSpell, name);
+        table.insert(items, {["T"] = glyphType, ["I"] = castSpell});
+      end
+    end
+    numGlyphSlot = NUM_GLYPH_SLOTS;
+    res.items = items;
+  else
+    numGlyphSlot = 6; -- GetNumGlyphSockets always returns 6 in 3.3.5a?
+  end
+
+  for talentGroup = 1,2 do
+    local glyphs = res[talentGroup];
+    for socket = 1, numGlyphSlot do
+      -- enabled, glyphType, glyphTooltipIndex, glyphSpell, icon = GetGlyphSocketInfo(socket, talentGroup)
+      local enabled, glyphType, glyphSpell;
+      if moreWow3 then
+        enabled, glyphType, _, glyphSpell = GetGlyphSocketInfo(socket, talentGroup);
+      else
+        enabled, glyphType, glyphSpell = GetGlyphSocketInfo(socket, talentGroup);
+      end
+      if enabled and glyphType and glyphSpell then
+        table.insert(glyphs, {["T"] = glyphType, ["I"] = glyphSpell});
+      end
+    end
+  end
+
+  return res;
 end
 
 function dumper:GetEquipmentData()
