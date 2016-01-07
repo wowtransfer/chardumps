@@ -18,6 +18,7 @@ function dumper:Dump(options)
   dump.mount  = chardumps:TryCall(self.GetMountData) or {};
   dump.critter = chardumps:TryCall(self.GetCritterData) or {};
   dump.reputation = chardumps:TryCall(self.GetReputationData) or {};
+  dump.achievement = chardumps:TryCall(self.GetAchievementData) or {};
 
   --dump.glyph  = chardumps:TryCall(self.) or {};
 
@@ -51,7 +52,38 @@ function dumper:Init()
 end
 
 function dumper:GetAchievementData()
+  local L = chardumps:GetLocale();
+  local res = {};
 
+  chardumps.log:Message(L.GetAchievement);
+
+  local count = 0;
+  local guildCount = 0;
+  local personalCount = 0;
+
+  local id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuildAch;
+  local posixtime;
+
+  for i = 1, 10000 do -- TODO: maximum value
+    status, id, _ --[[name]], _, completed, month, day, year, _ --[[description]], _, _, _, isGuildAch = pcall(GetAchievementInfo, i);
+
+    if status then
+      count = count + 1;
+      if id and completed then
+        if isGuildAch then
+          guildCount = guildCount + 1;
+        else
+          posixtime = time({["year"] = 2000 + year, ["month"] = month, ["day"] = day});
+          personalCount = personalCount + 1;
+          if posixtime then
+            table.insert(res, i, posixtime);
+          end
+        end
+      end
+    end
+  end
+
+  return res;
 end
 
 function dumper:GetActionData()
