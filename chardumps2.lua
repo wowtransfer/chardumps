@@ -95,4 +95,28 @@ function chardumps:checkWowVersion()
 	end
 end
 
+---
+-- @return #table
+function chardumps:GetPlayerOptions()
+  local playerName = UnitName("player"); -- unique
+  local playerKey = playerName;
+
+  if CHD_ACCOUNT_OPTIONS == nil then
+    CHD_ACCOUNT_OPTIONS = {};
+  end
+
+  return CHD_ACCOUNT_OPTIONS[playerKey];
+end
+
+---
+-- @param #table options
+function chardumps:SetPlayerOptions(options)
+  local playerName = UnitName("player"); -- unique
+  local playerKey = playerName;
+  if CHD_ACCOUNT_OPTIONS[playerKey] == nil then
+    CHD_ACCOUNT_OPTIONS[playerKey] = {};
+  end
+  CHD_ACCOUNT_OPTIONS[playerKey] = options;
+end
+
 chardumps:Init();

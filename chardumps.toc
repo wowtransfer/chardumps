@@ -10,7 +10,7 @@
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariables: CHD_ACCOUNT_OPTIONS
-## SavedVariablesPerCharacter: CHD_CLIENT,CHD_TAXI,CHD_OPTIONS
+## SavedVariablesPerCharacter: CHD_CLIENT
 
 global.lua
 log.lua

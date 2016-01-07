@@ -369,35 +369,16 @@ function mainFrame:OnEvent(event, ...)
   end
 end
 
-function mainFrame:OnPlayerLeavingWorld()
-  --chardumps.options:Save(nil, CHD_OPTIONS);
-  local options = chardumps.options;
-  CHD_OPTIONS = {};
-
-  chardumps.log:Debug("PLAYER_LEAVING_WORLD")
-
-  local entities = {};
-  for name, data in pairs(self.entitiesData) do
-    entities[name] = data.checkbox:GetChecked();
-  end
-  CHD_OPTIONS.entities = entities;
-  CHD_OPTIONS.crypt = self.chbCrypt:GetChecked();
-  CHD_OPTIONS.minimize = options.minimize;
-
-  -- TODO: may be errors on the reading
-  CHD_OPTIONS.dynamicData = chardumps.dumper:GetDynamicDataAll();
-end
-
 function mainFrame:ApplyOptions()
-  local CHD_OPTIONS = CHD_OPTIONS or {};
-  CHD_OPTIONS.entities = CHD_OPTIONS.entities or {};
+  local playerOptions = chardumps:GetPlayerOptions();
+  playerOptions.entities = playerOptions.entities or {};
 
-  for name, checked in pairs(CHD_OPTIONS.entities) do
+  for name, checked in pairs(playerOptions.entities) do
     self:SetEntityChecked(name, checked);
   end
 
-  self.chbCrypt:SetChecked(CHD_OPTIONS.crypt);
-  if CHD_OPTIONS.minimize then
+  self.chbCrypt:SetChecked(playerOptions.crypt);
+  if playerOptions.minimize then
     self:OnMinimizeClick();
   end
 end
@@ -508,7 +489,6 @@ function mainFrame:OnTaximapOpened()
   end
   local taxiData = chardumps.dumper:GetDynamicData("taxi");
   taxiData[continent] = res;
-  CHD_TAXI[continent] = res;
   chardumps.dumper:SetDynamicData("taxi", taxiData);
 
   mainFrame:UpdateEntityText("taxi", chardumps.dumper:GetTaxiItemsCount());
@@ -523,13 +503,35 @@ function mainFrame:OnAddonLoaded(addonName)
 	chardumps.log:Debug("ADDON_LOADED");
 end
 
+function mainFrame:OnPlayerLeavingWorld()
+  local options = chardumps.options;
+
+  chardumps.log:Debug("PLAYER_LEAVING_WORLD")
+
+  local entities = {};
+  for name, data in pairs(self.entitiesData) do
+    entities[name] = data.checkbox:GetChecked();
+  end
+
+  -- TODO: create method
+  local playerOptions = {};
+  
+  playerOptions.entities = entities;
+  playerOptions.crypt = self.chbCrypt:GetChecked();
+  playerOptions.minimize = options.minimize;
+  -- TODO: may be errors on the reading
+  playerOptions.dynamicData = chardumps.dumper:GetDynamicDataAll();
+
+  chardumps:SetPlayerOptions(playerOptions);
+end
+
 function mainFrame:OnVariablesLoaded()
-	CHD_CLIENT = {};
+  CHD_CLIENT = {};
 
   chardumps.log:Debug("VARIABLES_LOADED");
 
-  local dynamicData = CHD_OPTIONS.dynamicData;
-  chardumps.dumper:SetDynamicDataAll(dynamicData);
+  local playerOptions = chardumps:GetPlayerOptions();
+  chardumps.dumper:SetDynamicDataAll(playerOptions.dynamicData);
   chardumps.dumper:UpdateDynamicAllFrames();
 
   self:ApplyOptions();

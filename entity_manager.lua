@@ -25,7 +25,7 @@ local entityManager = {
 		spell = {},
 		statistic = {},
 		talent = {},
-		taxi = {},
+		taxi = {dynamic = true},
 		title = {},
 	}
 };

@@ -220,12 +220,6 @@ function CHD_OnDumpClick()
 	end
 	CHD_frmMainchbArenaText:SetText(L.chbArena .. string.format(" (%d)", #dump.arena));
 
-	if (CHD_frmMainchbTaxi:GetChecked()) then
-		dump.taxi = CHD_TAXI or {};
-	else
-		dump.taxi = {};
-	end;
-
 	if (CHD_frmMainchbQuests:GetChecked()) then
 		dump.quest = CHD_SERVER_LOCAL.quest or {}; -- TODO: delete "or {}"
 	else

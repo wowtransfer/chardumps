@@ -66,7 +66,6 @@ end
 
 function dumper:UpdateFrame(name)
   local count = self:GetEntityCount(name);
-  print(name, count);
   chardumps.mainFrame:UpdateEntityText(name, count);
 end
 
@@ -113,6 +112,12 @@ end
 
 function dumper:Init()
   self:Clear();
+
+  local taxi = {};
+  for i = 1, chardumps.MAX_NUM_CONTINENT do
+    taxi[i] = {};
+  end
+  self.dynamicDump.taxi = taxi;
 end
 
 function dumper:GetAchievementData()
