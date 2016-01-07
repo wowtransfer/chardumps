@@ -14,6 +14,7 @@ function dumper:Dump(options)
   dump.player = chardumps:TryCall(self.GetPlayerData) or {};
   dump.glyph  = chardumps:TryCall(self.GetGlyphData) or {};
   dump.currency = chardumps:TryCall(self.GetCurrencyData) or {};
+  dump.spell  = chardumps:TryCall(self.GetSpellData) or {};
   
   --dump.glyph  = chardumps:TryCall(self.) or {};
 
@@ -333,7 +334,29 @@ function dumper:GetSkillspellData()
 end
 
 function dumper:GetSpellData()
+  local L = chardumps:GetLocale();
+  local res = {};
 
+  chardumps.log:Message(L.GetSpell);
+
+  for i = 1, MAX_SKILLLINE_TABS do
+    local name, _, offset, numSpells = GetSpellTabInfo(i);
+    if not name then
+      break
+    end
+    for j = offset + 1, offset + numSpells do
+      local spellLink = GetSpellLink(j, BOOKTYPE_SPELL);
+      if spellLink then
+        local spellid = tonumber(strmatch(spellLink, "Hspell:(%d+)"));
+        if spellid > 0 then
+          table.insert(res, spellid, i);
+        end
+      end
+    end
+  end
+  table.sort(res, function (v1, v2) return v1[1] < v2[1] end);
+
+  return res;
 end
 
 function dumper:GetStatisticData()
