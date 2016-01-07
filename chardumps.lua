@@ -165,31 +165,6 @@ local function CHD_GetPvpCurrency(tCurrency)
 	return honor, ap, cp;
 end
 
-local function CHD_GetRepInfo()
-	local res = {};
-	local tblRep = {};
-
-	CHD_Message(L.GetReputation);
-	ExpandAllFactionHeaders();
-	for i = 1, GetNumFactions() do
-		local name = GetFactionInfo(i);
-		tblRep[name] = true;
-	end
-
-	for i = 1, 1160 do -- maximum 1160 for 3.3.5a
-		local name, _, _, _, _, barValue, atWarWith, canToggleAtWar, isHeader, _, _, isWatched = GetFactionInfoByID(i);
-		if name and tblRep[name] then
-			local flags = 1;
-			if canToggleAtWar and atWarWith then
-				flags = bit.bor(1, 2);
-			end
-			table.insert(res, {["I"] = i, ["V"] = barValue, ["F"] = flags});
-		end
-	end
-
-	return res;
-end
-
 local function CHD_GetAchievementInfo()
 	local res = {};
 

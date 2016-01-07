@@ -16,7 +16,8 @@ function dumper:Dump(options)
   dump.currency = chardumps:TryCall(self.GetCurrencyData) or {};
   dump.spell  = chardumps:TryCall(self.GetSpellData) or {};
   dump.mount  = chardumps:TryCall(self.GetMountData) or {};
-  dump.critter  = chardumps:TryCall(self.GetCritterData) or {};
+  dump.critter = chardumps:TryCall(self.GetCritterData) or {};
+  dump.reputation = chardumps:TryCall(self.GetReputationData) or {};
 
   --dump.glyph  = chardumps:TryCall(self.) or {};
 
@@ -345,7 +346,30 @@ function dumper:GetQuestlogData()
 end
 
 function dumper:GetReputationData()
+  local L = chardumps:GetLocale();
+  local res = {};
+  local tblRep = {};
 
+  chardumps.log:Message(L.GetReputation);
+
+  ExpandAllFactionHeaders();
+  for i = 1, GetNumFactions() do
+    local name = GetFactionInfo(i);
+    tblRep[name] = true;
+  end
+
+  for i = 1, 1160 do -- TODO: maximum 1160 for 3.3.5a
+    local name, _, _, _, _, barValue, atWarWith, canToggleAtWar, isHeader, _, _, isWatched = GetFactionInfoByID(i);
+    if name and tblRep[name] then
+      local flags = 1;
+      if canToggleAtWar and atWarWith then
+        flags = bit.bor(1, 2);
+      end
+      table.insert(res, {["I"] = i, ["V"] = barValue, ["F"] = flags});
+    end
+  end
+
+  return res;
 end
 
 function dumper:GetSkillData()
