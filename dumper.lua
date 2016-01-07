@@ -15,6 +15,7 @@ function dumper:Dump(options)
   dump.glyph  = chardumps:TryCall(self.GetGlyphData) or {};
   dump.currency = chardumps:TryCall(self.GetCurrencyData) or {};
   dump.spell  = chardumps:TryCall(self.GetSpellData) or {};
+  dump.mount  = chardumps:TryCall(self.GetMountData) or {};
   
   --dump.glyph  = chardumps:TryCall(self.) or {};
 
@@ -265,7 +266,18 @@ function dumper:GetInventoryData()
 end
 
 function dumper:GetMountData()
+  local L = chardumps:GetLocale();
+  local res = {};
 
+  chardumps.log:Message(L.GetMount);
+
+  for i = 1, GetNumCompanions("MOUNT") do
+    local _, _, spellID = GetCompanionInfo("MOUNT", i);
+    res[i] = spellID;
+  end
+  table.sort(res);
+
+  return res;
 end
 
 function dumper:GetPlayerData()

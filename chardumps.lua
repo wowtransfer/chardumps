@@ -165,19 +165,6 @@ local function CHD_GetPvpCurrency(tCurrency)
 	return honor, ap, cp;
 end
 
-local function CHD_GetMountInfo()
-	local res = {};
-
-	CHD_Message();
-	for i = 1, GetNumCompanions("MOUNT") do
-		local _, _, spellID = GetCompanionInfo("MOUNT", i);
-		res[i] = spellID;
-	end
-	sort(res);
-
-	return res;
-end
-
 local function CHD_GetCritterInfo()
 	local res = {};
 
