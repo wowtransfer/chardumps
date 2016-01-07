@@ -281,39 +281,6 @@ local function CHD_GetQuestlogInfo()
 	return res;
 end
 
-local function CHD_GetPMacroInfo()
-	local res = {};
-
-	CHD_Message(L.GetMacro);
-	local count = 1;
-	local _, numCharacterMacros = GetNumMacros();
-	local nIconPos = string.len("Interface\\Icons\\") + 1;
-	for i = 36 + 1, 36 + numCharacterMacros do
-		local name, texture, body = GetMacroInfo(i);
-		texture = string.sub(texture, nIconPos);
-		res[count] = {["N"] = name, ["T"] = texture, ["B"] = body};
-		count = count + 1;
-	end
-
-	return res;
-end
-
-local function CHD_GetAMacroInfo()
-	local res = {};
-
-	local count = 1;
-	local numAccountMacros = GetNumMacros();
-	local nIconPos = string.len("Interface\\Icons\\") + 1;
-	for i = 1, numAccountMacros do
-		local name, texture, body = GetMacroInfo(i);
-		texture = string.sub(texture, nIconPos);
-		res[count] = {["N"] = name, ["T"] = texture, ["B"] = body};
-		count = count + 1;
-	end
-
-	return res;
-end
-
 local function CHD_GetFriendsInfo()
 	local res = {};
 
@@ -577,10 +544,8 @@ function CHD_OnDumpClick()
 
 	if CHD_frmMainchbMacro:GetChecked() then
 		dump.pmacro = CHD_trycall(CHD_GetPMacroInfo) or {};
-		dump.amacro = {}; -- CHD_trycall(CHD_GetAMacroInfo) or {};
 	else
 		dump.pmacro = {};
-		dump.amacro = {};
 	end
 	CHD_frmMainchbMacroText:SetText(L.chbMacro .. string.format(" (%d)",
 		#dump.pmacro + #dump.amacro));

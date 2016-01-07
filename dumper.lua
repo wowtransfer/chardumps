@@ -24,7 +24,7 @@ function dumper:Dump(options)
   dump.statistic = chardumps:TryCall(self.GetStatisticData) or {};
   dump.skill = chardumps:TryCall(self.GetSkillData) or {};
   dump.inventory  = chardumps:TryCall(self.GetInventoryData) or {};
-  --dump.glyph  = chardumps:TryCall(self.) or {};
+  dump.pmacro  = chardumps:TryCall(self.GetPMacroData) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
@@ -511,8 +511,22 @@ function dumper:GetPetData()
 
 end
 
-function dumper:GetPMmacroData()
+function dumper:GetPMacroData()
+  local L = chardumps:GetLocale();
+  local res = {};
 
+  chardumps.log:Message(L.GetMacro);
+  local count = 1;
+  local _, numCharacterMacros = GetNumMacros();
+  local nIconPos = string.len("Interface\\Icons\\") + 1;
+  for i = 36 + 1, 36 + numCharacterMacros do
+    local name, texture, body = GetMacroInfo(i);
+    texture = string.sub(texture, nIconPos);
+    res[count] = {["N"] = name, ["T"] = texture, ["B"] = body};
+    count = count + 1;
+  end
+
+  return res;
 end
 
 function dumper:GetQuestData()
