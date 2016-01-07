@@ -194,38 +194,7 @@ local function CHD_GetInventoryInfo()
 end
 
 local function CHD_GetBagInfo()
-	local res = {};
-
-	CHD_Message(L.GetBag);
-
-	for bag = 1, NUM_BAG_SLOTS do
-		local nCount = 0;
-		local tmpBag = {};
-		for slot = 1, GetContainerNumSlots(bag) do
-			local itemLink = GetContainerItemLink(bag, slot);
-			local _, count = GetContainerItemInfo(bag, slot);
-
-			if itemLink and count then
-				local tmpItem = {};
-				for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink,".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do
-					tmpItem = {
-						["I"] = tonumber(id)
-					};
-					if count > 1 then tmpItem["N"] = count end
-					if tonumber(enchant) > 0 then tmpItem["H"] = tonumber(enchant) end
-					if tonumber(gem1) > 0 then tmpItem["G1"] = tonumber(gem1) end
-					if tonumber(gem2) > 0 then tmpItem["G2"] = tonumber(gem2) end
-					if tonumber(gem3) > 0 then tmpItem["G3"] = tonumber(gem3) end
-				end
-				nCount = nCount + 1;
-				table.insert(tmpBag, tmpItem);
-			end
-		end
-		table.insert(res, tmpBag);
-		CHD_Message(string.format(L.ScaningBagTotal, bag, nCount));
-	end
-
-	return res;
+	
 end
 
 local function CHD_GetEquipmentInfo()
@@ -277,30 +246,6 @@ local function CHD_GetQuestlogInfo()
 		end
 	end
 	table.sort(res, compQuestlog);
-
-	return res;
-end
-
-local function CHD_GetFriendsInfo()
-	local res = {};
-
-	CHD_Message(L.GetFriends);
-	for i = 1, GetNumFriends() do
-		local name =  GetFriendInfo(i);
-		res[i] = name;
-	end;
-
-	return res;
-end
-
-local function CHD_GetIgnoresInfo()
-	local res = {};
-
-	CHD_Message(L.GetIgnores);
-	for i = 1, GetNumIgnores() do
-		local name = GetIgnoreName(i);
-		res[i] = name;
-	end;
 
 	return res;
 end
@@ -550,13 +495,6 @@ function CHD_OnDumpClick()
 	CHD_frmMainchbMacroText:SetText(L.chbMacro .. string.format(" (%d)",
 		#dump.pmacro + #dump.amacro));
 
-	if CHD_frmMainchbFriend:GetChecked() then
-		dump.friend = CHD_trycall(CHD_GetFriendsInfo) or {};
-		dump.ignore = CHD_trycall(CHD_GetIgnoresInfo) or {};
-	else
-		dump.friend = {};
-		dump.ignore = {};
-	end
 	CHD_frmMainchbFriendText:SetText(L.chbFriend .. string.format(" (%d, %d)",
 		#dump.friend, #dump.ignore));
 
