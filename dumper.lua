@@ -19,6 +19,7 @@ function dumper:Dump(options)
   dump.critter = chardumps:TryCall(self.GetCritterData) or {};
   dump.reputation = chardumps:TryCall(self.GetReputationData) or {};
   dump.achievement = chardumps:TryCall(self.GetAchievementData) or {};
+  dump.action = chardumps:TryCall(self.GetActionData) or {};
 
   --dump.glyph  = chardumps:TryCall(self.) or {};
 
@@ -87,7 +88,42 @@ function dumper:GetAchievementData()
 end
 
 function dumper:GetActionData()
+  local L = chardumps:GetLocale();
+  local res = {};
 
+  --[[
+  0 Spell
+  1 Click
+  32 Eq set
+  64 Macro
+  65 Click macro
+  128 Item
+  
+  companion, equipmentset, flyout, item, macro, spell
+  ]]
+  -- "equipmentset", "flyout"
+  local arrType = {};
+  arrType.companion = 0;
+  arrType.item = 128;
+  arrType.macro = 64;
+  arrType.spell = 0;
+
+  chardumps.log:Message(L.GetAction);
+  for i = 1, 120 do -- (6 + 4) panels * 12 buttons
+    local t, id, subType, spellID = GetActionInfo(i);
+    if t and arrType[t] then
+      local item = {};
+      item.T = arrType[t];
+      if t == "spell" or t == "companion" then
+        item.I = spellID;
+      else -- item and macro
+        item.I = id;
+      end
+      res[i] = item;
+    end
+  end
+
+  return res;
 end
 
 function dumper:GetBagData()

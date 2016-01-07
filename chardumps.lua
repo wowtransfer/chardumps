@@ -165,44 +165,6 @@ local function CHD_GetPvpCurrency(tCurrency)
 	return honor, ap, cp;
 end
 
-local function CHD_GetActionsInfo()
-	local res = {};
-
---[[
-0 Spell
-1 Click
-32 Eq set
-64 Macro
-65 Click macro
-128 Item
-
-companion, equipmentset, flyout, item, macro, spell
-]]
-	-- "equipmentset", "flyout"
-	local arrType = {};
-	arrType.companion = 0;
-	arrType.item = 128;
-	arrType.macro = 64;
-	arrType.spell = 0;
-
-	CHD_Message(L.GetAction);
-	for i = 1, 120 do -- (6 + 4) panels * 12 buttons
-		local t, id, subType, spellID = GetActionInfo(i);
-		if t and arrType[t] then
-			local item = {};
-			item.T = arrType[t];
-			if t == "spell" or t == "companion" then
-				item.I = spellID;
-			else -- item and macro
-				item.I = id;
-			end
-			res[i] = item;
-		end
-	end
-
-	return res;
-end
-
 --[[
 CanShowAchievementUI - Returns whether the Achievements UI should be enabled
 GetAchievementCriteriaInfo - Gets information about criteria for an achievement or data for a statistic
