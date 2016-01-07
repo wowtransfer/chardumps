@@ -20,6 +20,7 @@ function dumper:Dump(options)
   dump.reputation = chardumps:TryCall(self.GetReputationData) or {};
   dump.achievement = chardumps:TryCall(self.GetAchievementData) or {};
   dump.action = chardumps:TryCall(self.GetActionData) or {};
+  dump.criterias = chardumps:TryCall(self.GetCriteriasData) or {};
 
   --dump.glyph  = chardumps:TryCall(self.) or {};
 
@@ -196,8 +197,45 @@ function dumper:GetBindData()
 
 end
 
+--[[
+CanShowAchievementUI - Returns whether the Achievements UI should be enabled
+GetAchievementCriteriaInfo - Gets information about criteria for an achievement or data for a statistic
+GetAchievementInfo - Gets information about an achievement or statistic
+GetAchievementLink - Returns a hyperlink representing the player's progress on an achievement
+GetAchievementNumRewards - Returns the number of point rewards for an achievement (currently always 1)
+GetAchievementReward - Returns the number of achievement points awarded for earning an achievement
+GetCategoryInfo - Returns information about an achievement/statistic category
+GetCategoryNumAchievements - Returns the number of achievements/statistics to display in a category
+GetNumComparisonCompletedAchievements - Returns the number of achievements earned by the comparison unit
+GetNumCompletedAchievements - Returns the number of achievements earned by the player
+GetStatistic - Returns data for a statistic that can be shown on the statistics tab of the achievements window
+GetStatisticsCategoryList - Returns a list of all statistic categories
+GetTotalAchievementPoints - Returns the player's total achievement points earned
+HasCompletedAnyAchievement - Checks if the player has completed at least 1 achievement
+SetAchievementComparisonUnit - Enables comparing achievements/statistics with another player
+--]]
 function dumper:GetCriteriasData()
+  local L = chardumps:GetLocale();
+  local res = {};
 
+  local categories = GetCategoryList(); --  A list of achievement category IDs (table)
+
+  chardumps.log:Message(L.GetCriterias);
+  for k, categoryId in ipairs(categories) do
+    local numItems, numCompleted = GetCategoryNumAchievements(categoryId);
+
+    for i = 1, numItems do
+      local achievementID, name, points, completed, Month, Day, Year, description, flags, _, rewardText, isGuildAch = GetAchievementInfo(categoryId, i);
+      for j = 1, GetAchievementNumCriteria(achievementID) do
+        local description, type, completedCriteria, quantity, requiredQuantity, characterName, flags, assetID, quantityString, criteriaID = GetAchievementCriteriaInfo(achievementID, j);
+        if criteriaID and quantity > 0 then
+          table.insert(res, criteriaID, quantity);
+        end
+      end
+    end
+  end
+
+  return res;
 end
 
 function dumper:GetCritterData()
