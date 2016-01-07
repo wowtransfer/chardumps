@@ -8,9 +8,17 @@ local dumper = {
 ---
 -- @param table options What is saved
 function dumper:Dump(options)
-  self.dump = {};
-  
-  
+  local dump = {};
+
+  dump.global = self:GetGlobalData();
+
+  if options.crypt then
+    -- TODO: crypt it
+    CHD_CLIENT = dump;
+  else
+    CHD_CLIENT = dump;
+  end
+  self.dump = dump;
 end
 
 ---
@@ -124,7 +132,21 @@ function dumper:GetCurrencyData()
 end
 
 function dumper:GetGlobalData()
+  local res = {};
+  local L = chardumps:GetLocale();
 
+  chardumps.log:Message(L.GetGlobal);
+
+  res.locale       = GetLocale();
+  res.realm        = GetRealmName();
+  res.realmlist    = GetCVar("realmList");
+  local _, build   = GetBuildInfo();
+  res.clientbuild  = tonumber(build);
+  res.addonversion = chardumps:GetVersion();
+  res.createtime   = time();
+  res.luaversion   = _VERSION;
+
+  return res;
 end
 
 function dumper:GetGlyphData()

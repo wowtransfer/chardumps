@@ -248,9 +248,8 @@ function mainFrame:OnDumpClick()
     options:AddOptionForDump("crypt");
   end
 
-  -- create dump...
-  local dumpOption = options:GetOptionsFroDump();
-
+  local dumpOption = options:GetOptionsForDump();
+  chardumps.dumper:Dump(dumpOption);
 
   mainFrame.btnSave:Enable();
   chardumps.log:Message(L.CreatedDump);
@@ -284,7 +283,7 @@ end
 function mainFrame:OnMinimizeClick()
   local frame = mainFrame.frame;
   local frameMin = mainFrame.frameMin;
-  print("frame:IsVisible()", frame:IsVisible());
+
   if frame:IsVisible() then
     frameMin:SetBackdrop(chardumps.widgets:GetBackdrop());
     frameMin:SetParent(UIParent);
@@ -299,7 +298,7 @@ function mainFrame:OnMinimizeClick()
 end
 
 function mainFrame:OnLoad()
-
+  chardumps.log:Debug("MainFrame:OnLoad");
 end
 
 ---
@@ -388,8 +387,6 @@ end
 function mainFrame:ApplyOptions()
   local CHD_OPTIONS = CHD_OPTIONS or {};
   CHD_OPTIONS.entities = CHD_OPTIONS.entities or {};
-
-  chardumps.log:Dump(CHD_OPTIONS);
 
   for name, checked in pairs(CHD_OPTIONS.entities) do
     self:SetEntityChecked(name, checked);

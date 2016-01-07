@@ -60,7 +60,7 @@ end
 
 ---
 -- @return #table
-function options:GetOptionsFroDump()
+function options:GetOptionsForDump()
   return self.dumpOptions;
 end
 

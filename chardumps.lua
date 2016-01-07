@@ -2,87 +2,6 @@ local chardumps = chardumps or {};
 local L = chardumps:GetLocale();
 local CHD_bindings = CHD_bindings or {};
 
---[[
-	Functions
---]]
-
--- TODO: replace to other file
-function CHD_SetOptionsDef()
-	CHD_OPTIONS = {};
-
-	CHD_OPTIONS.chbCrypt = true;
-	CHD_OPTIONS.chbMinimize = false;
-
-	CHD_OPTIONS.chbSpells = true;
-	CHD_OPTIONS.chbMounts = true;
-	CHD_OPTIONS.chbCritters = true;
-	CHD_OPTIONS.chbReputation = true;
-	CHD_OPTIONS.chbAchievements = true;
-	CHD_OPTIONS.chbCriterias = true;
-	CHD_OPTIONS.chbStatistic = true;
-	CHD_OPTIONS.chbActions = true;
-	CHD_OPTIONS.chbEquipment = true;
-	CHD_OPTIONS.chbMacro = true;
-	CHD_OPTIONS.chbArena = true;
-	CHD_OPTIONS.chbTitles = true;
-	CHD_OPTIONS.chbTalent = true;
-
-	CHD_OPTIONS.chbGlyph = true;
-	CHD_OPTIONS.chbCurrency = true;
-	CHD_OPTIONS.chbInventory = true;
-	CHD_OPTIONS.chbBags = true;
-	CHD_OPTIONS.chbSkills = true;
-	CHD_OPTIONS.chbSkillSpell = true;
-	CHD_OPTIONS.chbQuestlog = true;
-	CHD_OPTIONS.chbFriend = true;
-
-	CHD_OPTIONS.chbBank = true;
-	CHD_OPTIONS.chbBind = true;
-	CHD_OPTIONS.chbQuests = true;
-	CHD_OPTIONS.chbTaxi = true;
-
-	return true;
-end
-
--- TODO: replace to other file
-function CHD_SetOptions()
-	CHD_frmMainchbGlyphs:SetChecked(CHD_OPTIONS.chbGlyph);
-	CHD_frmMainchbCurrency:SetChecked(CHD_OPTIONS.chbCurrency);
-	CHD_frmMainchbSpells:SetChecked(CHD_OPTIONS.chbSpells);
-	CHD_frmMainchbMounts:SetChecked(CHD_OPTIONS.chbMounts);
-	CHD_frmMainchbCritters:SetChecked(CHD_OPTIONS.chbCritters);
-	CHD_frmMainchbReputation:SetChecked(CHD_OPTIONS.chbReputation);
-	CHD_frmMainchbAchievements:SetChecked(CHD_OPTIONS.chbAchievements);
-	CHD_frmMainchbCriterias:SetChecked(CHD_OPTIONS.chbCriterias);
-	CHD_frmMainchbStatistic:SetChecked(CHD_OPTIONS.chbStatistic);
-	CHD_frmMainchbActions:SetChecked(CHD_OPTIONS.chbActions);
-	CHD_frmMainchbSkills:SetChecked(CHD_OPTIONS.chbSkills);
-	CHD_frmMainchbProfessions:SetChecked(CHD_OPTIONS.chbProfessions);
-	CHD_frmMainchbSkillSpell:SetChecked(CHD_OPTIONS.chbSkillSpell);
-	CHD_frmMainchbInventory:SetChecked(CHD_OPTIONS.chbInventory);
-	CHD_frmMainchbBags:SetChecked(CHD_OPTIONS.chbBags);
-	CHD_frmMainchbEquipment:SetChecked(CHD_OPTIONS.chbEquipment);
-	CHD_frmMainchbQuestlog:SetChecked(CHD_OPTIONS.chbQuestlog);
-	CHD_frmMainchbMacro:SetChecked(CHD_OPTIONS.chbMacro);
-	CHD_frmMainchbFriend:SetChecked(CHD_OPTIONS.chbFriend);
-	CHD_frmMainchbArena:SetChecked(CHD_OPTIONS.chbArena);
-	CHD_frmMainchbTalent:SetChecked(CHD_OPTIONS.chbTalent);
-	CHD_frmMainchbTitles:SetChecked(CHD_OPTIONS.chbTitles);
-
-	CHD_frmMainchbTaxi:SetChecked(CHD_OPTIONS.chbTaxi);
-	CHD_frmMainchbQuests:SetChecked(CHD_OPTIONS.chbQuests);
-	CHD_frmMainchbBank:SetChecked(CHD_OPTIONS.chbBank);
-	CHD_frmMainchbBind:SetChecked(CHD_OPTIONS.chbBind);
-
-	CHD_frmMainchbCrypt:SetChecked(CHD_OPTIONS.chbCrypt);
-
-	if (CHD_OPTIONS.chbMinimize) then
-		OnCHD_frmMainbtnMinimizeClick();
-	end
-
-	return true;
-end
-
 function CHD_GetSkillSpellText()
 	local s = "";
 	local count = 0;
@@ -223,22 +142,6 @@ end
 --[[
 	Get data
 --]]
-
-local function CHD_GetGlobalInfo()
-	local res = {};
-
-	CHD_Message(L.GetGlobal);
-	res.locale       = GetLocale();
-	res.realm        = GetRealmName();
-	res.realmlist    = GetCVar("realmList");
-	local _, build   = GetBuildInfo();
-	res.clientbuild  = tonumber(build);
-	res.addonversion = chardumps:GetVersion();
-	res.createtime   = time();
-	res.luaversion   = _VERSION;
-
-	return res;
-end
 
 local function CHD_GetPlayerInfo()
 	local res  = {};
