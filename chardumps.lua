@@ -214,27 +214,9 @@ local function CHD_GetArenaInfo()
 	return res;
 end
 
-local function CHD_GetBindInfo()
-	local res = {};
-
-	CHD_Message(L.GetBind);
-	for i = 1, GetNumBindings() do
-		local commandName, binding1, binding2 = GetBinding(i);
-		if (binding1 or binding2) and (CHD_bindings[commandName]) then
-			table.insert(res, {commandName, binding1, binding2});
-		end
-	end
-
-	return res;
-end
-
 --[[
 	Saving data
 --]]
-
-function CHD_Debug()
-	CHD_GetStatistic();
-end
 
 function CHD_OnDumpClick()
 	local dump = {};

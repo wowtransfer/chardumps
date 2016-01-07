@@ -30,10 +30,9 @@ function dumper:Dump(options)
   dump.questlog = chardumps:TryCall(self.GetQuestlogData) or {};
   dump.title = chardumps:TryCall(self.GetTitleData) or {};
   dump.talent = chardumps:TryCall(self.GetTalentData) or {};
-  --dump.glyph  = chardumps:TryCall(self.) or {};
+  dump.bind   = chardumps:TryCall(self.GetBindData) or {};
   --dump.glyph  = chardumps:TryCall(self.) or {};
   
-
   if options.crypt then
     -- TODO: crypt it
     CHD_CLIENT = dump;
@@ -237,7 +236,19 @@ function dumper:GetBankData()
 end
 
 function dumper:GetBindData()
+  local L = chardumps:GetLocale();
+  local res = {};
+  local bindings = chardumps.bindings;
 
+  chardumps.log:Message(L.GetBind);
+  for i = 1, GetNumBindings() do
+    local commandName, binding1, binding2 = GetBinding(i);
+    if (binding1 or binding2) and (bindings[commandName]) then
+      table.insert(res, {commandName, binding1, binding2});
+    end
+  end
+
+  return res;
 end
 
 --[[
