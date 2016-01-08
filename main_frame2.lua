@@ -128,6 +128,9 @@ function mainFrame:Init()
     if not entity.always then
       local btn = widgets:CreateButton(frame, {x = 10, y = -y, cx = 12, cy = 12, tooltipTitle = "Delete"});
       btn.chdEntityName = name;
+      btn:SetScript("OnClick", function()
+        mainFrame:DeleteEntityData(btn.chdEntityName);
+      end)
     end
 
     local btnActive = widgets:CreateButton(frame, {x = 26, y = -y, cx = 12, cy = 12, tooltipTitle = "Active"});
@@ -259,6 +262,22 @@ end
 
 function mainFrame:OnSaveClick()
   ReloadUI();
+end
+
+function mainFrame:DeleteEntityData(entityName)
+  local entities = chardumps.entityManager:GetEntities();
+  local entity = entities[entityName];
+  if entity then
+    print(entity.dynamic);
+    if entity.dynamic then
+      local L = chardumps:GetLocale();
+      chardumps.widgets:ShowMessageBox(L.areyousure, function()
+        chardumps.dumper:DeleteEntityData(entityName);
+      end);
+    else
+      chardumps.dumper:DeleteEntityData(entityName);
+    end
+  end
 end
 
 function mainFrame:OnDeleteAllClick()

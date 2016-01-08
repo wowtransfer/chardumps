@@ -108,6 +108,10 @@ end
 
 function dumper:DeleteEntityData(name)
   self.dump[name] = nil;
+  if self.dynamicDump[name] then
+    self.dynamicDump[name] = nil;
+  end
+  self:UpdateFrame(name);
 end
 
 function dumper:Init()
