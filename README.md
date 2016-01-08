@@ -28,6 +28,15 @@ The addon can to save:
 - Taxi
 - Recipes
 
+## Features
+- Simple one window
+- Save player data to the file, called dump
+- Divide player data and addon options
+- Each data entity has view
+- Mimimize main window
+- Console commands
+- Save and restore graphic interface
+- Encrypt and compress data
 
 ## For developers
 
