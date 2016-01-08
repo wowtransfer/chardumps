@@ -10,32 +10,23 @@ local dumper = {
 function dumper:Dump(options)
   local dump = {};
 
-  dump.global = chardumps:TryCall(self.GetGlobalData) or {};
-  dump.player = chardumps:TryCall(self.GetPlayerData) or {};
-  dump.glyph  = chardumps:TryCall(self.GetGlyphData) or {};
-  dump.currency = chardumps:TryCall(self.GetCurrencyData) or {};
-  dump.spell  = chardumps:TryCall(self.GetSpellData) or {};
-  dump.mount  = chardumps:TryCall(self.GetMountData) or {};
-  dump.critter = chardumps:TryCall(self.GetCritterData) or {};
-  dump.reputation = chardumps:TryCall(self.GetReputationData) or {};
-  dump.achievement = chardumps:TryCall(self.GetAchievementData) or {};
-  dump.action = chardumps:TryCall(self.GetActionData) or {};
-  dump.criterias = chardumps:TryCall(self.GetCriteriasData) or {};
-  dump.statistic = chardumps:TryCall(self.GetStatisticData) or {};
-  dump.skill = chardumps:TryCall(self.GetSkillData) or {};
-  dump.inventory  = chardumps:TryCall(self.GetInventoryData) or {};
-  dump.pmacro  = chardumps:TryCall(self.GetPMacroData) or {};
-  dump.bag     = chardumps:TryCall(self.GetBagData) or {};
-  dump.equipment  = chardumps:TryCall(self.GetEquipmentData) or {};
-  dump.questlog = chardumps:TryCall(self.GetQuestlogData) or {};
-  dump.title = chardumps:TryCall(self.GetTitleData) or {};
-  dump.talent = chardumps:TryCall(self.GetTalentData) or {};
-  dump.bind   = chardumps:TryCall(self.GetBindData) or {};
-  dump.profession = chardumps:TryCall(self.GetProfessionData) or {};
+  local names = chardumps.entityManager:GetNames();
 
-  dump.quest     = self:GetDynamicData("quest");
-  dump.taxi      = self:GetDynamicData("taxi");
-  dump.skillspel = self:GetDynamicData("skillspell");
+  local fun, functionName;
+  for _, name in ipairs(names) do
+    functionName = "Get" .. chardumps:Ucfirst(name) .. "Data";
+    fun = self[functionName];
+    dump[name] = {};
+    if fun then
+      dump[name] = chardumps:TryCall(fun) or {};
+    end
+  end
+
+  local dynamicNames = chardumps.entityManager:GetDynamicNames();
+
+  for _, name in ipairs(dynamicNames) do
+    dump[name] = self:GetDynamicData(name);
+  end
 
   dump.CHD_FIELD_COUNT = self:GetCounts(dump);
 
