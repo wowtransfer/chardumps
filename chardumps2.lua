@@ -59,18 +59,28 @@ function chardumps:initSlashCommands()
     log:Message("/chardumps save");
     log:Message("/chardumps show");
     log:Message("/chardumps hide");
+    log:Message("/chardumps minimize")
     log:Message("/chardumps version");
   end
   local commandHandlers = {
     help = helpFun,
-    dump = function() print("dump...") end,
-    clear = function() print("clear...") end,
-    save = function() print("save...") end,
+    dump = function()
+      self.mainFrame:OnDumpClick();
+    end,
+    clear = function()
+      chardumps.dumper:Clear();
+    end,
+    save = function()
+      self.mainFrame:OnSaveClick();
+    end,
     show = function()
       chardumps.mainFrame:Show();
     end,
     hide = function()
       chardumps.mainFrame.OnHideClick();
+    end,
+    minimize = function()
+      chardumps.mainFrame.OnMinimizeClick();
     end,
     version = function() print("version...") end,
   };
@@ -89,10 +99,9 @@ function chardumps:initSlashCommands()
 end
 
 function chardumps:checkWowVersion()
-  assert("Unsupported WoW version. ASSERT");
-	if self:GetPatchVersion() == nil then
-		error("Unsupported WoW version");
-	end
+  if not self:GetPatchVersion() then
+    assert("Unsupported WoW version!");
+  end
 end
 
 ---
