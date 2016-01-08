@@ -16,16 +16,21 @@ function dumper:Dump(options)
   for _, name in ipairs(names) do
     functionName = "Get" .. chardumps:Ucfirst(name) .. "Data";
     fun = self[functionName];
-    dump[name] = {};
-    if fun then
+    if fun and options.entities[name] then
       dump[name] = chardumps:TryCall(fun) or {};
+    else
+      dump[name] = {};
     end
   end
 
   local dynamicNames = chardumps.entityManager:GetDynamicNames();
 
   for _, name in ipairs(dynamicNames) do
-    dump[name] = self:GetDynamicData(name);
+    if options.entities[name] then
+      dump[name] = self:GetDynamicData(name);
+    else
+      dump[name] = {};
+    end
   end
 
   dump.CHD_FIELD_COUNT = self:GetCounts(dump);
