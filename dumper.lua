@@ -506,7 +506,6 @@ function dumper:GetGlyphData()
       -- glyphType: 1 for minor glyphs, 2 for major glyphs, 3 for prime glyphs (number)
       local name, glyphType, isKnown, icon, castSpell = GetGlyphInfo(i);
       if isKnown and castSpell then
-      --  print(i, glyphType, castSpell, name);
         table.insert(items, {["T"] = glyphType, ["I"] = castSpell});
       end
     end

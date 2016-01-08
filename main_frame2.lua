@@ -126,14 +126,14 @@ function mainFrame:Init()
   -- Create entity's structure
   for name, entity in pairs(entities) do
     if not entity.always then
-      local btn = widgets:CreateButton(frame, {x = 10, y = -y, cx = 12, cy = 12, tooltipTitle = "Delete"});
+      local btn = widgets:CreateButton(frame, {x = 10, y = -y, cx = 12, cy = 12, tooltipTitle = L.Delete});
       btn.chdEntityName = name;
       btn:SetScript("OnClick", function()
         mainFrame:DeleteEntityData(btn.chdEntityName);
       end)
     end
 
-    local btnActive = widgets:CreateButton(frame, {x = 26, y = -y, cx = 12, cy = 12, tooltipTitle = "Active"});
+    local btnActive = widgets:CreateButton(frame, {x = 26, y = -y, cx = 12, cy = 12, tooltipTitle = L.Show});
     btnActive.chdEntityName = name;
     btnActive:SetScript("OnClick", function()
       mainFrame:SetActiveDataFrame(btnActive.chdEntityName);
@@ -268,7 +268,6 @@ function mainFrame:DeleteEntityData(entityName)
   local entities = chardumps.entityManager:GetEntities();
   local entity = entities[entityName];
   if entity then
-    print(entity.dynamic);
     if entity.dynamic then
       local L = chardumps:GetLocale();
       chardumps.widgets:ShowMessageBox(L.areyousure, function()

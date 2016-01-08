@@ -44,6 +44,9 @@ L.talent       = "Таланты"
 L.taxi         = "Перелеты"
 L.title        = "Звания"
 
+L.Show         = "Показать"
+L.Delete       = "Удалить"
+
 -- interface
 L.chbGlyphs       = "Символы"
 L.chbCurrency     = "Валюта"

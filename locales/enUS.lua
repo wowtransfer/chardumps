@@ -40,6 +40,9 @@ L.talent       = "Talents"
 L.taxi         = "Taxi"
 L.title        = "Titles"
 
+L.Show         = "Show"
+L.Delete       = "Delete"
+
 -- interface
 L.chbGlyphs       = "Glyphs"
 L.chbCurrency     = "Currency"
