@@ -25,9 +25,13 @@ function chardumps:GetPatchVersion()
 			self.patchVertion = 2;
 		elseif clientBuild >= 9056 and clientBuild <= 12340 then
 			self.patchVertion = 3;
-		elseif clientBuild >= 13164 and clientBuild <= 15595 then
+		elseif clientBuild > 12340 and clientBuild <= 15595 then
 			self.patchVertion = 4;
-		end
+		elseif clientBuild > 15595 and clientBuild <= 18414 then
+      self.patchVertion = 5;
+    elseif clientBuild > 18414 and clientBuild <= 20886 then
+      self.patchVertion = 6;
+    end
 	end
 	return self.patchVertion;
 end
