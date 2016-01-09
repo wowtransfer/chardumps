@@ -187,7 +187,11 @@ function mainFrame:CreateEntityWidgets(frame)
   if questData then
     local btnQueryQuest = chardumps.widgets:CreateButton(questData.dataFrame, {x = 5, y = -5, cx = 150, name = "btnQuestQuery"});
     btnQueryQuest:SetScript("OnClick", function()
-      QueryQuestsCompleted();
+      if type(QueryQuestsCompleted) == "function" then
+        QueryQuestsCompleted();
+      else
+        self:OnQuestQueryComplete();
+      end
     end);
   end
 end
@@ -402,11 +406,9 @@ function mainFrame:ApplyOptions()
 end
 
 function mainFrame:OnQuestQueryComplete()
-  --local questData = chardumps.dumper:GetDynamicData("quest");
-  local questData = chardumps:TryCall(chardumps.dumper.GetQuestData) or {};
-  chardumps.dumper:SetDynamicData("quest", questData);
-  self:UpdateEntityText("quest", #questData);
-  chardumps.log:Message(#questData);
+  local questIds = chardumps.dumper:GetQuestDataReal();
+  local count = chardumps:GetTableLength(questIds);
+  self:UpdateEntityText("quest", count);
 end
 
 -- http://wowprogramming.com/docs/api_categories#tradeskill

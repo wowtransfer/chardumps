@@ -77,7 +77,7 @@ function dumper:GetEntityCount(name)
 	else
 	  if entity == nil then -- dynamic data?
       local data = self:GetDynamicData(name);
-      count = #data; -- TODO: GetTableLength
+      count = chardumps:GetTableLength(data);
     elseif type(entity) == "table" then
       count = #entity;
       if count == 0 then
@@ -693,14 +693,28 @@ function dumper:GetPMacroData()
   return res;
 end
 
+---
+-- For patch < 5.0.4 call QueryQuestsCompleted before
+-- @return #table
+function dumper:GetQuestDataReal()
+  local L = chardumps:GetLocale();
+  local questIds = self:GetDynamicData("quest");
+  GetQuestsCompleted(questIds);
+  chardumps.log:Dump(questIds);
+  self:SetDynamicData("quest", questIds);
+  chardumps.log:Message(L.GetQuest);
+  chardumps.log:Message(chardumps:GetTableLength(questIds));
+  return questIds;
+end
+
 function dumper:GetQuestData()
   local L = chardumps:GetLocale();
   local res = {};
+  local questIds = self:GetDynamicData("quest");
 
   chardumps.log:Message(L.GetQuest);
 
-  local questTable = GetQuestsCompleted(nil);
-  for k, _ in pairs(questTable) do
+  for k, _ in pairs(questIds) do
     table.insert(res, k);
   end
   sort(res);
@@ -1032,11 +1046,12 @@ function dumper:GetCounts(dump)
   res.pet = 0;
   res.bank = self:GetBankItemsCount();
   res.bind = #dump.bind;
+  res.title = #dump.title;
+  res.talent = self:GetTalentItemsCount();
+
   res.quest = #dump.quest;
   res.taxi = self:GetTaxiItemsCount();
   res.skillspell = self:GetSkillspellItemsCount();
-  res.title = #dump.title;
-  res.talent = self:GetTalentItemsCount();
 
   return res;
 end
