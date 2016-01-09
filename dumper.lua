@@ -700,17 +700,18 @@ function dumper:GetQuestDataReal()
   local L = chardumps:GetLocale();
   local questIds = self:GetDynamicData("quest");
   GetQuestsCompleted(questIds);
-  chardumps.log:Dump(questIds);
   self:SetDynamicData("quest", questIds);
+
   chardumps.log:Message(L.GetQuest);
   chardumps.log:Message(chardumps:GetTableLength(questIds));
+
   return questIds;
 end
 
 function dumper:GetQuestData()
   local L = chardumps:GetLocale();
   local res = {};
-  local questIds = self:GetDynamicData("quest");
+  local questIds = dumper:GetDynamicData("quest");
 
   chardumps.log:Message(L.GetQuest);
 
