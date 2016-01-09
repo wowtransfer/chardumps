@@ -9,14 +9,14 @@ local dumper = {
 -- @param table options What is saved
 function dumper:Dump(options)
   local dump = {};
-
+  local entities = chardumps.entityManager:GetEntities();
   local names = chardumps.entityManager:GetNames();
 
   local fun, functionName;
   for _, name in ipairs(names) do
     functionName = "Get" .. chardumps:Ucfirst(name) .. "Data";
     fun = self[functionName];
-    if fun and options.entities[name] then
+    if fun and options.entities[name] and entities[name] and not entities[name].disable then
       dump[name] = chardumps:TryCall(fun) or {};
     else
       dump[name] = {};
