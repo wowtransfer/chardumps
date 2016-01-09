@@ -4,6 +4,7 @@ nbproject/*
 
 build.settings
 *.proj
+addon.lua
 
 .settings
 
