@@ -18,12 +18,12 @@ function chardumps:GetTableLength(t)
     return 0;
   end
 
-  local size = 0;
-  for k, v in pairs(t) do
-    size = size + 1;
+  local count = 0;
+  for _, _ in pairs(t) do
+    count = count + 1;
   end
 
-  return size;
+  return count;
 end
 
 ---
