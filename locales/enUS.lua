@@ -1,6 +1,3 @@
---[[
-	Chardumps Localization: English
---]]
 local chardumps = chardumps or {};
 local L = {};
 

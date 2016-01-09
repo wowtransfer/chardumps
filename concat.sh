@@ -3,27 +3,25 @@ declare -a files;
 
 files=(
 
-# constants
-
+'global.lua'
+'log.lua'
 'locales\enUS.lua'
 'locales\ruRU.lua'
 'valid_bindings.lua'
-
-# libraries
-'global.lua'
-
-# global
 'b64.lua'
 
-# code
-'main_frame_handle.lua'
-'main_frame.lua'
-'crypt_client.lua'
-'chardumps.lua'
+'encryption.lua'
+'functions.lua'
+'entity_manager.lua'
+'widgets.lua'
+'options.lua'
+'dumper.lua'
+'main_frame2.lua'
+'chardumps2.lua'
 
 );
 
-targetDir="../chardumps";
+targetDir=".";
 targetFile="addon.lua";
 targetFilePath="$targetDir/$targetFile";
 
@@ -34,6 +32,7 @@ for ((i=0; i < ${#files[@]}; i++))
 do
   echo ${files[$i]};
   cat ${files[$i]} >> ${targetFilePath};
+  echo -e "\n" >> ${targetFilePath};
 done
 
 echo "Finish.";

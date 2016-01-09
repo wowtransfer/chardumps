@@ -3,4 +3,5 @@
 * Add achievements hints (on tabard, food, npc)
 * Add bank and mail frames for hint
 * Add checkbox for confidential data (money, etc.)
-* Change language system, use english by default.
+* Change language system, use english by default and source language,
+if the foreign message is not found then use english message.
