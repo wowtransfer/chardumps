@@ -1,4 +1,4 @@
-﻿local chardumps = chardumps;
+local chardumps = chardumps;
 local log = {};
 
 function log:Message(...)

@@ -395,12 +395,10 @@ function dumper:GetCritterData()
   return res;
 end
 
-function dumper:GetCurrencyData()
-  local L = chardumps:GetLocale();
+---
+-- @return #table
+function dumper:GetCurrencyDataReal()
   local res = {};
-
-  chardumps.log:Message(L.GetCurrency);
-
   local i = 1;
   while true do
     local name, isHeader = GetCurrencyListInfo(i);
@@ -447,6 +445,14 @@ function dumper:GetCurrencyData()
   end
 
   return res;
+end
+
+function dumper:GetCurrencyData()
+  local L = chardumps:GetLocale();
+
+  chardumps.log:Message(L.GetCurrency);
+
+  return dumper:GetCurrencyDataReal();
 end
 
 function dumper:GetGlobalData()
@@ -649,9 +655,27 @@ function dumper:GetMountData()
   return res;
 end
 
+function dumper:GetPvpCurrency(currency)
+  local currency = dumper:GetCurrencyDataReal();
+  local res = {honor = 0, ap = 0, cp = 0};
+
+  for id, count in pairs(currency) do
+    if (id == 392) or (id == 43308) then -- 392 currency_id of honor, 43308 item_id of honor
+      res.honor = count;
+    elseif id == 43307 then -- 43307 arena points id
+      res.ap = count;
+    elseif id == 390 then -- 390 Conquest Points
+      res.cp = count;
+    end
+  end
+
+  return res;
+end
+
 function dumper:GetPlayerData()
   local res  = {};
   local L = chardumps:GetLocale();
+  local pvpCurrency = dumper:GetPvpCurrency();
 
   chardumps.log:Message(L.GetPlayer);
 
@@ -673,6 +697,9 @@ function dumper:GetPlayerData()
   end
   res.health           = UnitHealth("player");
   res.mana             = UnitMana("player");
+  res.honor            = pvpCurrency.honor;
+  res.ap               = pvpCurrency.ap;
+  res.cp               = pvpCurrency.cp;
 
   return res;
 end

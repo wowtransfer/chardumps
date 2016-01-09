@@ -415,11 +415,14 @@ function mainFrame:OnEvent(event, ...)
 end
 
 function mainFrame:ApplyOptions()
+  local entities = chardumps.entityManager:GetEntities();
   local playerOptions = chardumps:GetPlayerOptions();
   playerOptions.entities = playerOptions.entities or {};
 
   for name, checked in pairs(playerOptions.entities) do
-    self:SetEntityChecked(name, checked);
+    if entities[name] and not entities[name].disable then
+      self:SetEntityChecked(name, checked);
+    end
   end
 
   self.chbCrypt:SetChecked(playerOptions.crypt);
