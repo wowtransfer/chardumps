@@ -362,13 +362,17 @@ function dumper:GetCriteriasData()
   chardumps.log:Message(L.GetCriterias);
   for k, categoryId in ipairs(categories) do
     local numItems, numCompleted = GetCategoryNumAchievements(categoryId);
-
     for i = 1, numItems do
-      local achievementID, name, points, completed, Month, Day, Year, description, flags, _, rewardText, isGuildAch = GetAchievementInfo(categoryId, i);
-      for j = 1, GetAchievementNumCriteria(achievementID) do
-        local description, type, completedCriteria, quantity, requiredQuantity, characterName, flags, assetID, quantityString, criteriaID = GetAchievementCriteriaInfo(achievementID, j);
-        if criteriaID and quantity > 0 then
-          table.insert(res, criteriaID, quantity);
+      -- achievementID, name, points, completed, Month, Day, Year, description, flags, _, rewardText, isGuildAch = GetAchievementInfo(categoryId, i);
+      local achievementId, name, _, completed = GetAchievementInfo(categoryId, i);
+      if achievementId then
+        for j = 1, GetAchievementNumCriteria(achievementId) do
+          -- description, type, completedCriteria, quantity, requiredQuantity, characterName,
+          -- flags, assetID, quantityString, criteriaID = GetAchievementCriteriaInfo(achievementID, j);
+          local _, _, _, quantity, _, _, _, _, _, criteriaID = GetAchievementCriteriaInfo(achievementId, j);
+          if criteriaID and quantity > 0 then
+            table.insert(res, criteriaID, quantity);
+          end
         end
       end
     end
@@ -848,18 +852,22 @@ end
 function dumper:GetStatisticData()
   local L = chardumps:GetLocale();
   local res = {};
-
   local categories = GetStatisticsCategoryList();
 
   chardumps.log:Message(L.GetStatistic);
-  for k, categoryId in ipairs(categories) do
-    local numItems, numCompleted = GetCategoryNumAchievements(categoryId);
-
+  for _, categoryId in ipairs(categories) do
+    -- numItems, numCompleted = GetCategoryNumAchievements(categoryId);
+    local numItems = GetCategoryNumAchievements(categoryId);
     for i = 1, numItems do
-      local statisticID, name, points, completed, Month, Day, Year, description, flags, _, rewardText, isGuildAch = GetAchievementInfo(categoryId, i);
-      local description, type, completedCriteria, quantity, requiredQuantity, characterName, flags, assetID, quantityString, criteriaID = GetAchievementCriteriaInfo(statisticID, 1);
-      if criteriaID and completedCriteria and quantity > 0 then
-        table.insert(res, criteriaID, quantity);
+      -- statisticID, name, points, completed, Month, Day, Year,
+      -- description, flags, _, rewardText, isGuildAch = GetAchievementInfo(categoryId, i);
+      local statisticID, name, points, completed = GetAchievementInfo(categoryId, i);
+      local criteriaCount = GetAchievementNumCriteria(statisticID);
+      if criteriaCount > 0 then
+        local _, _, completedCriteria, quantity, _, _, _, _, _, criteriaID = GetAchievementCriteriaInfo(statisticID, 1);
+        if criteriaID and completedCriteria and quantity > 0 then
+          table.insert(res, criteriaID, quantity);
+        end
       end
     end
   end
