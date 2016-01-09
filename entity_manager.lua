@@ -5,7 +5,7 @@ local entityManager = {
 		action = {},
 		bag = {},
 		bank = {dynamic = true},
-		bind = {},
+		bind = {disable = true},
 		criterias = {},
 		critter = {},
 		currency = {},
