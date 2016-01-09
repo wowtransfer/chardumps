@@ -2,7 +2,7 @@ local chardumps = chardumps;
 local entityManager = {
 	entities = {
 		achievement = {},
-		action = {},
+		action = {disable = true},
 		bag = {},
 		bank = {dynamic = true},
 		bind = {disable = true},
