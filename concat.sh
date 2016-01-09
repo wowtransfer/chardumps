@@ -17,7 +17,7 @@ files=(
 'options.lua'
 'dumper.lua'
 'main_frame.lua'
-'chardumps2.lua'
+'chardumps.lua'
 
 );
 
