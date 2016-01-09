@@ -79,10 +79,7 @@ function dumper:GetEntityCount(name)
       local data = self:GetDynamicData(name);
       count = chardumps:GetTableLength(data);
     elseif type(entity) == "table" then
-      count = #entity;
-      if count == 0 then
-        count = chardumps:GetTableLength(entity);
-      end
+      count = chardumps:GetTableLength(entity);
     end
 	end
 
@@ -562,15 +559,17 @@ function dumper:GetInventoryData()
   -- 68-74 Bank Bags
   -- 86-117 Keys in Keyring +
 
+  local count = 0;
+
   for i = 1, 23 do
     local itemLink = GetInventoryItemLink("player", i);
     if itemLink then
-      local count = GetInventoryItemCount("player", i);
+      itemCount = GetInventoryItemCount("player", i);
       for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink,".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do 
         local tmpItem = {
           ["I"] = tonumber(id)
         };
-        if count > 1 then tmpItem["N"] = count end
+        if itemCount > 1 then tmpItem["N"] = itemCount end
         if tonumber(enchant) > 0 then tmpItem["H"] = tonumber(enchant) end
         if tonumber(gem1) > 0 then tmpItem["G1"] = tonumber(gem1) end
         if tonumber(gem2) > 0 then tmpItem["G2"] = tonumber(gem2) end
@@ -585,12 +584,12 @@ function dumper:GetInventoryData()
   for slot = 1, GetContainerNumSlots(container) do
     local itemLink = GetContainerItemLink(container, slot);
     if itemLink then
-      local _, count = GetContainerItemInfo(container, slot);
+      local _, itemCount = GetContainerItemInfo(container, slot);
       for id, enchant, gem1, gem2, gem3 in string.gmatch(itemLink, ".-Hitem:(%d+):(%d+):(%d+):(%d+):(%d+)") do 
         local tmpItem = {
           ["I"] = tonumber(id)
         };
-        if count > 1 then tmpItem["N"] = count end
+        if itemCount > 1 then tmpItem["N"] = itemCount end
         if tonumber(enchant) > 0 then tmpItem["H"] = tonumber(enchant) end
         if tonumber(gem1) > 0 then tmpItem["G1"] = tonumber(gem1) end
         if tonumber(gem2) > 0 then tmpItem["G2"] = tonumber(gem2) end
@@ -608,24 +607,25 @@ function dumper:GetInventoryData()
     local itemLink = GetContainerItemLink(container, slot);
     if itemLink then
       local id = GetContainerItemID(container, slot);
-      local _, count = GetContainerItemInfo(container, slot);
+      local _, itemCount = GetContainerItemInfo(container, slot);
       local tmpItem = {
         ["I"] = tonumber(id)
       };
-      if count > 1 then tmpItem["N"] = count end
+      if itemCount > 1 then tmpItem["N"] = itemCount end
       res[index] = tmpItem;
     end
     index = index + 1;
   end
-  
+
   -- Add main bank
   local bankData = dumper:GetDynamicData("bank");
   if bankData.mainbank then
     for i = 40, 74 do
-      res[i] = bankData.mainbank[i];
+      if bankData.mainbank[i] then
+        res[i] = bankData.mainbank[i];
+      end
     end
   end
-  --bankData.mainbank = nil; -- TODO: why?
 
   return res;
 end
@@ -661,8 +661,10 @@ function dumper:GetPlayerData()
   local honorableKills = GetPVPLifetimeStats()
   res.kills            = honorableKills;
   res.money            = math.floor(GetMoney() / 10000); -- convert to gold
-  res.specs            = GetNumTalentGroups();
-  if GetActiveSpecGroup ~= nil then
+  if type(GetNumTalentGroups) == "function" then
+    res.specs            = GetNumTalentGroups();
+  end
+  if type(GetActiveSpecGroup) == "function" then
     res.active_spec = GetActiveSpecGroup();
   end
   res.health           = UnitHealth("player");
@@ -891,6 +893,9 @@ function dumper:GetTalentData()
   for specNum = 1,2 do
     specTalent = {};
     for tabIndex = 1,5 do -- GetNumTalentTabs() always return  3???
+      if type(GetNumTalents) ~= "function" then
+        break;
+      end
       numTalents = GetNumTalents(tabIndex, false, false);
       if (numTalents == nil) or (numTalents == 0) then
         break
