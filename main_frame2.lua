@@ -43,7 +43,8 @@ function mainFrame:RegisterWorkEvents(frame)
   local events = {
     "TAXIMAP_OPENED", "VARIABLES_LOADED", "BANKFRAME_OPENED", "PLAYER_LEAVING_WORLD",
     "TRADE_SKILL_SHOW", "QUEST_DETAIL", "QUEST_PROGRESS", "QUEST_AUTOCOMPLETE",
-    "QUEST_COMPLETE", "QUEST_QUERY_COMPLETE", "ADDON_LOADED", "PLAYER_LOGOUT", -- UNIT_QUEST_LOG_CHANGED
+    "QUEST_QUERY_COMPLETE", "ADDON_LOADED", "PLAYER_LOGOUT", -- UNIT_QUEST_LOG_CHANGED
+    "QUEST_TURNED_IN",
   }
   frame:UnregisterAllEvents();
   for _, name in pairs(events) do
@@ -383,26 +384,25 @@ function mainFrame:OnEvent(event, ...)
     mainFrame:OnVariablesLoaded();
   elseif "TRADE_SKILL_SHOW" == event then
     mainFrame:OnTradeSkillShow(arg1);
-  elseif "QUEST_DETAIL" == event or "QUEST_PROGRESS" == event then
-    if chardumps:GetPatchVersion() <= 3 then
-      return
-    end
-    local L = chardumps:GetLocale();
-    local questIds = chardumps.dumper:GetQuestDataReal();
-    local questId = GetQuestID();
-    local s = L.Quest .. "(ID = " .. questId .. ")";
-    if questIds[questId] then
-      s = s .. " \124cFF00FF00 " .. L.QuestWasCompleted  .. "\r";
-    end
-    chardumps.log:Message(s);
-  elseif "QUEST_COMPLETE" == event then
-    print(chardumps:GetPatchVersion());
+  elseif "QUEST_TURNED_IN" == event then
     if chardumps:GetPatchVersion() <= 3 then
       return
     end
     local L = chardumps:GetLocale();
     local questId = GetQuestID();
     chardumps.log:Message(L.Quest .. " (ID = " .. questId .. ") \124cFF00FF00 " .. L.QuestCompleted .. "\r");
+  elseif "QUEST_DETAIL" == event or "QUEST_PROGRESS" == event then
+    if chardumps:GetPatchVersion() <= 3 then
+      return
+    end
+    local L = chardumps:GetLocale();
+    local questIds = chardumps.dumper:GetDynamicData("quest");
+    local questId = GetQuestID();
+    local s = L.Quest .. " (ID = " .. questId .. ")";
+    if questIds[questId] then
+      s = s .. " \124cFF00FF00 " .. L.QuestWasCompleted  .. "\r";
+    end
+    chardumps.log:Message(s);
   elseif "QUEST_AUTOCOMPLETE" == event then
     print("debug:", event, arg1, arg2, arg3);
   elseif "QUEST_QUERY_COMPLETE" == event then
