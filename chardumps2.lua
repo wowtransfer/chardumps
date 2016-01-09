@@ -18,6 +18,7 @@ end
 
 function chardumps:GetPatchVersion()
 	if self.patchVertion == nil then
+	  self.patchVertion = 0;
 		local _, clientBuild = GetBuildInfo();
 		clientBuild = tonumber(clientBuild);
 		if clientBuild >= 6080 and clientBuild <= 8478 then
@@ -114,7 +115,7 @@ function chardumps:GetPlayerOptions()
     CHD_ACCOUNT_OPTIONS = {};
   end
 
-  return CHD_ACCOUNT_OPTIONS[playerKey];
+  return CHD_ACCOUNT_OPTIONS[playerKey] or {};
 end
 
 ---
