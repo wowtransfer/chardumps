@@ -36,8 +36,8 @@ function dumper:Dump(options)
   dump.CHD_FIELD_COUNT = self:GetCounts(dump);
 
   if options.crypt then
-    -- TODO: crypt it
-    CHD_CLIENT = dump;
+    local json = chardumps.encryption:toJson(dump);
+    CHD_CLIENT = b64_encode(json);
   else
     CHD_CLIENT = dump;
   end

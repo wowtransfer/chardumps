@@ -71,7 +71,7 @@ function encryption:encode(obj)
 		else
 			for key, value in pairs(obj) do
 				if isEncodeable(key) and isEncodeable(value) then
-					table.insert(ret, '"' .. encodeString(tostring(key)) .. '":' .. chd_encode(value));
+					table.insert(ret, '"' .. encodeString(tostring(key)) .. '":' .. self:encode(value));
 				end
 			end
 			return '{' .. table.concat(ret, ',') .. '}';
