@@ -1,15 +1,16 @@
 local chardumps = chardumps;
-local options = {};
+local options = {
+  debug = false,
+};
 
 function options:getDefault()
-  local entityManager = chardumps.getEntityManager();
+  local entityManager = chardumps:GetEntityManager();
 
   
 end
 
 function options:Init()
   self:Clear();
-  
 end
 
 function options:Save()
@@ -57,6 +58,18 @@ end
 -- @return #table
 function options:GetOptionsForDump()
   return self.dumpOptions;
+end
+
+function options:IsDebug()
+  return self.debug;
+end
+
+function options:SetDebug(value)
+  if value == nil then
+    value = true;
+  end
+  chardumps.mainFrame:SetDebug(value);
+  self.debug = value;
 end
 
 chardumps.options = options;

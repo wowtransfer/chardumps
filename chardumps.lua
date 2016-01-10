@@ -1,21 +1,29 @@
 local chardumps = chardumps;
 
-function chardumps:getEntityManager()
+function chardumps:GetEntityManager()
 	return self.entityManager;
 end
 
-function chardumps:getEncryption()
+---
+-- @return #table
+function chardumps:GetEncryption()
   return self.encryption;
 end
 
+---
+-- @return #string
 function chardumps:GetLocale()
 	return self.locale;
 end
 
+---
+-- @return #string
 function chardumps:GetVersion()
-	return "1.11";
+	return "2.1";
 end
 
+---
+-- @return #number
 function chardumps:GetPatchVersion()
 	if self.patchVertion == nil then
 	  self.patchVertion = 0;
@@ -66,11 +74,16 @@ function chardumps:initSlashCommands()
     log:Message("/chardumps hide");
     log:Message("/chardumps minimize")
     log:Message("/chardumps version");
+    log:Message("/chardumps debug");
   end
   local commandHandlers = {
     help = helpFun,
     dump = function()
       self.mainFrame:OnDumpClick();
+    end,
+    debug = function()
+      local value = chardumps.options:IsDebug();
+      chardumps.options:SetDebug(not value);
     end,
     clear = function()
       chardumps.dumper:Clear();

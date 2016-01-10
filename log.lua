@@ -16,8 +16,13 @@ function log:Warning(message)
   print(string.format("\124cFF9F3FFFchardumps:\124c00FFFF00 %s\124r", message));
 end
 
-function log:Debug(message)
-  print(string.format("\124cFF9F3FFFchardumps:\124c00FFFF00 %s\124r", message));
+function log:Debug(message, ...)
+  local t = {...};
+  local s = message;
+  for _, v in pairs(t) do
+    s = s .. " " .. tostring(v);
+  end
+  print(string.format("\124cFF9F3FFFchardumps:\124c00FFFF00 %s\124r", s));
 end
 
 function log:GetDump(o)
