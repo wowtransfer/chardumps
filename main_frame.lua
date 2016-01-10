@@ -426,7 +426,6 @@ function mainFrame:ApplyOptions()
   if not playerOptions.debug then
     playerOptions.crypt = true;
   end
-  print("Apply options");
   chardumps.options:SetDebug(false);
   self.chbCrypt:SetChecked(playerOptions.crypt);
   if playerOptions.minimize then
@@ -439,7 +438,6 @@ function mainFrame:SetDebug(value)
     value = true;
   end
 
-  print("mainFrame", value);
   if value then
     self.chbCrypt:Show();
     self.chbEvents:Show();
