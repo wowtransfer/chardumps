@@ -32,6 +32,7 @@ function mainFrame:CreateEntityFrame(name, parent)
   frame:SetBackdrop(chardumps.widgets:GetBackdrop());
   frame:SetFontObject("GameFontNormal");
   frame:Hide();
+  frame.chdEntityName = name;
 
   return frame;
 end
@@ -228,15 +229,38 @@ function mainFrame:CreateEntityWidgets(frame)
 end
 
 function mainFrame:SetActiveDataFrame(name)
+  local entities = chardumps.entityManager:GetEntities();
   if name == nil then
     local entityNames = chardumps.entityManager:GetNames();
     name = entityNames[1];
   end
+  local entity = entities[name];
+  if not entity then
+    return
+  end
+
   if self.activeDataDrame ~= nil then
     self.activeDataDrame:Hide();
+    local name = self.activeDataDrame.chdEntityName;
+    local entity = entities[name];
+    local chb = self.entitiesData[name].checkbox;
+    if not entity.disable then
+      local chbText = getglobal(chb:GetName() .. "Text");
+      if chbText then
+        chbText:SetTextColor(1, 1, 1);
+      end
+    end
   end
   local frame = self.entitiesData[name].dataFrame;
   frame:Show();
+  local chb = self.entitiesData[name].checkbox;
+  if not entity.disable then
+    local chbText = getglobal(chb:GetName() .. "Text");
+    if chbText then
+      chbText:SetTextColor(0.8, 0, 0);
+    end
+  end
+
   self.activeDataDrame = frame;
 end
 
