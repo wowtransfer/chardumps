@@ -161,11 +161,14 @@ function mainFrame:Init()
       end)
     end
 
-    local btnActive = widgets:CreateButton(frame, {x = 26, y = -y, cx = 12, cy = 12, tooltipTitle = L.Show});
-    btnActive.chdEntityName = name;
-    btnActive:SetScript("OnClick", function()
-      mainFrame:SetActiveDataFrame(btnActive.chdEntityName);
-    end);
+    if not entity.disable then
+      local btnActive = widgets:CreateButton(frame, {x = 26, y = -y, cx = 12, cy = 12, tooltipTitle = L.Show});
+      btnActive.chdEntityName = name;
+      btnActive:SetScript("OnClick", function()
+        mainFrame:SetActiveDataFrame(btnActive.chdEntityName);
+      end);
+    end
+
     local text = L[name];
     local chb = widgets:CreateCheckbox(frame, {x = 40, y = -y, cx = 14, cy = 14, tooltipTitle = text, text = text});
     chb.chdEntityName = name;
