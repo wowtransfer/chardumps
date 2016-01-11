@@ -304,6 +304,7 @@ function mainFrame:OnDumpClick()
   local L = chardumps:GetLocale();
 
   local options = chardumps.options;
+  options:ClearForDump();
   -- read options
   for name, data in pairs(mainFrame.entitiesData) do
     if (data.checkbox:GetChecked()) then
