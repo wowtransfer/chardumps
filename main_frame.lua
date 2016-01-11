@@ -66,7 +66,6 @@ function mainFrame:Init()
   frame:SetWidth(self.defaultWidth);
   frame:SetHeight(self.defaultHeight);
   frame:SetFrameStrata("DIALOG");
-  frame:SetScript("OnLoad", self.OnLoad);
   frame:SetScript("OnEvent", self.OnEvent);
   frame:SetBackdrop(chardumps.widgets:GetBackdrop());
   frame:SetFrameStrata("DIALOG");
@@ -78,7 +77,8 @@ function mainFrame:Init()
   str:SetPoint("CENTER", frame, 0, 0);
   str:SetPoint("TOP", frame, 0, -5);
   str:SetTextColor(1.0, 1.0, 0.0, 1.0);
-  str:SetText(L.AddonName .. " v " .. L.Version);
+  local addonTitle = L.AddonName .. " " .. L.Version .. " - http://wowtransfer.com";
+  str:SetText(addonTitle);
 
 
   local btnW = widgets.btnWidth;
@@ -379,10 +379,6 @@ function mainFrame:OnMinimizeClick()
   end
 end
 
-function mainFrame:OnLoad()
-  chardumps.log:Debug("MainFrame:OnLoad");
-end
-
 ---
 -- @return #boolean
 function mainFrame:IsEntityChecked(name)
@@ -601,6 +597,9 @@ function mainFrame:OnAddonLoaded(addonName)
 	if addonName ~= "chardumps" then
 	  return
 	end
+
+  local L = chardumps:GetLocale();
+  chardumps.log:Message(L.AddonName .. " " .. L.Version .. " - http://wowtransfer.com");
 end
 
 function mainFrame:OnPlayerLeavingWorld()
