@@ -100,7 +100,9 @@ function chardumps:initSlashCommands()
     minimize = function()
       chardumps.mainFrame.OnMinimizeClick();
     end,
-    version = function() print("version...") end,
+    version = function()
+      chardumps.log:Message(chardumps:GetVersion());
+    end,
   };
 
   local commandId = "CHARDUMPS";
