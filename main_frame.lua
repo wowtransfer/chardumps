@@ -203,9 +203,20 @@ function mainFrame:Init()
 end
 
 function mainFrame:CreateEntityWidgets(frame)
+  local L = chardumps:GetLocale();
+
+  for name, data in pairs(self.entitiesData) do
+    local entityFrame = data.dataFrame;
+    local font = entityFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge");
+    font:SetPoint("TOPLEFT", 50, -5);
+    font:SetText(L[name]);
+  end
+
+  local top = 25;
+
   local questData = self.entitiesData["quest"];
   if questData then
-    local btnQueryQuest = chardumps.widgets:CreateButton(questData.dataFrame, {x = 5, y = -5, cx = 150, name = "btnQuestQuery"});
+    local btnQueryQuest = chardumps.widgets:CreateButton(questData.dataFrame, {x = 5, y = -top, cx = 150, name = "btnQuestQuery"});
     btnQueryQuest:SetScript("OnClick", function()
       if type(QueryQuestsCompleted) == "function" then
         QueryQuestsCompleted();
