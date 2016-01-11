@@ -17,6 +17,9 @@ function log:Warning(message)
 end
 
 function log:Debug(message, ...)
+  if not chardumps.options:IsDebug() then
+    return
+  end
   local t = {...};
   local s = message;
   for _, v in pairs(t) do
