@@ -15,11 +15,9 @@ The addon can to save:
 - Critters
 - Currency
 - Glyphs
-- Equipment sets (to do)
-- Inventory (items on the player, equipped bags, main backpack, main bank, bank bags and keys in keyring)
+- Inventory (equipped items, equipped bags, main backpack, main bank, bank bags and keys in the keyring)
 - Player macroses
 - Mounts
-- Pets (to do)
 - Quests
 - Quest log
 - Reputation
@@ -28,17 +26,22 @@ The addon can to save:
 - Taxi
 - Recipes
 
+
 ## Features
-- Simple one window
+- One simple window
 - Save player data to the file, called dump
+- Dynamic sets and unsets the dump options
 - Divide player data and addon options
 - Each data entity has view
-- Mimimize main window
+- Mimimize and restore main window
 - Console commands
-- Save and restore graphic interface
+- Save graphic interface
 - Encrypt and compress data
+- Debug mode
+
 
 ## For developers
 
 1. For GUI design use WowAddOnStudio, https://addonstudio.codeplex.com.
 2. For lua editing use Eclipse, http://www.eclipse.org/ldt.
+3. For debug mode run command /chardumps debug
