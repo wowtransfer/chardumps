@@ -3,6 +3,8 @@ local chardumps = chardumps or {};
 if GetLocale():lower() == "ruru" then
   local L = {};
 
+  L["Press \"Dump\" button"] = "Нажмите кнопку Дамп";
+
   L.AddonName       = "Chardumps"
   L.Version         = "2.1"
 

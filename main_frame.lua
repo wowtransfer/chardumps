@@ -7,6 +7,7 @@ local mainFrame = {
   -- Data View (Frame),
   -- Delete Button (Button)
   -- Active Button (Button)
+  -- Press dump button font
   -- }
   },
   captionHeight = 30,
@@ -214,6 +215,12 @@ function mainFrame:CreateEntityWidgets(frame)
     local font = entityFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge");
     font:SetPoint("TOPLEFT", 50, -5);
     font:SetText(L[name]);
+
+    local pressDumpButtonWarning = entityFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
+    pressDumpButtonWarning:SetPoint("TOPLEFT", 10, -30);
+    pressDumpButtonWarning:SetText(L["Press \"Dump\" button"]);
+    pressDumpButtonWarning:SetTextColor(chardumps.config:GetWarningColor());
+    data.pressDumpBtnText = pressDumpButtonWarning;
   end
 
   local top = 25;
@@ -308,6 +315,7 @@ function mainFrame:OnDumpClick()
   -- read options
   for name, data in pairs(mainFrame.entitiesData) do
     if (data.checkbox:GetChecked()) then
+      data.pressDumpBtnText:Hide();
       options:AddEntityForDump(name);
     end
   end

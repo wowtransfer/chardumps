@@ -1,6 +1,8 @@
 local chardumps = chardumps or {};
 local L = {};
 
+L["Press \"Dump\" button"] = "Press \"Dump\" button";
+
 L.AddonName       = "Chardumps"
 L.Version         = "2.1"
 
