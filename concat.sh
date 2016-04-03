@@ -11,6 +11,7 @@ files=(
 'b64.lua'
 
 'encryption.lua'
+'config.lua'
 'functions.lua'
 'entity_manager.lua'
 'widgets.lua'

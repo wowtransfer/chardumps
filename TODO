@@ -4,3 +4,4 @@
 * Change language system, use english by default and source language,
 if the foreign message is not found then use english message.
 * Add for each entity a graphic view (frame)
+* Add icons to delete and activate entity's items
