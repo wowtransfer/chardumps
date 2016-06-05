@@ -194,8 +194,13 @@ L.QuestCompleted  = "completed"
 L.DumpDone        = "DONE! You can find the dump here: \
 WoW/WTF/Account/%AccountName%/%RealmName%/%PlayerName%/SavedVariables/chardumps.lua";
 
+L["Alterac Valley"] = "Alterac Valley"
 L.Ap = "Arena points"
+L["Arathi Basin"] = "Arathi Basin"
+L["Eye of the Storm"] = "Eye of the Storm"
+L["Isle of Conquest"] = "Isle of Conquest"
 L.Honor = "Honor points"
 L.Kills = "Kills"
+L["Warsong Gulch"] = "Warsong Gulch"
 
 chardumps.locale = L;

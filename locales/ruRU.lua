@@ -194,9 +194,17 @@ if GetLocale():lower() == "ruru" then
   L.DumpDone        = "Создано! Дамп находится здесь: \
   WoW/WTF/Account/%Аккаунт%/%НазваниеРеалма%/%ИмяПерсонажа%/SavedVariables/chardumps.lua";
 
+
+  L["Alterac Valley"] = "Альтеракская Долина"
   L.Ap = "Очки арены"
+  L["Battleground"] = "Поле боя"
+  L["Arathi Basin"] = "Низина Арати"
+  L["Eye of the Storm"] = "Око Бури"
+  L["Isle of Conquest"] = "Остров завоеваний"
   L.Honor = "Очки чести"
   L.Kills = "Убийства"
+  L["Warsong Gulch"] = "Ущелье песни войны"
+
 
   chardumps.locale = L;
 end
