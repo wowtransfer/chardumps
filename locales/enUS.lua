@@ -191,14 +191,11 @@ L.Comboboxes      = "Checkboxes"
 L.Quest           = "Quest"
 L.QuestWasCompleted = "was completed"
 L.QuestCompleted  = "completed"
-L.DumpDone        = "DONE! You can find the dump here:\
-WoW Folder/\
-WTF/\
-Account/\
-%AccountName%/\
-%RealmName%/\
-%PlayerName%/\
-SavedVariables/\
-\124cFF00FF00chardumps.lua\124r";
+L.DumpDone        = "DONE! You can find the dump here: \
+WoW/WTF/Account/%AccountName%/%RealmName%/%PlayerName%/SavedVariables/chardumps.lua";
+
+L.Ap = "Arena points"
+L.Honor = "Honor points"
+L.Kills = "Kills"
 
 chardumps.locale = L;

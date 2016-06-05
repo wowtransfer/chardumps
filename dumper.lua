@@ -63,6 +63,7 @@ end
 function dumper:UpdateFrame(name)
   local count = self:GetEntityCount(name);
   chardumps.mainFrame:UpdateEntityText(name, count);
+  chardumps.mainFrame:UpdateEntityView(name);
 end
 
 function dumper:GetEntityCount(name)

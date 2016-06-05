@@ -1,5 +1,5 @@
 sourceDir="."
-targetDir="d:/wow_off/World of Warcraft/Interface/AddOns/chardumps"
+targetDir="d:/wow_wolk/Interface/AddOns/chardumps"
 
 mkdir -v "$targetDir";
 

@@ -196,11 +196,6 @@ function mainFrame:Init()
   end
   self:CreateEntityWidgets(frame);
   self:SetActiveDataFrame();
-
---[[
-  local btn = CHD_CreateButton("btnQuestQuery", 180, chbHeight * 9 + 8, 150, btnHeight, frame);
-  btn:SetScript("OnClick", CHD_OnQueryQuestClick);
---]]
   self:RegisterWorkEvents(frame);
 
   self.frameMin = frameMin;
@@ -241,8 +236,7 @@ end
 function mainFrame:SetActiveDataFrame(name)
   local entities = chardumps.entityManager:GetEntities();
   if name == nil then
-    local entityNames = chardumps.entityManager:GetNames();
-    name = entityNames[1];
+    name = "player";
   end
   local entity = entities[name];
   if not entity then
@@ -287,6 +281,20 @@ function mainFrame:UpdateEntityText(name, count)
       count = count or 0;
       entityName = entityName .. " (" .. count .. ")";
       label:SetText(entityName);
+    end
+  end
+end
+
+function mainFrame:UpdateEntityView(name)
+  local data = self.entitiesData[name];
+  if data then
+    local entityFrame = data.dataFrame;
+    --print(entityFrame);
+    local functionName = "Update" .. chardumps:Ucfirst(name) .. "View";
+    local views = chardumps.entityViews;
+    local entityViewFun = views[functionName];
+    if type(entityViewFun) == "function" and entityFrame then
+      views[functionName](views, entityFrame);
     end
   end
 end
@@ -469,7 +477,7 @@ function mainFrame:ApplyOptions()
   if not playerOptions.debug then
     playerOptions.crypt = true;
   end
-  chardumps.options:SetDebug(false);
+  chardumps.options:SetDebug(true);
   self.chbCrypt:SetChecked(playerOptions.crypt);
   if playerOptions.minimize then
     self:OnMinimizeClick();
@@ -566,20 +574,29 @@ function mainFrame:OnTradeSkillShow(flags)
 end
 
 function mainFrame:OnTaximapOpened()
-	if not mainFrame:IsEntityChecked("taxi") then
+  if not mainFrame:IsEntityChecked("taxi") then
     return
   end
 
   local res = {};
   --[[
+
   -1 - Cosmic map
+
   0 - Azeroth
+
   1 - Kalimdor
+
   2 - Eastern Kingdoms
+
   3 - Outland
+
   4 - Northrend
+
   5 - The Maelstrom
+
   6 - Pandaria
+
   --]]
   local continent = GetCurrentMapContinent();
   if (continent < 1) or (continent > chardumps.MAX_NUM_CONTINENT) then
@@ -602,9 +619,9 @@ function mainFrame:OnTaximapOpened()
 end
 
 function mainFrame:OnAddonLoaded(addonName)
-	if addonName ~= "chardumps" then
-	  return
-	end
+  if addonName ~= "chardumps" then
+    return
+  end
 
   local L = chardumps:GetLocale();
   chardumps.log:Message(L.AddonName .. " " .. L.Version .. " - http://wowtransfer.com");
@@ -620,7 +637,7 @@ function mainFrame:OnPlayerLeavingWorld()
 
   -- TODO: create method
   local playerOptions = {};
-  
+
   playerOptions.entities = entities;
   playerOptions.crypt = self.chbCrypt:GetChecked();
   playerOptions.minimize = options.minimize;

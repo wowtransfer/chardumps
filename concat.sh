@@ -18,6 +18,7 @@ files=(
 'options.lua'
 'dumper.lua'
 'main_frame.lua'
+'entity_views.lua'
 'chardumps.lua'
 
 );

@@ -191,15 +191,12 @@ if GetLocale():lower() == "ruru" then
   L.Quest           = "Задание"
   L.QuestWasCompleted = "было выполнено ранее"
   L.QuestCompleted  = "выполнено"
-  L.DumpDone        = "Создано! Дамп находится здесь:\
-  каталог WoW/\
-  WTF/\
-  Account/\
-  %ИмяАккаунта%/\
-  %ИмяРеалма%/\
-  %ИмяПерсонажа%/\
-  SavedVariables/\
-  \124cFF00FF00chardumps.lua\124r";
+  L.DumpDone        = "Создано! Дамп находится здесь: \
+  WoW/WTF/Account/%Аккаунт%/%НазваниеРеалма%/%ИмяПерсонажа%/SavedVariables/chardumps.lua";
+
+  L.Ap = "Очки арены"
+  L.Honor = "Очки чести"
+  L.Kills = "Убийства"
 
   chardumps.locale = L;
 end
