@@ -60,6 +60,12 @@ function widgets:CreateCheckbox(parent, params)
     widgets:SetTooltip(chb, params.tooltipTitle, L["tt" .. chbName]);
   end
 
+  local chbText = getglobal(chb:GetName() .. "Text");
+  if chbText then
+    params.text = params.text or L[chbName];
+    chbText:SetText(params.text);
+  end
+
   return chb;
 end
 

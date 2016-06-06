@@ -119,7 +119,7 @@ function mainFrame:Init()
   self.btnSave:SetPoint("BOTTOMRIGHT", -10 - 5 - 100, 10);
   self.btnSave:Disable();
 
-  self.chbCrypt = widgets:CreateCheckbox(frame, {name = "chbCrypt", cx = 14, cy = 14});
+  self.chbCrypt = widgets:CreateCheckbox(frame, {name = "chbCrypt", cx = 14, cy = 14, text = L["chbCrypt"]});
   self.chbCrypt:ClearAllPoints();
   self.chbCrypt:SetPoint("BOTTOMRIGHT", -10 - 5 - 300, 10);
 
@@ -260,7 +260,7 @@ function mainFrame:SetActiveDataFrame(name)
   frame:Show();
   local activeButton = self.entitiesData[name].activeButton;
   if not entity.disable and activeButton then
-    activeButton:GetFontString():SetTextColor(0.8, 0, 0);
+    activeButton:GetFontString():SetTextColor(1, 1, 0);
   end
 
   self.activeDataDrame = frame;
