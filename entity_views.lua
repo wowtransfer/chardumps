@@ -59,14 +59,13 @@ function entityViews:UpdatePlayerView(frame)
     y = y + dy;
     str = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
     str:SetPoint("TOPLEFT", x, y);
-    str:SetText(L["Battleground"]);
-
+    widgets.fontStrBgTotal = str;
 
     y = y + dy;
     str = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
     str:SetPoint("TOPLEFT", x, y);
     str:SetTextColor(1, 1, 1);
-    widgets.fontStrBgAlteracValley = str;
+    widgets.fontStrAlteracValley = str;
 
     y = y + dy;
     str = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
@@ -92,12 +91,6 @@ function entityViews:UpdatePlayerView(frame)
     str:SetTextColor(1, 1, 1);
     widgets.fontStrIsleOfConquest = str;
 
-
-    y = y + dy;
-    str = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
-    str:SetPoint("TOPLEFT", x, y);
-    str:SetTextColor(1, 1, 1);
-    widgets.fontStrBgTotal = str;
   end
 
   if player ~= nil then
@@ -106,40 +99,43 @@ function entityViews:UpdatePlayerView(frame)
     widgets.fontStrKills:SetText(L.Kills .. " = " .. player.kills);
   end
 
+  local criterias = chardumps.dumper:GetEntity("statistic");
+  local sumWin, sumTotal = 0, 0;
+  local formatBgValues = function(win, total)
+    win = win or 0;
+    total = total or 0;
+    if (win > 0 and total > 0) then
+      return string.format("%4i/%4i (%2.1f%%)", win, total, win / total * 100);
+    end
+    return "";
+  end
   local setBgValue = function(fontStr, bgName, winCriteriaId, totalCriteriaId)
-    local criterias = chardumps.dumper:GetEntity("statistic");
-    local win, total = 0, 0;
-    win = criterias[winCriteriaId];
-    total = criterias[totalCriteriaId];
+    local win, total;
+    win = criterias[winCriteriaId] or 0;
+    total = criterias[totalCriteriaId] or 0;
     local s;
     if (win > 0 and total > 0) then
-      s = string.format("%4i/%4i (%2.1f%%)", win, total, win / total * 100);
+      s = formatBgValues(win, total);
+      sumWin = sumWin + win;
+      sumTotal = sumTotal + total;
     else
       s = "";
     end
     fontStr:SetText(s .. " " .. bgName);
   end
 
-  local criterias = chardumps.dumper:GetEntity("statistic");
   if criterias ~= nil then
-    --[[
-    [100] = "win Alterac Valley",
-    [104] = "Alterac Valley",
-    [5745] = "win Eye of the Stormи",
-    [105] = "Eye of the Storm",
-    [102] = "win Arathi Basin",
-    [106] = "Arathi Basin",
-    [140] = "win Warsong Gulch",
-    [5747] = "Warsong Gulch",
-    [11959] = "win Isle of Conquest",
-    [11958] = "Isle of Conquest",
-    --]]
-    -- widgets.fontStrBgTotal
-    setBgValue(widgets.fontStrBgAlteracValley, L["Alterac Valley"], 100, 104);
-    setBgValue(widgets.fontStrEyeOfTheStorm, L["Eye of the Storm"], 5745, 105);
-    setBgValue(widgets.fontStrArathiBasin, L["Arathi Basin"], 102, 106);
-    setBgValue(widgets.fontStrWarsongGulch, L["Warsong Gulch"], 140, 5747);
-    setBgValue(widgets.fontStrIsleOfConquest, L["Isle of Conquest"], 11959, 11958);
+    local bgWinAndTotalCriterias = {
+      ["AlteracValley"]  = {["win"] = 100, ["total"] = 104, ["text"] = L["Alterac Valley"]},
+      ["EyeOfTheStorm"]  = {["win"] = 5745, ["total"] = 105, ["text"] = L["Eye of the Storm"]},
+      ["ArathiBasin"]    = {["win"] = 102, ["total"] = 106, ["text"] = L["Arathi Basin"]},
+      ["WarsongGulch"]   = {["win"] = 140, ["total"] = 5747, ["text"] = L["Warsong Gulch"]},
+      ["IsleOfConquest"] = {["win"] = 11959, ["total"] = 11958, ["text"] = L["Isle of Conquest"]},
+    };
+    for name, t in pairs(bgWinAndTotalCriterias) do
+      setBgValue(widgets["fontStr" .. name], t.text, t.win, t.total);
+    end
+    widgets.fontStrBgTotal:SetText(L["Battleground"] .. " ".. formatBgValues(sumWin, sumTotal));
   end
 
   frame.widgets = widgets;

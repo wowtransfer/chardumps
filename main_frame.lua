@@ -148,7 +148,7 @@ function mainFrame:Init()
   local btn = widgets:CreateButton(frame, {x = 10, y = -10, cx = 12, cy = 12, tooltipTitle = btnDeleteAllTooltip});
   btn:SetScript("OnClick", self.OnDeleteAllClick);
   local chbAllTooltip = L.ttchbAll;
-  local chbAll = widgets:CreateCheckbox(frame, {x = 40, y = -10, cx = 14, cy = 14,
+  local chbAll = widgets:CreateCheckbox(frame, {x = 28, y = -10, cx = 14, cy = 14,
     tooltipTitle = chbAllTooltip, withoutText = true});
   chbAll:SetScript("OnClick", self.OnChbAllClick);
 
@@ -162,33 +162,35 @@ function mainFrame:Init()
       end)
     end
 
-    if not entity.disable then
-      local btnActive = widgets:CreateButton(frame, {x = 26, y = -y, cx = 12, cy = 12, tooltipTitle = L.Show});
-      btnActive.chdEntityName = name;
-      btnActive:SetScript("OnClick", function()
-        mainFrame:SetActiveDataFrame(btnActive.chdEntityName);
-      end);
-    end
-
     local text = L[name];
-    local chb = widgets:CreateCheckbox(frame, {x = 40, y = -y, cx = 14, cy = 14, tooltipTitle = text, text = text});
+
+    local btnActive = widgets:CreateButton(frame, {x = 42, y = -y, cx = 144, cy = 14, text = text});
+    btnActive.chdEntityName = name;
+    local btnActiveFont = btnActive:GetFontString();
+    btnActiveFont:SetJustifyH("LEFT");
+    btnActive:SetScript("OnClick", function(self)
+      mainFrame:SetActiveDataFrame(self.chdEntityName);
+    end);
+
+    local chb = widgets:CreateCheckbox(frame, {x = 28, y = -y, cx = 14, cy = 14, tooltipTitle = text, withoutText = true});
     chb.chdEntityName = name;
     if entity.disable then
       chb:SetChecked(false);
       chb:Disable();
-      local label = getglobal(chb:GetName() .. "Text");
-      if label then
-        label:SetFontObject("GameFontDisable");
-      end
+      btnActiveFont:SetTextColor(0.5, 0.5, 0.5);
     elseif entity.always then
       chb:SetChecked(true);
       chb:Disable();
     end
 
+    chb:SetScript("OnClick", function(self)
+      print(self:GetName(), self.chdEntityName);
+      mainFrame:SetActiveDataFrame(self.chdEntityName);
+    end);
+
     local entityData = {};
     entityData.checkbox = chb;
     entityData.deleteButton = btn;
-    entityData.activeButton = btnActive;
     entityData.dataFrame = self:CreateEntityFrame(name, frame);
     self.entitiesData[name] = entityData;
 
