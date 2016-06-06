@@ -164,10 +164,11 @@ function mainFrame:Init()
 
     local text = L[name];
 
-    local btnActive = widgets:CreateButton(frame, {x = 42, y = -y, cx = 144, cy = 14, text = text});
+    local btnActive = widgets:CreateButton(frame, {x = 42, y = -y, cx = 150, cy = 14, text = text});
     btnActive.chdEntityName = name;
     local btnActiveFont = btnActive:GetFontString();
     btnActiveFont:SetJustifyH("LEFT");
+    btnActiveFont:SetTextColor(1, 1, 1);
     btnActive:SetScript("OnClick", function(self)
       mainFrame:SetActiveDataFrame(self.chdEntityName);
     end);
@@ -192,6 +193,7 @@ function mainFrame:Init()
     entityData.checkbox = chb;
     entityData.deleteButton = btn;
     entityData.dataFrame = self:CreateEntityFrame(name, frame);
+    entityData.activeButton = btnActive;
     self.entitiesData[name] = entityData;
 
     y = y + 14;
@@ -249,22 +251,16 @@ function mainFrame:SetActiveDataFrame(name)
     self.activeDataDrame:Hide();
     local name = self.activeDataDrame.chdEntityName;
     local entity = entities[name];
-    local chb = self.entitiesData[name].checkbox;
-    if not entity.disable then
-      local chbText = getglobal(chb:GetName() .. "Text");
-      if chbText then
-        chbText:SetTextColor(1, 1, 1);
-      end
+    local activeButton = self.entitiesData[name].activeButton;
+    if not entity.disable and activeButton then
+      activeButton:GetFontString():SetTextColor(1, 1, 1);
     end
   end
   local frame = self.entitiesData[name].dataFrame;
   frame:Show();
-  local chb = self.entitiesData[name].checkbox;
-  if not entity.disable then
-    local chbText = getglobal(chb:GetName() .. "Text");
-    if chbText then
-      chbText:SetTextColor(0.8, 0, 0);
-    end
+  local activeButton = self.entitiesData[name].activeButton;
+  if not entity.disable and activeButton then
+    activeButton:GetFontString():SetTextColor(0.8, 0, 0);
   end
 
   self.activeDataDrame = frame;
@@ -275,14 +271,14 @@ function mainFrame:UpdateEntityText(name, count)
   if data then
     local entity = chardumps.entityManager:GetEntity(name);
     local chb = data.checkbox;
-    local label = getglobal(chb:GetName() .. "Text");
+    local activeButton = data.activeButton;
     local disable = entity and entity.disable;
-    if label and not disable then
+    if activeButton and not disable then
       local L = chardumps:GetLocale();
       local entityName = L[name];
       count = count or 0;
       entityName = entityName .. " (" .. count .. ")";
-      label:SetText(entityName);
+      activeButton:SetText(entityName);
     end
   end
 end
