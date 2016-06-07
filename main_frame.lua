@@ -84,7 +84,6 @@ function mainFrame:Init()
 
   local btnW = widgets.btnWidth;
   local frameMin = CreateFrame("Frame", widgets:GetFrameName("minFrame", frame:GetName()), frame);
-  -- frameMin:CreateTitleRegion():SetAllPoints(); TODO
   frameMin:ClearAllPoints();
   frameMin:SetPoint("TOPRIGHT", frame, 0, 0);
   frameMin:SetWidth(5 + 5 + btnW*3 + 3*3 + 5);
@@ -167,7 +166,7 @@ function mainFrame:Init()
     local btnActive = widgets:CreateButton(frame, {x = 42, y = -y, cx = 150, cy = 14, text = text});
     btnActive.chdEntityName = name;
     local btnActiveFont = btnActive:GetFontString();
-    btnActiveFont:SetJustifyH("LEFT");
+    btnActiveFont:SetJustifyH("LEFT"); -- TODO: do not work
     btnActiveFont:SetTextColor(1, 1, 1);
     btnActive:SetScript("OnClick", function(self)
       mainFrame:SetActiveDataFrame(self.chdEntityName);
@@ -471,11 +470,11 @@ function mainFrame:ApplyOptions()
       self:SetEntityChecked(name, checked);
     end
   end
-
+  print(playerOptions.debug);
   if not playerOptions.debug then
     playerOptions.crypt = true;
   end
-  chardumps.options:SetDebug(true);
+  chardumps.options:SetDebug(playerOptions.debug);
   self.chbCrypt:SetChecked(playerOptions.crypt);
   if playerOptions.minimize then
     self:OnMinimizeClick();
@@ -483,10 +482,6 @@ function mainFrame:ApplyOptions()
 end
 
 function mainFrame:SetDebug(value)
-  if value == nil then
-    value = true;
-  end
-
   if value then
     self.chbCrypt:Show();
     self.chbEvents:Show();
@@ -638,6 +633,7 @@ function mainFrame:OnPlayerLeavingWorld()
 
   playerOptions.entities = entities;
   playerOptions.crypt = self.chbCrypt:GetChecked();
+  playerOptions.debug = self.chbDebug:GetChecked();
   playerOptions.minimize = options.minimize;
   -- TODO: may be errors on the reading
   playerOptions.dynamicData = chardumps.dumper:GetDynamicDataAll();

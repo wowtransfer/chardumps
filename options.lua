@@ -65,8 +65,10 @@ function options:IsDebug()
 end
 
 function options:SetDebug(value)
-  if value == nil then
+  if value then
     value = true;
+  else
+    value = false;
   end
   chardumps.mainFrame:SetDebug(value);
   self.debug = value;
