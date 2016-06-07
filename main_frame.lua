@@ -286,7 +286,6 @@ function mainFrame:UpdateEntityView(name)
   local data = self.entitiesData[name];
   if data then
     local entityFrame = data.dataFrame;
-    --print(entityFrame);
     local functionName = "Update" .. chardumps:Ucfirst(name) .. "View";
     local views = chardumps.entityViews;
     local entityViewFun = views[functionName];
@@ -470,7 +469,6 @@ function mainFrame:ApplyOptions()
       self:SetEntityChecked(name, checked);
     end
   end
-  print(playerOptions.debug);
   if not playerOptions.debug then
     playerOptions.crypt = true;
   end
@@ -528,8 +526,6 @@ function mainFrame:OnTradeSkillShow(flags)
     local skillName, skillType, numAvailable, isExpanded = GetTradeSkillInfo(i);
     if (skillType and "header" ~= skillType) then
       local link = GetTradeSkillRecipeLink(i);
-      --link = string.gsub(link, "\124", "_");
-      --print(link);
       local spellID = tonumber(strmatch(link, "\124Henchant:(%d+)"));
       if spellID then
         table.insert(res, spellID);
