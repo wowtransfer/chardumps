@@ -184,7 +184,6 @@ function mainFrame:Init()
     end
 
     chb:SetScript("OnClick", function(self)
-      print(self:GetName(), self.chdEntityName);
       mainFrame:SetActiveDataFrame(self.chdEntityName);
     end);
 
@@ -625,11 +624,10 @@ function mainFrame:OnPlayerLeavingWorld()
   end
 
   -- TODO: create method
-  local playerOptions = {};
+  local playerOptions = chardumps:GetPlayerOptions();
 
   playerOptions.entities = entities;
   playerOptions.crypt = self.chbCrypt:GetChecked();
-  playerOptions.debug = self.chbDebug:GetChecked();
   playerOptions.minimize = options.minimize;
   -- TODO: may be errors on the reading
   playerOptions.dynamicData = chardumps.dumper:GetDynamicDataAll();

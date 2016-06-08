@@ -3,7 +3,7 @@ local log = {};
 
 function log:Message(...)
   local x = {...};
-  for k,v in pairs(x) do
+  for k, v in pairs(x) do
     print("\124cFF9F3FFFchardumps:\124r ", v);
   end
 end
