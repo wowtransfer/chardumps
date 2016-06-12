@@ -141,4 +141,78 @@ function entityViews:UpdatePlayerView(frame)
   frame.widgets = widgets;
 end
 
+
+function entityViews:UpdateInventoryView(frame)
+  local inventory = chardumps.dumper:GetEntity("inventory");
+  local L = chardumps:GetLocale();
+
+  --[[
+  --]]
+
+  local x = 5;
+  local y, dy = -30, -12;
+
+  local widgets = frame.widgets;
+  if widgets == nil then
+    widgets = {};
+    --[[
+    local str = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
+    str:SetPoint("TOPLEFT", x, y);
+    str:SetTextColor(1, 1, 1);
+    y = y + dy;
+    widgets.fontStrHonor = str;--]]
+
+    local scroll = CreateFrame("ScrollFrame", nil, frame);
+    scroll:SetPoint("TOPLEFT", 10, -30); 
+    scroll:SetPoint("BOTTOMRIGHT", -10, 10);
+    scroll:Show();
+    local texture = scroll:CreateTexture();
+    texture:SetAllPoints();
+    texture:SetTexture(.5, .5, .5, 1); 
+    frame.scrollFrame = scroll;
+
+    local scrollbar = CreateFrame("Slider", nil, scroll, "UIPanelScrollBarTemplate") 
+    scrollbar:SetPoint("TOPLEFT", frame, "TOPRIGHT", 4, -16);
+    scrollbar:SetPoint("BOTTOMLEFT", frame, "BOTTOMRIGHT", 4, 16);
+    scrollbar:SetMinMaxValues(1, 200);
+    scrollbar:SetValueStep(1);
+    scrollbar:SetValue(0); 
+    scrollbar:SetWidth(16);
+    scrollbar:SetScript("OnValueChanged", 
+      function (self, value)
+        print(value);
+        self:GetParent():SetVerticalScroll(value) 
+    end)
+    scrollbar:Show();
+    local scrollbg = scrollbar:CreateTexture(nil, "BACKGROUND") 
+    scrollbg:SetAllPoints(scrollbar)
+    scrollbg:SetTexture(0, 0, 0, 0.4)
+    frame.scrollbar = scrollbar;
+
+    local editbox = CreateFrame("EditBox", nil, scroll);
+    editbox:SetMultiLine(true);
+    editbox:SetFontObject(ChatFontNormal);
+    --editbox:SetAutoFocus(true);
+    editbox:SetPoint("TOPLEFT", frame, "TOPRIGHT", 0, 0) 
+    editbox:SetPoint("BOTTOMLEFT", frame, "BOTTOMRIGHT", 0, 0) 
+    local texture = editbox:CreateTexture() 
+    --texture:SetAllPoints() 
+    texture:SetTexture("Interface\\GLUES\\MainMenu\\Glues-BlizzardLogo") 
+
+    scroll:SetScrollChild(editbox);
+
+    editbox:Show();
+
+    widgets.editbox = editbox;
+  end
+
+  if inventory ~= nil then
+    widgets.editbox:Insert("1111\n\n");
+    widgets.editbox:Insert("1111\n");
+    widgets.editbox:Insert("1111\n");
+  end
+
+  frame.widgets = widgets;
+end
+
 chardumps.entityViews = entityViews;
