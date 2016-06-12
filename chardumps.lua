@@ -74,7 +74,6 @@ function chardumps:initSlashCommands()
     log:Message("/chardumps hide");
     log:Message("/chardumps minimize")
     log:Message("/chardumps version");
-    log:Message("/chardumps debug");
   end
   local commandHandlers = {
     help = helpFun,
