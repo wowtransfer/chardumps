@@ -145,71 +145,64 @@ end
 function entityViews:UpdateInventoryView(frame)
   local inventory = chardumps.dumper:GetEntity("inventory");
   local L = chardumps:GetLocale();
-
-  --[[
-  --]]
-
   local x = 5;
-  local y, dy = -30, -12;
+  local startY = 30;
+  local y, dy = -startY, -12;
 
   local widgets = frame.widgets;
   if widgets == nil then
     widgets = {};
-    --[[
-    local str = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
-    str:SetPoint("TOPLEFT", x, y);
-    str:SetTextColor(1, 1, 1);
-    y = y + dy;
-    widgets.fontStrHonor = str;--]]
+ 
+    local scrollingMessageFrame = CreateFrame("ScrollingMessageFrame", nil, frame);
+    scrollingMessageFrame:SetPoint("TOPLEFT", 10, -startY);
+    scrollingMessageFrame:SetPoint("BOTTOMRIGHT", -10, 10);
+    scrollingMessageFrame:SetFontObject(GameFontNormal);
+    scrollingMessageFrame:SetTextColor(1, 1, 1, 1);
+    scrollingMessageFrame:SetJustifyH("LEFT");
+    scrollingMessageFrame:SetHyperlinksEnabled(true);
+    scrollingMessageFrame:SetFading(false);
+    scrollingMessageFrame:SetInsertMode("BOTTOM");
+    scrollingMessageFrame:Show();
 
-    local scroll = CreateFrame("ScrollFrame", nil, frame);
-    scroll:SetPoint("TOPLEFT", 10, -30); 
-    scroll:SetPoint("BOTTOMRIGHT", -10, 10);
-    scroll:Show();
-    local texture = scroll:CreateTexture();
+    local texture = scrollingMessageFrame:CreateTexture();
     texture:SetAllPoints();
-    texture:SetTexture(.5, .5, .5, 1); 
-    frame.scrollFrame = scroll;
+    texture:SetTexture(.5, .5, .5, 1);
 
-    local scrollbar = CreateFrame("Slider", nil, scroll, "UIPanelScrollBarTemplate") 
-    scrollbar:SetPoint("TOPLEFT", frame, "TOPRIGHT", 4, -16);
-    scrollbar:SetPoint("BOTTOMLEFT", frame, "BOTTOMRIGHT", 4, 16);
-    scrollbar:SetMinMaxValues(1, 200);
-    scrollbar:SetValueStep(1);
-    scrollbar:SetValue(0); 
-    scrollbar:SetWidth(16);
-    scrollbar:SetScript("OnValueChanged", 
-      function (self, value)
-        print(value);
-        self:GetParent():SetVerticalScroll(value) 
-    end)
-    scrollbar:Show();
-    local scrollbg = scrollbar:CreateTexture(nil, "BACKGROUND") 
-    scrollbg:SetAllPoints(scrollbar)
-    scrollbg:SetTexture(0, 0, 0, 0.4)
-    frame.scrollbar = scrollbar;
+    widgets.scrollMessageFrame = scrollingMessageFrame;
 
-    local editbox = CreateFrame("EditBox", nil, scroll);
-    editbox:SetMultiLine(true);
-    editbox:SetFontObject(ChatFontNormal);
-    --editbox:SetAutoFocus(true);
-    editbox:SetPoint("TOPLEFT", frame, "TOPRIGHT", 0, 0) 
-    editbox:SetPoint("BOTTOMLEFT", frame, "BOTTOMRIGHT", 0, 0) 
-    local texture = editbox:CreateTexture() 
-    --texture:SetAllPoints() 
-    texture:SetTexture("Interface\\GLUES\\MainMenu\\Glues-BlizzardLogo") 
-
-    scroll:SetScrollChild(editbox);
-
-    editbox:Show();
-
-    widgets.editbox = editbox;
+    local scrollBar = CreateFrame("Slider", nil, frame, "UIPanelScrollBarTemplate")
+    scrollBar:ClearAllPoints();
+    scrollBar:SetPoint("RIGHT", frame, "RIGHT", 0, 0);
+    scrollBar:SetSize(30, frame:GetHeight() - startY - 10 - 10);
+    scrollBar:SetMinMaxValues(0, 100);
+    scrollBar:SetValueStep(1);
+    scrollBar.scrollStep = 1;
+    scrollBar:SetScript("OnValueChanged", function(self, value)
+      local _, maxValue = scrollBar:GetMinMaxValues();
+      scrollingMessageFrame:SetScrollOffset(maxValue - value);
+   end)
+   widgets.scrollBar = scrollBar;
   end
 
   if inventory ~= nil then
-    widgets.editbox:Insert("1111\n\n");
-    widgets.editbox:Insert("1111\n");
-    widgets.editbox:Insert("1111\n");
+    local index1 = 1;
+    widgets.scrollMessageFrame:Clear();
+    local len = chardumps:GetTableLength(inventory);
+    widgets.scrollMessageFrame:SetMaxLines(len);
+    local maxValue = len - 26;
+    if maxValue < 0 then
+      maxValue = 0;
+    end
+    widgets.scrollBar:SetMinMaxValues(0, maxValue);
+    widgets.scrollBar:SetValue(0);
+    for i, item in pairs(inventory) do
+      local itemId = item["I"] or 0;
+      local itemName, itemLink = GetItemInfo(itemId);
+      if itemLink then
+        widgets.scrollMessageFrame:AddMessage(index1 .. " " .. itemLink);
+        index1 = index1 + 1;
+      end
+    end
   end
 
   frame.widgets = widgets;
