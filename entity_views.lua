@@ -168,8 +168,6 @@ function entityViews:UpdateInventoryView(frame)
     texture:SetAllPoints();
     texture:SetTexture(.5, .5, .5, 1);
 
-    widgets.scrollMessageFrame = scrollingMessageFrame;
-
     local scrollBar = CreateFrame("Slider", nil, frame, "UIPanelScrollBarTemplate")
     scrollBar:ClearAllPoints();
     scrollBar:SetPoint("RIGHT", frame, "RIGHT", 0, 0);
@@ -181,14 +179,18 @@ function entityViews:UpdateInventoryView(frame)
       local _, maxValue = scrollBar:GetMinMaxValues();
       scrollingMessageFrame:SetScrollOffset(maxValue - value);
    end)
+
    widgets.scrollBar = scrollBar;
+   widgets.scrollMessageFrame = scrollingMessageFrame;
   end
 
   if inventory ~= nil then
     local index1 = 1;
     widgets.scrollMessageFrame:Clear();
     local len = chardumps:GetTableLength(inventory);
-    widgets.scrollMessageFrame:SetMaxLines(len);
+    if len > 0 then
+      widgets.scrollMessageFrame:SetMaxLines(len);
+    end
     local maxValue = len - 26;
     if maxValue < 0 then
       maxValue = 0;
