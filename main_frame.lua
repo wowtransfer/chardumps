@@ -177,6 +177,7 @@ function mainFrame:Init()
     if entity.disable then
       chb:SetChecked(false);
       chb:Disable();
+      chb:Hide();
       btnActiveFont:SetTextColor(0.5, 0.5, 0.5);
     elseif entity.always then
       chb:SetChecked(true);
