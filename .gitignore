@@ -5,6 +5,8 @@ nbproject/*
 build.settings
 *.proj
 addon.lua
+*ob.lua
+*.bak
 
 .settings
 
