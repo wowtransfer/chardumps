@@ -1081,7 +1081,7 @@ function dumper:GetCounts(dump)
   res.glyph = self:GetGlyphItemsCount();
   res.global = chardumps:GetTableLength(dump.global);
   res.inventory = chardumps:GetTableLength(dump.inventory);
-  res.quest = #dump.quest;
+  res.quest = chardumps:GetTableLength(dump.quest);
   res.questlog = #dump.questlog;
   res.pet = 0;
   res.player = chardumps:GetTableLength(dump.player);
