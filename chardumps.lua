@@ -67,7 +67,6 @@ function chardumps:initSlashCommands()
   local helpFun = function()
     local log = chardumps.log;
     log:Message("/chardumps, /chardumps help");
-    log:Message("/chardumps dump");
     log:Message("/chardumps clear");
     log:Message("/chardumps save");
     log:Message("/chardumps show");
