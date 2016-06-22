@@ -153,7 +153,7 @@ function mainFrame:Init()
 
   -- Create entity's structure
   for name, entity in pairs(entities) do
-    if not entity.always then
+    if not entity.always and not entity.disable then
       local btn = widgets:CreateButton(frame, {x = 10, y = -y, cx = 12, cy = 12, tooltipTitle = L.Delete});
       btn.chdEntityName = name;
       btn:SetScript("OnClick", function()
