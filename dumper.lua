@@ -1071,29 +1071,30 @@ function dumper:GetCounts(dump)
 
   res.achievement = chardumps:GetTableLength(dump.achievement);
   res.action = chardumps:GetTableLength(dump.action);
-  res.criterias = chardumps:GetTableLength(dump.criterias);
-  res.statistic = chardumps:GetTableLength(dump.statistic);
-  res.critter = #dump.critter;
-  res.mount = #dump.mount;
   res.bag = self:GetBagItemsCount();
-  res.currency = chardumps:GetTableLength(dump.currency);
-  res.equipment = #dump.equipment;
-  res.reputation = #dump.reputation;
-  res.glyph = self:GetGlyphItemsCount();
-  res.inventory = chardumps:GetTableLength(dump.inventory);
-  res.questlog = #dump.questlog;
-  res.spell = chardumps:GetTableLength(dump.spell);
-  res.skill = #dump.skill;
-  res.pmacro = #dump.pmacro;
-  res.pet = 0;
   res.bank = self:GetBankItemsCount();
   res.bind = #dump.bind;
-  res.title = #dump.title;
-  res.talent = self:GetTalentItemsCount();
-
+  res.criterias = chardumps:GetTableLength(dump.criterias);
+  res.critter = #dump.critter;
+  res.currency = chardumps:GetTableLength(dump.currency);
+  res.equipment = #dump.equipment;
+  res.glyph = self:GetGlyphItemsCount();
+  res.global = chardumps:GetTableLength(dump.global);
+  res.inventory = chardumps:GetTableLength(dump.inventory);
   res.quest = #dump.quest;
+  res.questlog = #dump.questlog;
+  res.pet = 0;
+  res.player = chardumps:GetTableLength(dump.player);
+  res.pmacro = #dump.pmacro;
+  res.reputation = #dump.reputation;
+  res.mount = #dump.mount;
+  res.talent = self:GetTalentItemsCount();
   res.taxi = self:GetTaxiItemsCount();
+  res.title = #dump.title;
+  res.spell = chardumps:GetTableLength(dump.spell);
+  res.skill = #dump.skill;
   res.skillspell = self:GetSkillspellItemsCount();
+  res.statistic = chardumps:GetTableLength(dump.statistic);
 
   return res;
 end
