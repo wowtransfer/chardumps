@@ -1,7 +1,7 @@
 ## Interface: 30300
 ## Title: chardumps
 ## Author: gracerpro
-## Version: 2.1
+## Version: 2.2
 ## X-Date: 2016-01-07
 ## X-Website: http://wowtransfer.com
 ## X-Feedback: admin@wowtransfer.com

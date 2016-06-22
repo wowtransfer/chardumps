@@ -6,7 +6,7 @@ if GetLocale():lower() == "ruru" then
   L["Press \"Dump\" button"] = "Нажмите кнопку Дамп";
 
   L.AddonName       = "Chardumps"
-  L.Version         = "2.1"
+  L.Version         = "2.2"
 
   -- help
   L.help1 = "/chardumps or /chd -- консольная команда"
