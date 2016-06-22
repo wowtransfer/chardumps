@@ -161,7 +161,7 @@ function entityViews:UpdateInventoryView(frame)
     scrollingMessageFrame:SetJustifyH("LEFT");
     scrollingMessageFrame:SetHyperlinksEnabled(true);
     scrollingMessageFrame:SetFading(false);
-    scrollingMessageFrame:SetInsertMode("BOTTOM");
+    scrollingMessageFrame:SetInsertMode("bottom");
     scrollingMessageFrame:Show();
 
     local texture = scrollingMessageFrame:CreateTexture();
